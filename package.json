@@ -1,6 +1,6 @@
 {
   "name": "squirrelly",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple to use Express template engine",
   "main": "index.js",
   "scripts": {
