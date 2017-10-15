@@ -15,5 +15,16 @@
     "sqrl"
   ],
   "author": "Ben Gubler",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nebrelbug/squirrelly.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nebrelbug/squirrelly/issues"
+  },
+  "homepage": "https://github.com/nebrelbug/squirrelly#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
