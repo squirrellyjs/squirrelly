@@ -6,6 +6,7 @@
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/nebrelbug/crawlbug.svg)](https://github.com/nebrelbug/crawlbug)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/33bf9811125c493f9808050e2499c9c6)](https://www.codacy.com/app/nebrelbug/crawlbug?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/crawlbug&amp;utm_campaign=Badge_Grade)
 
+
 Squirrelly is an easy-to-use ExpressJS Template engine, allowing basic conditional statements and easy ExpressJS usage. Just pass in options and/or conditionals inside double brackets!
 
 ## Why to use Squirrelly
