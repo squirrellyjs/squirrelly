@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{title}}</title>
+  </head>
+  <body>
+    <p>{{message}}</p>
+    <p>This is a {{message}} statement</p>
+    <p>What is your {{birthday}}?</p>
+
+    {(truth){
+    <p>truth = true!</p>
+    }}
+
+    {(!untruth){
+    <p>untruth = false!</p>
+    }}
+
+  </body>
+</html>
