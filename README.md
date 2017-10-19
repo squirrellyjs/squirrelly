@@ -4,8 +4,8 @@
 [![npm version](https://img.shields.io/npm/v/squirrelly.svg)](https://www.npmjs.com/package/squirrelly)
 [![npm downloads](https://img.shields.io/npm/dt/squirrelly.svg)](https://www.npmjs.com/package/squirrelly)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/nebrelbug/crawlbug.svg)](https://github.com/nebrelbug/crawlbug)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/33bf9811125c493f9808050e2499c9c6)](https://www.codacy.com/app/nebrelbug/crawlbug?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/crawlbug&amp;utm_campaign=Badge_Grade)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 Squirrelly is an easy-to-use ExpressJS Template engine, allowing basic conditional statements and easy ExpressJS usage. Just pass in options and/or conditionals inside double brackets!
 

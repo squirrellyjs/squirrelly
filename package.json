@@ -1,7 +1,7 @@
 {
   "name": "squirrelly",
   "version": "1.0.2",
-  "description": "A simple to use Express template engine",
+  "description": "A simple yet powerful ExpressJS template engine that works out-of-the-box",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,9 +12,10 @@
     "engine",
     "squirrelly",
     "html",
+    "expressjs",
     "sqrl"
   ],
-  "author": "Ben Gubler",
+  "author": "Ben Gubler <nebrelbug@gmail.com> (https://bengubler.com)",
   "license": "ISC",
   "repository": {
     "type": "git",
