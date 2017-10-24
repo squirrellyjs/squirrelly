@@ -3,9 +3,14 @@
 [![dependencies Status](https://david-dm.org/nebrelbug/squirrelly/status.svg)](https://david-dm.org/nebrelbug/squirrelly)
 [![npm version](https://img.shields.io/npm/v/squirrelly.svg)](https://www.npmjs.com/package/squirrelly)
 [![npm downloads](https://img.shields.io/npm/dt/squirrelly.svg)](https://www.npmjs.com/package/squirrelly)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/nebrelbug/crawlbug.svg)](https://github.com/nebrelbug/crawlbug)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/nebrelbug/squirrelly.svg)](https://github.com/nebrelbug/squirrelly)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
+[![GitHub forks](https://img.shields.io/github/forks/nebrelbug/squirrelly.svg?style=social&label=Fork)](https://github.com/nebrelbug/squirrelly/fork)
+[![GitHub stars](https://img.shields.io/github/stars/nebrelbug/squirrelly.svg?style=social&label=Stars)](https://github.com/nebrelbug/squirrelly)
+[![GitHub watchers](https://img.shields.io/github/watchers/nebrelbug/squirrelly.svg?style=social&label=Watch)](https://github.com/nebrelbug/squirrelly)
+[![GitHub followers](https://img.shields.io/github/followers/nebrelbug.svg?style=social&label=Follow)](https://github.com/nebrelbug/squirrelly)
 
 Squirrelly is an easy-to-use ExpressJS Template engine, allowing basic conditional statements and easy ExpressJS usage. Just pass in options and/or conditionals inside double brackets!
 
@@ -15,7 +20,7 @@ Squirrelly is an easy-to-use ExpressJS Template engine, allowing basic condition
 * It was made for Express; there's no need to pipe or do weird input stuff... it just works
 * Unlike many other template engines, it doesn't make a JS file to access the DOM--instead, it just returns correct HTML to the `__express` function.
 
-## Squirrelly basic setup
+## Basic Usage
 
 1. Download [`squirrelly`](https://www.npmjs.com/package/squirrelly) (`npm install squirrelly --save`)
 2. Create an `index.sqrl` file (that's explained below, but basically you just put options between double brackets)
@@ -28,7 +33,7 @@ const app = express()
 
 app.set('views', 'tests/views') //specify views directory (where your sqrl files are)
 app.engine('sqrl', require('squirrelly').__express);//Set the template engine to squirrelly, and make it use .sqrl files. If you don't do this, you'll have to use the file extension .squirrelly
-app.set('view engine', 'sqrl'); (use the template engine)
+app.set('view engine', 'sqrl'); (use squirrelly as a template engine)
 
 
 app.get('/', function (req, res) {//When a request is made to the server
@@ -43,7 +48,7 @@ app.listen(3000, function () {//Start the server
 
 4. Watch the magic happen!
 
-## Squirrelly Syntax
+## Syntax
 
 To use squirrelly, instead of creating an HTML file, create a `.sqrl` file. (This will only work if you inlude the following code:
 
@@ -55,12 +60,26 @@ Otherwise, you can name your files with the `.squirrelly` extension. Inside thes
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{title}}</title>
+    <title>{{title}}</title> //Evaluates to <title>why you should use squirrelly</title>
   </head>
   <body>
-    <p>Because {{reason}}</p>
+    <p>Because {{reason}}</p> //Evaluates to <p>Because it's awesome</p>
   </body>
 </html>
+```
+
+### Recommended Use
+
+Right now, squirrelly only has basic functionality with conditionals (though it's under active development.) But remember, squirrelly can parse anything, even content of `script` tags. We recommend using squirrelly inside script tags for advanced logic. A very basic  example is shown below:
+
+```
+<script>
+var userInfo = {{userInfo}};
+if (userInfo !== null && userInfo !== undefined) {
+document.getElementById("userInfo").innerHTML = {{userInfo}};
+}
+</script>
+
 ```
 
 ### Conditionals
@@ -91,4 +110,6 @@ To test if an option is false, pass in the option with an exclamation point in f
 
 ## Contributing
 
-Squirrelly is still under very active development, and all contributors would be appreciated. Just contact me or send me a pull request at Squirrelly's [Github Repo](https://github.com/nebrelbug/squirrelly). If you find any issues, submit an issue.
+Squirrelly is still under very active development, and all contributors are welcome. Feel free to [fork](https://github.com/nebrelbug/squirrelly), clone, and mess around! Then, contact me, create an issue, or send a pull request at Squirrelly's [Github Repo](https://github.com/nebrelbug/squirrelly).
+
+Beginners are welcome! We welcome all contributors, no matter what skill level.
