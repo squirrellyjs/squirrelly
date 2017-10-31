@@ -1,16 +1,16 @@
 # squirrelly 🐿️
-[![Build Status](https://travis-ci.org/nebrelbug/squirrelly.svg?branch=master)](https://travis-ci.org/nebrelbug/squirrelly)
-[![dependencies Status](https://david-dm.org/nebrelbug/squirrelly/status.svg)](https://david-dm.org/nebrelbug/squirrelly)
-[![npm version](https://img.shields.io/npm/v/squirrelly.svg)](https://www.npmjs.com/package/squirrelly)
-[![npm downloads](https://img.shields.io/npm/dt/squirrelly.svg)](https://www.npmjs.com/package/squirrelly)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/nebrelbug/squirrelly.svg)](https://github.com/nebrelbug/squirrelly)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![](https://travis-ci.org/nebrelbug/squirrelly.svg?branch=master)](https://travis-ci.org/nebrelbug/squirrelly)
+[![](https://david-dm.org/nebrelbug/squirrelly/status.svg)](https://david-dm.org/nebrelbug/squirrelly)
+[![](https://img.shields.io/npm/v/squirrelly.svg)](https://www.npmjs.com/package/squirrelly)
+[![](https://img.shields.io/npm/dt/squirrelly.svg)](https://www.npmjs.com/package/squirrelly)
+[![](https://img.shields.io/github/commit-activity/y/nebrelbug/squirrelly.svg)](https://github.com/nebrelbug/squirrelly)
+[![](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)
+[![](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-[![GitHub forks](https://img.shields.io/github/forks/nebrelbug/squirrelly.svg?style=social&label=Fork)](https://github.com/nebrelbug/squirrelly/fork)
-[![GitHub stars](https://img.shields.io/github/stars/nebrelbug/squirrelly.svg?style=social&label=Stars)](https://github.com/nebrelbug/squirrelly)
-[![GitHub watchers](https://img.shields.io/github/watchers/nebrelbug/squirrelly.svg?style=social&label=Watch)](https://github.com/nebrelbug/squirrelly)
-[![GitHub followers](https://img.shields.io/github/followers/nebrelbug.svg?style=social&label=Follow)](https://github.com/nebrelbug/squirrelly)
+[![](https://img.shields.io/github/forks/nebrelbug/squirrelly.svg?style=social&label=Fork)](https://github.com/nebrelbug/squirrelly/fork)
+[![](https://img.shields.io/github/stars/nebrelbug/squirrelly.svg?style=social&label=Stars)](https://github.com/nebrelbug/squirrelly)
+[![](https://img.shields.io/github/watchers/nebrelbug/squirrelly.svg?style=social&label=Watch)](https://github.com/nebrelbug/squirrelly)
+[![](https://img.shields.io/github/followers/nebrelbug.svg?style=social&label=Follow)](https://github.com/nebrelbug/squirrelly)
 
 Squirrelly is an easy-to-use ExpressJS Template engine, allowing basic conditional statements and easy ExpressJS usage. Just pass in options and/or conditionals inside double brackets!
 
