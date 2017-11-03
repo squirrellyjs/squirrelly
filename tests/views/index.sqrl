@@ -6,15 +6,20 @@
   <body>
     <p>{{message}}</p>
     <p>This is a {{message}} statement</p>
-    <p>What is your {{birthday}}?</p>
+    <p>What is your birthday?</p>
 
     {(truth){
     <p>truth = true!</p>
-    }}
+    <p>My birthday is {{birthday}}!</p>
+    {(!secondTruth){
+    <p>secondTruth also = {{secondTruth}}!</p>
+    }**}
+    <div></div>
+    }*}
 
     {(!untruth){
     <p>untruth = false!</p>
-    }}
+    }*}
 
   </body>
 </html>

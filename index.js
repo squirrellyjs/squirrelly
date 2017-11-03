@@ -1,15 +1,42 @@
 var fs = require('fs') // this engine requires the fs module
+
 exports.__express = function (filePath, options, callback) {
   fs.readFile(filePath, function (err, content) {
     if (err) {
       return callback(err)
     }
-    var rendered = content.toString()
-    console.log('initial rendered: ' + rendered)
-    // Do if statements
-    var ifRegExp = /(\{\([^]*?\}\})/g
+    var sqrlFile = content.toString()
+    var renderedFile = exports.returnHTML(sqrlFile, options)
+    return callback(null, renderedFile)
+  })
+}
 
-    function ifEval (match, p1, p2, p3, offset, string) {
+exports.returnHTML = function (rendered, options, ifIndex) {
+  var passedIfIndex
+  if (rendered === null) {
+    return 'err: rendered===null'
+  } else {
+    var optionsTwo = new Object(options)
+    var renderedString = rendered.toString()
+  // Do if statements
+    if (ifIndex === null || ifIndex === undefined) {
+      passedIfIndex = 1
+    } else {
+      passedIfIndex = ifIndex
+    }
+
+    function ifAsteriskCount (index) {
+    	var returnAsteriskCount = ''
+      for (i = 0; i < index; i++) {
+        returnAsteriskCount += '\\*'
+	    }
+      console.log(returnAsteriskCount)
+      return (returnAsteriskCount)
+    }
+
+    var ifRegExp = new RegExp('(\\{\\([^]*?\\}' + ifAsteriskCount(passedIfIndex) + '\\})', 'g')
+
+    function ifEval (match) {
       var innerContentExp = /<[^]*>/g
       var returnContent
       console.log('match: ' + match)
@@ -23,8 +50,10 @@ exports.__express = function (filePath, options, callback) {
       console.log('ifContent: ' + ifContent)
       var conditionalTrueExp = /[^\w]/g
       if (conditionalTrueExp.exec(ifContent) === null) { // Conditional if variable is true
-        if (options[ifContent] === true) { // Conditional if variable is true
-          returnContent = innerContentExp.exec(match)
+        if (optionsTwo[ifContent] === true) { // Conditional if variable is true
+          console.log('second conditional')
+          returnContent = exports.returnHTML(innerContentExp.exec(match), optionsTwo, passedIfIndex + 1);
+          console.log('true returnContent: ' + returnContent)
           console.log('true conditional passed')
         } else {
           returnContent = ''
@@ -34,30 +63,32 @@ exports.__express = function (filePath, options, callback) {
         var withoutExclamationExp = /[^!][^]*/
         var withoutExclamationContent = withoutExclamationExp.exec(ifContent)
         console.log('withoutExclamationExp: ' + withoutExclamationContent)
-        if (options[withoutExclamationContent] === false) {
-          returnContent = innerContentExp.exec(match)
-          console.log('returnContent: ' + returnContent)
+        if (optionsTwo[withoutExclamationContent] === false) {
+          console.log('t conditional')
+          returnContent = exports.returnHTML(innerContentExp.exec(match), optionsTwo, passedIfIndex + 1)
+          console.log('false returnContent: ' + returnContent)
         } else {
-          console.log('options[withoutExclamationContent] !== false (conditional failed)')
+          returnContent = ''
+          console.log('optionsTwo[withoutExclamationContent] !== false (conditional failed)')
         }
       }
       return returnContent
     };
 
-    rendered = rendered.replace(ifRegExp, ifEval)
+    renderedString = renderedString.replace(ifRegExp, ifEval)
 
-    // Replace options
-    for (var i = 0; i < Object.keys(options).length; i++) {
-      var cOption = Object.keys(options)[i]
-      console.log('cOption: ' + cOption)
+    // Replace optionsTwo
+    for (var i = 0; i < Object.keys(optionsTwo).length; i++) {
+      var cOption = Object.keys(optionsTwo)[i]
+      // cOption stands for current option)
       if (cOption !== 'settings' && cOption !== '_locals' && cOption !== 'cache') {
-        console.log('options.cOption: ' + options[cOption])
+        // console.log('optionsTwo.cOption: ' + optionsTwo[cOption])
         var optionRegExp = new RegExp('\{\{' + cOption + '\}\}', 'g') // eslint-disable-line
-        console.log('optionRegExp: ' + optionRegExp)
-        rendered = rendered.replace(optionRegExp, options[cOption])
+        // console.log('optionRegExp: ' + optionRegExp)
+        renderedString = renderedString.replace(optionRegExp, optionsTwo[cOption])
       }
     }
-    console.log('rendered: ' + rendered)
-    return callback(null, rendered)
-  })
+    console.log('renderedString: ' + renderedString)
+    return renderedString
+  }
 }
