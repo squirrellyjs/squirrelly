@@ -12,15 +12,13 @@
 [![](https://img.shields.io/github/watchers/nebrelbug/squirrelly.svg?style=social&label=Watch)](https://github.com/nebrelbug/squirrelly)
 [![](https://img.shields.io/github/followers/nebrelbug.svg?style=social&label=Follow)](https://github.com/nebrelbug/squirrelly)
 
-Squirrelly is an easy-to-use ExpressJS Template engine, allowing basic conditional statements and easy ExpressJS usage. Just pass in options and/or conditionals inside double brackets!
-
-<img src="squirrellylogo.PNG" alt="" style="height: 100px;"/>
+Squirrelly is an easy-to-use ExpressJS Template engine that includes basic conditional statements, passing in options to HTML, and even passing in options to inline JavaScript for advanced conditionals!
 
 ## Why to use Squirrelly
 
-* It's super easy to use, with syntax inspired by swig
+* It's super easy to use, with double-bracket syntax similar to Mustache.js, Handlebars.js, and Swig
 * It was made for Express; there's no need to pipe or do weird input stuff... it just works
-* Unlike many other template engines, it doesn't make a JS file to access the DOM--instead, it just returns correct HTML to the `__express` function.
+* Unlike many other template engines, it doesn't make a JS file to access the DOM--instead, it just returns correct HTML to the `__express` function
 
 ## Basic Usage
 
@@ -93,21 +91,21 @@ A basic Squirrelly conditional follows the following syntax:
 ```
 {(conditional statement){
 	HTML that displays if the conditional passes
-}}
+}*}
 ```
 
-To test if an option is true, pass in the `truth` option without anything else.
+To test if an option is true, pass in the desired option without anything else.
 
 ```
 {(truth){
     <p>truth = true!</p>
-}}
+}*}
 ```
 To test if an option is false, pass in the option with an exclamation point in front of it.
 ```
 {(!untruth){
     <p>untruth = false!</p>
-}}
+}*}
 ```
 
 ## Contributing
