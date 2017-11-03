@@ -14,6 +14,7 @@
 
 Squirrelly is an easy-to-use ExpressJS Template engine, allowing basic conditional statements and easy ExpressJS usage. Just pass in options and/or conditionals inside double brackets!
 
+[![](squirrellylogo.PNG)](https://github.com/nebrelbug/squirrelly)
 ## Why to use Squirrelly
 
 * It's super easy to use, with syntax inspired by swig
