@@ -74,9 +74,9 @@ Right now, squirrelly only has basic functionality with conditionals (though it'
 
 ```
 <script>
-var userInfo = {{userInfo}};
+var userInfo = {{{userInfo}}};
 if (userInfo !== null && userInfo !== undefined) {
-document.getElementById("userInfo").innerHTML = {{userInfo}};
+document.getElementById("userInfo").innerHTML = {{{userInfo}}};
 }
 </script>
 
