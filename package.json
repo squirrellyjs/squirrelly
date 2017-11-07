@@ -25,7 +25,8 @@
     "url": "https://github.com/nebrelbug/squirrelly/issues"
   },
   "homepage": "https://github.com/nebrelbug/squirrelly#readme",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "express": "^4.16.2"
   }
 }
