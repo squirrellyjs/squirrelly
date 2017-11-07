@@ -52,7 +52,7 @@ exports.returnHTML = function (rendered, options, ifIndex) {
       if (conditionalTrueExp.exec(ifContent) === null) { // Conditional if variable is true
         if (optionsTwo[ifContent] === true) { // Conditional if variable is true
           console.log('second conditional')
-          returnContent = exports.returnHTML(innerContentExp.exec(match), optionsTwo, passedIfIndex + 1);
+          returnContent = exports.returnHTML(innerContentExp.exec(match), optionsTwo, passedIfIndex + 1)
           console.log('true returnContent: ' + returnContent)
           console.log('true conditional passed')
         } else {
@@ -82,9 +82,16 @@ exports.returnHTML = function (rendered, options, ifIndex) {
       var cOption = Object.keys(optionsTwo)[i]
       // cOption stands for current option)
       if (cOption !== 'settings' && cOption !== '_locals' && cOption !== 'cache') {
+        var jsOptionRegExp = new RegExp('\{\{\{' + cOption + '\}\}\}', 'g') //eslint-disable-line
         // console.log('optionsTwo.cOption: ' + optionsTwo[cOption])
         var optionRegExp = new RegExp('\{\{' + cOption + '\}\}', 'g') // eslint-disable-line
         // console.log('optionRegExp: ' + optionRegExp)
+        if (typeof optionsTwo[cOption] === 'string') {
+          renderedString = renderedString.replace(jsOptionRegExp, '"' + optionsTwo[cOption] + '"')
+        } else {
+          renderedString = renderedString.replace(jsOptionRegExp, optionsTwo[cOption])
+        }
+
         renderedString = renderedString.replace(optionRegExp, optionsTwo[cOption])
       }
     }
