@@ -17,6 +17,7 @@ Squirrelly is an easy-to-use ExpressJS Template engine that includes basic condi
 ## Why to use Squirrelly
 
 * It's super easy to use, with double-bracket syntax similar to Mustache.js, Handlebars.js, and Swig
+* It only supports basic conditionals so it's lightweight and speedy, but you can pass in options to inline JavaScript and use advanced conditionals inside the JS.
 * It was made for Express; there's no need to pipe or do weird input stuff... it just works
 * Unlike many other template engines, it doesn't make a JS file to access the DOM--instead, it just returns correct HTML to the `__express` function
 
