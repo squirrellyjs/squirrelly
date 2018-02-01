@@ -6,6 +6,7 @@
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/nebrelbug/squirrelly.svg)](https://github.com/nebrelbug/squirrelly)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Open Source Helpers](https://www.codetriage.com/nebrelbug/squirrelly/badges/users.svg)](https://www.codetriage.com/nebrelbug/squirrelly)
 
 [![](https://img.shields.io/github/forks/nebrelbug/squirrelly.svg?style=social&label=Fork)](https://github.com/nebrelbug/squirrelly/fork)
 [![](https://img.shields.io/github/stars/nebrelbug/squirrelly.svg?style=social&label=Stars)](https://github.com/nebrelbug/squirrelly)
