@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 
 app.set('views', 'tests/views') // specify the views directory
-app.engine('sqrl', require('../testindex.js').__express)
+app.engine('sqrl', require('../index.js').__express)
 app.set('view engine', 'sqrl')
 
 app.get('/', function (req, res) {

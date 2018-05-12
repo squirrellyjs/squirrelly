@@ -1,114 +1,91 @@
 var fs = require('fs') // this engine requires the fs module
 
 exports.__express = function (filePath, options, callback) {
-  fs.readFile(filePath, function (err, content) {
-    if (err) {
-      return callback(err)
-    }
-    var sqrlFile = content.toString()
-    var renderedFile = exports.returnHTML(sqrlFile, options)
-    return callback(null, renderedFile)
-  })
+    fs.readFile(filePath, function (err, content) {
+        if (err) {
+            return callback(err)
+        }
+        var sqrlFile = content.toString()
+        var renderedFile = exports.returnHTML(sqrlFile, options)
+        return callback(null, renderedFile)
+    })
 }
 
-exports.returnHTML = function (rendered, options, ifIndex) {
-  var passedIfIndex
-  if (rendered === null) {
-    return 'err: rendered===null'
-  } else {
-    var optionsTwo = new Object(options)
-    var renderedString = rendered.toString()
-  // Do if statements
-    if (ifIndex === null || ifIndex === undefined) {
-      passedIfIndex = 1
-    } else {
-      passedIfIndex = ifIndex
-    }
-
-    function ifAsteriskCount (index) {
-    	var returnAsteriskCount = ''
-      for (i = 0; i < index; i++) {
-        returnAsteriskCount += '\\*'
-	    }
-      console.log(returnAsteriskCount)
-      return (returnAsteriskCount)
-    }
-
-    var ifRegExp = new RegExp('(\\{\\([^]*?\\}' + ifAsteriskCount(passedIfIndex) + '\\})', 'g')
-
-    function ifEval (match) {
-      var innerContentExp = /<[^]*>/g
-      var returnContent
-      console.log('match: ' + match)
-      var fRegExp = /\{\(.*\)\{/g
-      var sRegExp = /([^\(\)\{])*([^\(\)\{])/ // eslint-disable-line
-      var fMatch = fRegExp.exec(match)
-      console.log('fMatch: ' + fMatch)
-      var sMatch = sRegExp.exec(fMatch)
-      console.log('sMatch: ' + sMatch)
-      var ifContent = sMatch[0].replace(/\s/g, '')
-      console.log('ifContent: ' + ifContent)
-      var conditionalTrueExp = /[^\w]/g
-      if (conditionalTrueExp.exec(ifContent) === null) { // Conditional if variable is true
-        if (optionsTwo[ifContent] === true) { // Conditional if variable is true
-          console.log('second conditional')
-          returnContent = exports.returnHTML(innerContentExp.exec(match), optionsTwo, passedIfIndex + 1)
-          console.log('true returnContent: ' + returnContent)
-          console.log('true conditional passed')
-        } else {
-          returnContent = ''
-          console.log('conditional failed')
+exports.returnHTML = function (sqrlstring, opts) {
+    var sqrlstr = sqrlstring
+    var options = new Object(opts)
+    console.log("options: " + options)
+    //Functions to deal with each type of squirrelly pass-in
+    function basicParse(match) {
+        console.log("basicParse match: " + match)
+        var m = match
+        var splitExp = /[\[\]]\[*/g
+        var insideBracketsExp = /[\w]+(?:\[[\"\'\w]\w*[\"\'\w]\])*/g
+        m = m.replace(" ", "")
+        console.log("m")
+        m = insideBracketsExp.exec(m)[0]
+        console.log("m: "+ m)
+        m = m.split(splitExp)
+        result = options[m[0]]
+        console.log("fresult: " + JSON.stringify(result))
+        for (var i = 1; i < m.length-1; i++) {
+            var thisOp = m[i]
+            if (/[\"\']/g.test(m)) {
+                thisOp = thisOp.replace(/\"/g, "")
+                thisOp = thisOp.replace(/\'/g, "")
+                console.log("has quotations")
+                result = result[thisOp]
+                console.log("result: " + JSON.stringify(result) + "i: " + i)
+            } else {
+                console.log("result[options]: " + result[options])
+                var parsedOp = options[thisOp]
+                result = result[parsedOp]
+                console.log("result: " + JSON.stringify(result) + "i: " + i)
+            }
         }
-      } else if (ifContent.charAt(0) === '!') { // Conditional if variable is false
-        var withoutExclamationExp = /[^!][^]*/
-        var withoutExclamationContent = withoutExclamationExp.exec(ifContent)
-        console.log('withoutExclamationExp: ' + withoutExclamationContent)
-        if (optionsTwo[withoutExclamationContent] === false) {
-          console.log('t conditional')
-          returnContent = exports.returnHTML(innerContentExp.exec(match), optionsTwo, passedIfIndex + 1)
-          console.log('false returnContent: ' + returnContent)
-        } else {
-          returnContent = ''
-          console.log('optionsTwo[withoutExclamationContent] !== false (conditional failed)')
-        }
-      }
-      return returnContent
-    };
-
-    renderedString = renderedString.replace(ifRegExp, ifEval)
-
-    var jsOptionRegExp = /\{\{\{[^]*?\}\}\}/g //eslint-disable-line
-    var optionRegExp = /(\{\{[^]*?\}\})/g // eslint-disable-line
-    var innerOptionRegExp = /[^{}]+/g
-
-    function optionEval (match) {
-      console.log("optionMatch: " + match)
-      var innerOptionContent = match.match(innerOptionRegExp)[0]
-      console.log("innerOp: " + innerOptionContent);
-      console.log("optionEval return content: " + optionsTwo[innerOptionContent])
-      return optionsTwo[innerOptionContent]
+        return result
+    }
+    function ifParse(stringtoparse) {
 
     }
-
-    function jsOptionEval (match) {
-      console.log("jsMatch: " + match);
-      var returnOptionContent = match.match(innerOptionRegExp)[0]
-      console.log("innerjsop: " +returnOptionContent);
-      if (typeof optionsTwo[returnOptionContent] === 'string') {
-          console.log("jsreturn: " + "'" + optionsTwo[returnOptionContent] + "'")
-          return "'" + optionsTwo[returnOptionContent] + "'"
-      } else {
-          console.log("jsreturn: " + optionsTwo[returnOptionContent])
-          return optionsTwo[returnOptionContent]
-      }
+    function forParse(stringtoparse) {
 
     }
+    function whileParse(stringtoparse) {
 
-    renderedString = renderedString.replace(jsOptionRegExp, jsOptionEval);
-    renderedString = renderedString.replace(optionRegExp, optionEval);
+    }
+    function includeParse(stringtoparse) {
 
+    }
+    function helperParse(stringtoparse) {
 
-    console.log('renderedString: ' + renderedString)
-    return renderedString
-  }
+    }
+    //Functions to find and execute each kind of squirrelly pass-in
+    function basicMatch() {
+        //Really long, but covers all of the possibilities
+        var RegExp = /(?:\{\{[^]*?\}\})/g
+        sqrlstr = sqrlstr.replace(RegExp, basicParse);
+    }
+    function ifMatch() {
+
+    }
+    function forMatch() {
+
+    }
+    function whileMatch() {
+
+    }
+    function includeMatch() {
+
+    }
+    function helperMatch() {
+
+    }
+    basicMatch();
+    ifMatch();
+    forMatch();
+    whileMatch();
+    includeMatch();
+    helperMatch();
+    return sqrlstr;
 }
