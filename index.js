@@ -77,24 +77,37 @@ exports.returnHTML = function (rendered, options, ifIndex) {
 
     renderedString = renderedString.replace(ifRegExp, ifEval)
 
-    // Replace optionsTwo
-    for (var i = 0; i < Object.keys(optionsTwo).length; i++) {
-      var cOption = Object.keys(optionsTwo)[i]
-      // cOption stands for current option)
-      if (cOption !== 'settings' && cOption !== '_locals' && cOption !== 'cache') {
-        var jsOptionRegExp = new RegExp('\{\{\{' + cOption + '\}\}\}', 'g') //eslint-disable-line
-        // console.log('optionsTwo.cOption: ' + optionsTwo[cOption])
-        var optionRegExp = new RegExp('\{\{' + cOption + '\}\}', 'g') // eslint-disable-line
-        // console.log('optionRegExp: ' + optionRegExp)
-        if (typeof optionsTwo[cOption] === 'string') {
-          renderedString = renderedString.replace(jsOptionRegExp, '"' + optionsTwo[cOption] + '"')
-        } else {
-          renderedString = renderedString.replace(jsOptionRegExp, optionsTwo[cOption])
-        }
+    var jsOptionRegExp = /\{\{\{[^]*?\}\}\}/g //eslint-disable-line
+    var optionRegExp = /(\{\{[^]*?\}\})/g // eslint-disable-line
+    var innerOptionRegExp = /[^{}]+/g
 
-        renderedString = renderedString.replace(optionRegExp, optionsTwo[cOption])
-      }
+    function optionEval (match) {
+      console.log("optionMatch: " + match)
+      var innerOptionContent = match.match(innerOptionRegExp)[0]
+      console.log("innerOp: " + innerOptionContent);
+      console.log("optionEval return content: " + optionsTwo[innerOptionContent])
+      return optionsTwo[innerOptionContent]
+
     }
+
+    function jsOptionEval (match) {
+      console.log("jsMatch: " + match);
+      var returnOptionContent = match.match(innerOptionRegExp)[0]
+      console.log("innerjsop: " +returnOptionContent);
+      if (typeof optionsTwo[returnOptionContent] === 'string') {
+          console.log("jsreturn: " + "'" + optionsTwo[returnOptionContent] + "'")
+          return "'" + optionsTwo[returnOptionContent] + "'"
+      } else {
+          console.log("jsreturn: " + optionsTwo[returnOptionContent])
+          return optionsTwo[returnOptionContent]
+      }
+
+    }
+
+    renderedString = renderedString.replace(jsOptionRegExp, jsOptionEval);
+    renderedString = renderedString.replace(optionRegExp, optionEval);
+
+
     console.log('renderedString: ' + renderedString)
     return renderedString
   }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{title}}</title>
+  </head>
+  <body>
+    <p>{{message}}</p>
+    <p>This is a {{message}} statement</p>
+    <p>What is your birthday?</p>
+
+    {(truth){
+    <p>truth = true!</p>
+    <p>My birthday is {{birthday}}!</p>
+    {(!secondTruth){
+    <p>secondTruth also = {{secondTruth}}!</p>
+    }**}
+    <div></div>
+    }*}
+
+    {(!untruth){
+    <p>untruth = false!</p>
+    }*}
+
+    <p>content of 1st array object: {{list[0]}}</p>
+    <p>content of object: {{myObject}}</p>
+    <p>object title: {{myObject.objectTitle}}</p>
+    <p>quote test: {{{quote}}}</p>
+    <p id="conditionaltest">hello</p>
+    <script>
+      var quote = {{{quote}}}
+      if ({{{number}}} > 40) {
+      document.getElementById("conditionaltest").innerHTML = "It works!"
+      }
+    </script>
+  </body>
+</html>
