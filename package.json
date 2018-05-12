@@ -1,6 +1,6 @@
 {
   "name": "squirrelly",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "A simple yet powerful modern template engine that works with ExpressJS and as a standalone module.",
   "main": "index.js",
   "scripts": {
