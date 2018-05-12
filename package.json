@@ -1,10 +1,10 @@
 {
   "name": "squirrelly",
   "version": "3.0.0",
-  "description": "A simple yet powerful ExpressJS template engine that works out-of-the-box",
+  "description": "A simple yet powerful modern template engine that works with ExpressJS and standalone.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [
     "express",
@@ -25,7 +25,9 @@
     "url": "https://github.com/nebrelbug/squirrelly/issues"
   },
   "homepage": "https://github.com/nebrelbug/squirrelly#readme",
-  "dependencies": {},
+  "dependencies": {
+    "mocha": "^5.1.1"
+  },
   "devDependencies": {
     "express": "^4.16.3"
   }
