@@ -12,6 +12,7 @@ exports.__express = function (filePath, options, callback) {
 }
 
 exports.returnHTML = function (sqrlstring, opts) {
+    console.time('returnhtml')
     var sqrlstr = sqrlstring
     var options = new Object(opts)
     console.log("options: " + options)
@@ -39,6 +40,7 @@ exports.returnHTML = function (sqrlstring, opts) {
             } else {
                 console.log("result[options]: " + result[options])
                 var parsedOp = options[thisOp]
+                console.log("parsedOp: " + parsedOp)
                 result = result[parsedOp]
                 console.log("result: " + JSON.stringify(result) + "i: " + i)
             }
@@ -87,5 +89,6 @@ exports.returnHTML = function (sqrlstring, opts) {
     whileMatch();
     includeMatch();
     helperMatch();
+    console.timeEnd('returnhtml')
     return sqrlstr;
 }

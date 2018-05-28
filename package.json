@@ -1,7 +1,7 @@
 {
   "name": "squirrelly",
   "version": "3.0.2",
-  "description": "A simple yet powerful modern template engine that works with ExpressJS and as a standalone module.",
+  "description": "A simple yet powerful modern template engine that works in the browser, in Node.js, and with ExpressJS.",
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit"
@@ -17,6 +17,9 @@
   ],
   "author": "Ben Gubler <nebrelbug@gmail.com> (https://bengubler.com)",
   "license": "ISC",
+  "bin": {
+    "squirrelly": "cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nebrelbug/squirrelly.git"
@@ -26,9 +29,10 @@
   },
   "homepage": "https://github.com/nebrelbug/squirrelly#readme",
   "dependencies": {
-    "mocha": "^5.1.1"
+    "colors": "^1.2.5"
   },
   "devDependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "mocha": "^5.1.1"
   }
 }
