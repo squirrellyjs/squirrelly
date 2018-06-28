@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="nnindex.js"></script>
+</head>
+<body>
+<script id="template" type="text/squirrelly">
+    <h1>{{title}}</h1>
+    <p>{{language}}</p>
+</script>
+<script>
+    var source = document.getElementById("template").innerHTML
+    console.time("compiling")
+    var template = Sqrl.Compile(source)
+    //console.log(template.toString())
+    var result = template({title: "MyTitle", language: "English"})
+    var nresult = template({title: "NewTitle", language: "Espanol"})
+    console.timeEnd("compiling")
+    console.log("Result: " + result)
+    console.log("New Result: " + nresult)
+
+</script>
+
+</body>
+</html>
