@@ -28,11 +28,11 @@
     "url": "https://github.com/nebrelbug/squirrelly/issues"
   },
   "homepage": "https://github.com/nebrelbug/squirrelly#readme",
-  "dependencies": {
-    "colors": "^1.2.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "express": "^4.16.3",
+    "google-closure-compiler-js": "^20180610.0.0",
+    "gulp": "^3.9.1",
     "mocha": "^5.1.1"
   }
 }
