@@ -7,22 +7,25 @@
 
 <body>
     <script id="template" type="text/squirrelly">
-        {{If(hello, 3, @hello:4, "HI") 1}} hey
-        {{#else}}
-            hello
-            {{/else}}
-            {{/If 1}}
-            {{hi}} {{@hola}} {{hey}} {{whassup}}
+        {{hi}}
     </script>
     <script>
+        var source2 = "Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}"
         var source = document.getElementById("template").innerHTML
         console.time("compiling")
         var template = Sqrl.Precompile(source)
         console.timeEnd("compiling")
+        console.time("compiling2")
+        var template2 = Sqrl.Precompile(source2)
+        console.timeEnd("compiling2")
         console.log("Tag Array: ")
         console.log(template.tagArray)
         console.log("Func: ")
         console.log(template.func.toString())
+        console.log("Tag Array2: ")
+        console.log(template2.tagArray)
+        console.log("Func2: ")
+        console.log(template2.func.toString())
         //console.log("New Result: " + nresult)
         function comp() {
             console.time("comp")

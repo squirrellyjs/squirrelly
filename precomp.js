@@ -101,7 +101,7 @@
                 if (m.index > lastMatchIndex) {
                     tagArray.push({
                         kind: "string",
-                        fullmatch: str.slice(lastMatchIndex, m.index),
+                        value: str.slice(lastMatchIndex, m.index),
                     })
                 }
                 if (m[1] === undefined || !m[1]) {
@@ -119,7 +119,7 @@
             if (str.length > lastMatchIndex) {
                 tagArray.push({
                     kind: "string",
-                    fullmatch: str.slice(lastMatchIndex, str.length)
+                    value: str.slice(lastMatchIndex, str.length)
                 })
             }
             return tagArray
@@ -127,6 +127,8 @@
         /*End of parseHelperRefs*/
         /*To parse the string into blocks: helpers and not helpers, after which it'll get parsed into refs and strings*/
         function parseString(str) {
+            var tagArray = [];
+            var lastMatchIndex = 0;
             while ((m = regexps.helper.exec(str)) !== null) {
                 //p1 is helper name, p2 is helper parameters, p3 helper id, p4 helper first block, p5 everything else inside
                 var name = m[1] || ""
@@ -134,9 +136,6 @@
                 var id = m[3] || ""
                 var firstblock = m[4] || ""
                 var content = m[5] || ""
-
-                var tagArray = [];
-                var lastMatchIndex = 0;
 
                 if (m.index > lastMatchIndex) {
                     tagArray.push({
@@ -177,19 +176,39 @@
 
         /*NOW TO PARSE .... */
         var tagArray = parseString(str);
+        //console.log("tagArray is : " + tagArray)
         /*NOW IT'S ALL PARSED HOPEFULLY*/
-        var funcString = ""
+        var funcString = "var templateResult = \"\";"
         for (var i = 0; i < tagArray.length; ++i) {
             var currentBlock = tagArray[i]
             if (currentBlock.kind === "helper") {
                 //The current block is a helper
             } else {
-                for (var j = 0; j < currentBlock.innerRefs.length; j++) {
-                    console.log("The inner block is.... " + JSON.stringify(currentBlock.innerRefs[i]))
+                var globalOrNotBlocks = currentBlock.innerRefs
+                for (var j = 0; j < globalOrNotBlocks.length; j++) {
+                    if (globalOrNotBlocks[j].kind === "globalRef") {
+                        //console.log("It's a global reference: " + globalOrNotBlocks[j].content)
+                    } else {
+                        var helperOrNotBlocks = globalOrNotBlocks[j].innerRefs
+                        for (var k = 0; k < helperOrNotBlocks.length; k++) {
+                            if (helperOrNotBlocks[k].kind === "helperRef") {
+                                //console.log("It's a helper reference. Scope: " + helperOrNotBlocks[k].scope + " , Content: " + helperOrNotBlocks[k].content)
+                            } else {
+                                var stringVal = helperOrNotBlocks[k].value.trim()
+                                if (stringVal !== "") {
+                                    funcString += "templateResult += \"" + stringVal + "\";"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        var func = new Function("options", funcString)
+
+        function addToString() {
+
+        }
+        var func = new Function("options", funcString + "return templateResult;")
         return {
             tagArray: tagArray,
             func: func
