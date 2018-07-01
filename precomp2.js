@@ -23,7 +23,6 @@
     Sqrl.Partials = {} //For partials
     Sqrl.Layouts = {} //For layouts
     Sqrl.Helper = function (name, callback) {
-        //console.log("Helper added!")
         Sqrl.Helpers[name] = callback
     }
     Sqrl.Utils.EscMap = {
@@ -46,6 +45,7 @@
         comment: /{{!--\w*--}}/g, //Comment regexp
         parameterGlobalRef: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\d(?:\.)?\d*|[[.@]\w+|(\w+)/g, //Parameter is a Global ref
         parameterHelperRef: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g, //To tell if a parameter is a helper ref p1 scope, p2 is ref
+        trim: /^ +| +$/gm
     }
 
     Sqrl.Compiler.SetTags = function (otag, ctag) {
@@ -57,77 +57,72 @@
         return String(string).replace(
             /[&<>"'`=\/]/g,
             function fromEscMap(s) {
-                return escMap[s]
+                return Sqrl.Utils.EscMap[s]
             }
         )
     }
 
     Sqrl.Precompile = function (str) {
+        var funcString = "var templateResult = \"\";"
         var regexps = Sqrl.Compiler.RegExps
         /*To separate all non-helper blocks of text into global refs and not global refs. I'll probably make this more efficient sometime...*/
         function parseGlobalRefs(str) {
-            var tagArray = [];
             var lastMatchIndex = 0;
             while ((m = regexps.globalRef.exec(str)) !== null) {
-                var content = m[1]
-                if (m.index > lastMatchIndex) {
-                    tagArray.push({
-                        kind: "nonGlobalRef",
-                        innerRefs: parseHelperRefs(str.slice(lastMatchIndex, m.index))
-                    })
+                var content = m[1].trim()
+                if (m.index > lastMatchIndex) { //Block before the first match, in between each of the matches
+                    //console.time("parseHRefs")
+                    parseHelperRefs(str.slice(lastMatchIndex, m.index))
+                    //console.timeEnd("parseHRefs")
                 }
-                tagArray.push({
-                    kind: "globalRef",
-                    content: content
-                })
+                if (content !== "") {
+                    funcString += "templateResult = templateResult + options." + content + ";"
+                }
                 lastMatchIndex = regexps.globalRef.lastIndex
             }
-            if (str.length > lastMatchIndex) {
-                tagArray.push({
-                    kind: "nonGlobalRef",
-                    innerRefs: parseHelperRefs(str.slice(lastMatchIndex, str.length))
-                })
+            if (str.length > lastMatchIndex) { //Block after the last match
+                //console.time("parseHRefs2")
+                parseHelperRefs(str.slice(lastMatchIndex, str.length))
+                //console.timeEnd("parseHRefs2")
+
             }
-            return tagArray
         }
         /*End of parseGlobalRefs*/
 
         /*To separate all non-global refs into helper refs and strings*/
         function parseHelperRefs(str) {
-            var tagArray = [];
             var lastMatchIndex = 0;
             while ((m = regexps.helperRef.exec(str)) !== null) {
-                var content = m[2]
-                if (m.index > lastMatchIndex) {
-                    tagArray.push({
-                        kind: "string",
-                        value: str.slice(lastMatchIndex, m.index),
-                    })
+                var content = m[2].trim()
+                if (m.index > lastMatchIndex) { //Block before first match
+                    var stringVal = str.slice(lastMatchIndex, m.index).trim()
+                    if (stringVal !== "") {
+                        funcString += "templateResult += \"" + stringVal + "\";"
+                    }
                 }
                 if (m[1] === undefined || !m[1]) {
                     var scope = ""
                 } else {
                     var scope = m[1]
                 }
-                tagArray.push({
+                funcString += "templateResult += namespaces[\"" + scope + "\"]." + content + ";"
+                /*tagArray.push({
                     kind: "helperRef",
                     content: content,
                     scope: scope
-                })
+                })*/
                 lastMatchIndex = regexps.helperRef.lastIndex
             }
-            if (str.length > lastMatchIndex) {
-                tagArray.push({
-                    kind: "string",
-                    value: str.slice(lastMatchIndex, str.length)
-                })
+            if (str.length > lastMatchIndex) { //And block after last match
+                var stringVal = str.slice(lastMatchIndex, str.length).trim()
+                if (stringVal !== "") {
+                    funcString += "templateResult += \"" + stringVal + "\";"
+                }
             }
-            return tagArray
         }
         /*End of parseHelperRefs*/
         /*To parse the string into blocks: helpers and not helpers, after which it'll get parsed into refs and strings*/
         function parseString(str) {
-            var tagArray = [];
             var lastMatchIndex = 0;
             while ((m = regexps.helper.exec(str)) !== null) {
                 //p1 is helper name, p2 is helper parameters, p3 helper id, p4 helper first block, p5 everything else inside
@@ -136,14 +131,8 @@
                 var id = m[3] || ""
                 var firstblock = m[4] || ""
                 var content = m[5] || ""
-
-                if (m.index > lastMatchIndex) {
-                    tagArray.push({
-                        kind: "nonhelper",
-                        innerRefs: parseGlobalRefs(str.slice(lastMatchIndex, m.index))
-                    })
-                }
-                tagArray.push({
+                parseGlobalRefs(str.slice(lastMatchIndex, m.index))
+                /*tagArray.push({
                     kind: "helper",
                     name: name,
                     params: "[" + params.replace(regexps.parameterGlobalRef, function (match, p1) {
@@ -161,61 +150,21 @@
                     id: id,
                     firstblock: firstblock,
                     content: content
-                })
+                })*/
                 lastMatchIndex = regexps.helper.lastIndex
             }
 
             if (str.length > lastMatchIndex) {
-                tagArray.push({
-                    kind: "nonhelper",
-                    innerRefs: parseGlobalRefs(str.slice(lastMatchIndex, str.length))
-                })
-            }
-            return tagArray
-        }
-
-        /*NOW TO PARSE .... */
-        var tagArray = parseString(str);
-        //console.log("tagArray is : " + tagArray)
-        /*NOW IT'S ALL PARSED HOPEFULLY*/
-        var funcString = "var templateResult = \"\";"
-        for (var i = 0; i < tagArray.length; ++i) {
-            var currentBlock = tagArray[i]
-            if (currentBlock.kind === "helper") {
-                //The current block is a helper
-            } else {
-                var globalOrNotBlocks = currentBlock.innerRefs
-                for (var j = 0; j < globalOrNotBlocks.length; j++) {
-                    if (globalOrNotBlocks[j].kind === "globalRef") {
-                        var globalVal = globalOrNotBlocks[j].content.trim()
-                        if (globalVal !== "") {
-                            funcString+="templateResult = templateResult + options." + globalVal + ";"
-                        }
-                    } else {
-                        var helperOrNotBlocks = globalOrNotBlocks[j].innerRefs
-                        for (var k = 0; k < helperOrNotBlocks.length; k++) {
-                            if (helperOrNotBlocks[k].kind === "helperRef") {
-                                //console.log("It's a helper reference. Scope: " + helperOrNotBlocks[k].scope + " , Content: " + helperOrNotBlocks[k].content)
-                            } else {
-                                var stringVal = helperOrNotBlocks[k].value.trim()
-                                if (stringVal !== "") {
-                                    funcString += "templateResult += \"" + stringVal + "\";"
-                                }
-                            }
-                        }
-                    }
-                }
+                parseGlobalRefs(str.slice(lastMatchIndex, str.length))
             }
         }
+        parseString(str)
 
         function addToString() {
 
         }
         var func = new Function("options", funcString + "return templateResult;")
-        return {
-            tagArray: tagArray,
-            func: func
-        }
+        return func
     }
 
     if (typeof fs !== "undefined" && fs !== null) {

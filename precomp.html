@@ -2,39 +2,47 @@
 <html>
 
 <head>
-    <script src="precomp.js"></script>
+    <script src="precomp2.js"></script>
 </head>
 
 <body>
     <script id="template" type="text/squirrelly">
         {{hi}}
+
+        {{language}}
+        {{parent.child}}
+        {{parent.otherchild}}
     </script>
     <script>
         var source2 = "Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}"
         var source = document.getElementById("template").innerHTML
         console.time("compiling")
-        var template = Sqrl.Precompile(source)
+        var template = Sqrl.Precompile(source2)
         console.timeEnd("compiling")
-        console.time("compiling2")
+        /*console.time("compiling2")
         var template2 = Sqrl.Precompile(source2)
-        console.timeEnd("compiling2")
-        console.log("Tag Array: ")
-        console.log(template.tagArray)
+        console.timeEnd("compiling2")*/
         console.log("Func: ")
-        console.log(template.func.toString())
-        console.log("Tag Array2: ")
+        console.log(template.toString())
+        console.log(template({whassup: "yeah", hi: "hola"}))
+        /*console.log("Tag Array2: ")
         console.log(template2.tagArray)
         console.log("Func2: ")
-        console.log(template2.func.toString())
+        console.log(template2.func.toString())*/
         //console.log("New Result: " + nresult)
         function comp() {
-            console.time("comp")
+            /*console.time("comp")
             let newtemplate = Sqrl.Precompile(source)
-            console.timeEnd("comp")
-            console.log("Tag Array: ")
+            console.timeEnd("comp")*/
+            console.time("comp2")
+            let newtemplate2 = Sqrl.Precompile(source2)
+            let result = newtemplate2({whassup: "Hello", hi: "Aloha"})
+            console.timeEnd("comp2")
+            console.log("result is : " + result)
+            /*console.log("Tag Array: ")
             console.log(newtemplate.tagArray)
-            console.log("Func: ")
-            console.log(newtemplate.func.toString())
+            console.log("Func: ")*/
+            console.log(newtemplate2.toString())
         }
     </script>
     <button onclick="comp()">Compile</button>
