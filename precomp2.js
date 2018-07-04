@@ -25,24 +25,60 @@
     Sqrl.Helper = function (name, callback) {
         Sqrl.Helpers[name] = callback
     }
-    Sqrl.Utils.EscMap = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-        "/": "&#x2F;",
-        "`": "&#x60;",
-        "=": "&#x3D;"
+    Sqrl.Str = function (thing) { /*To make it more safe...I'll probably have people opt in for performance though*/
+        if (typeof thing === "string") {
+            return thing
+        } else if (typeof thing === "object") {
+            return JSON.stringify(thing)
+        } else {
+            return thing.toString()
+        }
     }
+
+    Sqrl.Render = function (template, options) {
+        return template(options, Sqrl)
+    }
+
+    Sqrl.defaultFilters = { //All strings are automatically passed through the "d" filter (stands for default, but is shortened to save space)
+        //, and then each of the default filters the user
+        //Has set to true. This opens up a realm of possibilities like autoEscape, etc.
+        //List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names
+        e: false //Escape is turned off by default for performance
+    }
+
+    Sqrl.autoEscape = function (bool) {
+        if (bool) {
+            Sqrl.defaultFilters.e = true
+        } else {
+            Sqrl.defaultFilters.e = false
+        }
+    }
+    Sqrl.Filters = {
+        d: function (str) {
+            return str
+        },
+        e: function (str) {
+            return String(str).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&#39;").replace("/", "&#x2F;").replace("`", "&#x60;").replace("=", "&#x3D;")
+        },
+        reverse: function (str) {
+            var out = "";
+            for (var i = str.length - 1; i >= 0; i--) {
+                out += str.charAt(i);
+            }
+            return out || str
+        }
+    }
+
+    Sqrl.Filters.escape = Sqrl.Filters.e
+
 
     Sqrl.Compiler.RegExps = {
         /*These are the default RegExps, when the tag isn't changed*/
         helperRef: /{{\s*@(?:([\w$]*):)?\s*(.+?)\s*}}/g, //Helper Reference (with a @)
-        globalRef: /{{\s*?([^#@.\(\\/]+?(?:[.[].*?)*?)}}/g, //Global reference (No prefix)
+        globalRef: /{{\s*?([^#@.\(\\/]+?(?:[.[].*?)*?)((?:\|[\w$]+?)*)}}/g, //Global reference (No prefix), supports filters
         helper: /{{ *?([\w$]+) *?\(([^\n]*)\) *?([\w$]*) *?}}([^]*?)((?:{{ *?# *?[\w$]* *?}}[^]*)*){{ *?\/ *?\1 *? \3 *?}}/g, //Helper
         helperBlock: /{{ *?# *?(\w*) *?}}([^]*){{ *?\/ *?\1 *?}}(?:\s*{{!--[\w$\s]*--}}\s*)*/g, //Helper block
-        comment: /{{!--\w*--}}/g, //Comment regexp
+        comment: /{{!--[^]*?--}}/g, //Comment regexp
         parameterGlobalRef: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\d(?:\.)?\d*|[[.@]\w+|(\w+)/g, //Parameter is a Global ref
         parameterHelperRef: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g, //To tell if a parameter is a helper ref p1 scope, p2 is ref
         trim: /^ +| +$/gm
@@ -52,31 +88,36 @@
         /*TODO*/
     }
 
-    Sqrl.Utils.EscapeHTML = function (string) {
-        //To deal with XSS. I borrowed the function from Mustache.JS
-        return String(string).replace(
-            /[&<>"'`=\/]/g,
-            function fromEscMap(s) {
-                return Sqrl.Utils.EscMap[s]
-            }
-        )
-    }
-
     Sqrl.Precompile = function (str) {
-        var funcString = "var templateResult = \"\";"
+        var funcString = "\"use strict\";var tmpltRes=\"\";Sqrl.F=Sqrl.Filters;"
         var regexps = Sqrl.Compiler.RegExps
         /*To separate all non-helper blocks of text into global refs and not global refs. I'll probably make this more efficient sometime...*/
         function parseGlobalRefs(str) {
             var lastMatchIndex = 0;
             while ((m = regexps.globalRef.exec(str)) !== null) {
-                var content = m[1].trim()
+                var content = m[1]
+                var filters = m[2]
                 if (m.index > lastMatchIndex) { //Block before the first match, in between each of the matches
                     //console.time("parseHRefs")
                     parseHelperRefs(str.slice(lastMatchIndex, m.index))
                     //console.timeEnd("parseHRefs")
                 }
                 if (content !== "") {
-                    funcString += "templateResult = templateResult + options." + content + ";"
+                    var returnStr = "Sqrl.F.d(options." + content + ")||\"\""
+                    for (key in Sqrl.defaultFilters) {
+                        if (Sqrl.defaultFilters[key] === true) {
+                            returnStr = "Sqrl.F." + key + "(" + returnStr + ")"
+                        }
+                    }
+                    if (typeof filters !== 'undefined' && filters !== null) {
+                        var filtersArray = filters.split("|")
+                        for (var i = 1; i < filtersArray.length; i++) {
+                            returnStr = "Sqrl.F." + filtersArray[i] + "(" + returnStr + ")"
+                        }
+                        funcString += "tmpltRes+=" + returnStr + ";"
+                    } else {
+                        funcString += returnStr
+                    }
                 }
                 lastMatchIndex = regexps.globalRef.lastIndex
             }
@@ -93,19 +134,21 @@
         function parseHelperRefs(str) {
             var lastMatchIndex = 0;
             while ((m = regexps.helperRef.exec(str)) !== null) {
-                var content = m[2].trim()
+                var content = m[2]
                 if (m.index > lastMatchIndex) { //Block before first match
-                    var stringVal = str.slice(lastMatchIndex, m.index).trim()
+                    var stringVal = str.slice(lastMatchIndex, m.index) //.replace(/\n/g, "\\\n")
                     if (stringVal !== "") {
-                        funcString += "templateResult += \"" + stringVal + "\";"
+                        funcString += "tmpltRes+=\"" + stringVal + "\";"
                     }
                 }
                 if (m[1] === undefined || !m[1]) {
                     var scope = ""
+                    funcString += "tmpltRes+=Sqrl.hvals.c." + content + ";" //hvals stands for helper values (their own namespaces) and "c" for current. Trying to keep space down
                 } else {
                     var scope = m[1]
+                    funcString += "tmpltRes+=Sqrl.hvals.c." + scope + "." + content + ";"
+
                 }
-                funcString += "templateResult += namespaces[\"" + scope + "\"]." + content + ";"
                 /*tagArray.push({
                     kind: "helperRef",
                     content: content,
@@ -114,15 +157,16 @@
                 lastMatchIndex = regexps.helperRef.lastIndex
             }
             if (str.length > lastMatchIndex) { //And block after last match
-                var stringVal = str.slice(lastMatchIndex, str.length).trim()
+                var stringVal = str.slice(lastMatchIndex, str.length) //.replace(/\n/g, "\\\n")
                 if (stringVal !== "") {
-                    funcString += "templateResult += \"" + stringVal + "\";"
+                    funcString += "tmpltRes+=\"" + stringVal + "\";"
                 }
             }
         }
         /*End of parseHelperRefs*/
         /*To parse the string into blocks: helpers and not helpers, after which it'll get parsed into refs and strings*/
-        function parseString(str) {
+        function parseString(strng) {
+            var str = strng.replace(regexps.comment, "") //.replace(/\n/g, "\\n").replace(/\"/g, "\\\"")
             var lastMatchIndex = 0;
             while ((m = regexps.helper.exec(str)) !== null) {
                 //p1 is helper name, p2 is helper parameters, p3 helper id, p4 helper first block, p5 everything else inside
@@ -160,10 +204,7 @@
         }
         parseString(str)
 
-        function addToString() {
-
-        }
-        var func = new Function("options", funcString + "return templateResult;")
+        var func = new Function("options", "Sqrl", funcString.replace(/\n/g, "\\n").replace(/\r/g, "\\r") + "return tmpltRes;")
         return func
     }
 

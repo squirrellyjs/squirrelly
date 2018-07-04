@@ -2,7 +2,7 @@ var gulp = require('gulp');
 const compiler = require('google-closure-compiler-js').gulp();
 
 gulp.task('compress', function() {
-  return gulp.src('./precomp.js', {base: './'})
+  return gulp.src('./precomp2.js', {base: './'})
       // your other steps here
       .pipe(compiler({
           compilationLevel: 'SIMPLE',
