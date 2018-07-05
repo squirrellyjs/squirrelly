@@ -2,95 +2,74 @@
 <html>
 
 <head>
-    <script src="nnindex.js"></script>
+    <script src="precomp2.js"></script>
 </head>
 
 <body>
+    <div id="result1"></div>
+    <p>--------------------</p>
+    <div id="result2"></div>
+    <p>--------------------</p>
+
     <script id="template" type="text/squirrelly">
-        <h1>{{title}}</h1>
-        <p>{{language}}</p>
-        <p>{{whassup}}
-        {{If("Hi", whassup, 3, 5, 3) 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
-        {{If("Hi") 1}}
-        Hi
-        {{/If 1}}
+        <div>
+            {{A|reverse}} {{B|reverse}} {{C|reverse}} {{D|reverse}} {{E|reverse}}
+        </div>
     </script>
     <script>
-        Sqrl.Helper("If", function (args, content, blocks, options) {
-            /*var ifResult = Function("var options = " + JSON.stringify(options) + ";if(" + args[0] +
-                "){return true}else{return false}")
-            console.log("ifResult: " + ifResult)
-            ifResult = ifResult()
-            if (ifResult) {
-                return content
-            } else {
-                return blocks.selse
-            }*/
-            return "IF called!!!!"
-        })
+        var source2 =
+            "Yo this is hola its a pretty cool thing so Ill say {{whassup|escaped}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}"
         var source = document.getElementById("template").innerHTML
-        console.time("compiling")
-        var template = Sqrl.Precompile(source)
-        //console.log(template.toString())
-        /*var result = template({
-            title: "MyTitle",
-            language: "English",
-            whassup: "Hey"
-        })*/
-        //var nresult = template({title: "NewTitle", language: "Espanol"})
-        console.log(template)
-        console.timeEnd("compiling")
-        console.log("Result: " + result)
-        //console.log("New Result: " + nresult)
-        function comp() {
-            console.time("comp")
-            let template = Sqrl.Precompile(source)
-            /*let result = template({
-                title: "MyTitle",
-                language: "English",
-                whassup: "Hey"
-            })*/
-            console.timeEnd("comp")
-            console.log("Compiled")
+        //var template = Sqrl.Precompile("{{hello}}       {{array}}{{!--this is a comment--}}")
+        comp1()
+        //comp2()
+
+        function comp1() {
+            console.time("comp1")
+            let newtemplate = Sqrl.Precompile(source)
+            console.timeEnd("comp1")
+            let result = Sqrl.Render(newtemplate, {
+                A: "HI"
+            })
+            document.getElementById("result1").innerHTML = result
+            console.log("Function returned by comp1: ")
+            console.log(newtemplate.toString())
+        }
+
+        function comp2() {
+            console.time("comp2")
+            let newtemplate2 = Sqrl.Precompile(source2)
+            let result = Sqrl.Render(newtemplate2, {
+                whassup: "<p>whassup</p>",
+                hi: "hola"
+            })
+            console.timeEnd("comp2")
+            document.getElementById("result2").innerHTML = result
+            console.log("Function returned by comp2: ")
+            console.log(newtemplate2.toString())
+
         }
     </script>
-    <button onclick="comp()">Compile</button>
+    <button onclick="comp1()">Compile</button>
+    <button onclick="comp2()">Compile 2nd</button>
+    <textarea oninput="comp()" id="input"></textarea>
+    <div id="output"></div>
+    <script>
+        function comp() {
+            console.time("comp")
+            let newtemplatefunction = Sqrl.Precompile(document.getElementById("input").value)
+            /*let result = newtemplate2({
+                whassup: "what'sup",
+                hi: "hola"
+            })*/
+            console.timeEnd("comp")
+            document.getElementById("output").innerHTML = newtemplatefunction
+            console.log("Function returned by comp2: ")
+            console.log(newtemplatefunction.toString())
 
+        }
+        comp()
+    </script>
 </body>
 
 </html>

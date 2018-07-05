@@ -4,6 +4,9 @@
 
 Squirrelly is a modern template engine supporting ExpressJS, in-browser functions, and even use as a standalone Node.JS module! 
 
+
+## Note: there's a HUGE redesign on the way. Much of the syntax below may not work anymore, but I believe that the new syntax will be cleaner, WAY faster, and more powerful.
+
 Note: right now only basic option pass-ins are supported but all of the features described below are expected to be rolled out in the coming months.
 ## Table of Contents
 [**Usage**](#usage)
