@@ -93,8 +93,8 @@
     /*IMPORTANT PARSING FUNCTIONS*/
     /*To separate all non-helper blocks of text into global refs and not global refs. I'll probably make this more efficient sometime...*/
     /*To parse the string into blocks: helpers and not helpers, after which it'll get parsed into refs and strings*/
-    function parseString(strng, varName) {
-        var regexps = Sqrl.Compiler.RegExps
+    function parseString(strng, varName, regexps) {
+        regexps = regexps || Sqrl.Compiler.RegExps
         var funcString = "var " + varName + "=\"\";"
         var str = strng.replace(regexps.comment, "").replace(/\"/g, "\\\"")
         var lastMatchIndex = 0;
@@ -106,12 +106,22 @@
             var firstblock = m[4] || ""
             var content = m[5] || ""
             funcString = parseGlobalRefs(str.slice(lastMatchIndex, m.index), varName, funcString, regexps)
+            //console.log("after GParse: " + funcString)
+            if (firstblock !== "") {
+                lastMatchIndex = regexps.helper.lastIndex
+                funcString += name + id + "={name: \"" + name + "\", id: \"" + id + "\", blocks: {default: function (hvals, hvals" + id + ") {" + parseString(firstblock || "", "block" + id + name) + "}}};"
+                break;
+            }
             lastMatchIndex = regexps.helper.lastIndex
         }
 
         if (str.length > lastMatchIndex) {
+            //console.log("before GParse2: " + funcString)
             funcString = parseGlobalRefs(str.slice(lastMatchIndex, str.length), varName, funcString, regexps)
+            //console.log("after GParse2: " + funcString)
+
         }
+        //console.log("right before the end: " + funcString)
         return funcString
     }
 
@@ -135,7 +145,7 @@
                     for (var i = 1; i < filtersArray.length; i++) {
                         returnStr = "Sqrl.F." + filtersArray[i] + "(" + returnStr + ")"
                     }
-                    funcString += varName+ "+=" + returnStr + ";"
+                    funcString += varName + "+=" + returnStr + ";"
                 } else {
                     funcString += varName + "+=" + returnStr + ";"
                 }
@@ -181,7 +191,8 @@
     /*END OF IMPORTANT PARSING FUNCTIONS*/
 
     Sqrl.Precompile = function (str) {
-        var funcString = parseString(str, "tRes", "")
+        var funcString = parseString(str, "tRes")
+        //console.log("funcString is now: " + funcString)
         var regexps = Sqrl.Compiler.RegExps
 
         var func = new Function("options", "Sqrl", funcString.replace(/\n/g, "\\n").replace(/\r/g, "\\r") + "return tRes;")
