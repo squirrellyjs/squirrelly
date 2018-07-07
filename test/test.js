@@ -1,8 +1,8 @@
 var assert = require('assert');
-var squirrelly = require('../index.js')
+var Sqrl = require('../index.js')
 
-describe('ReturnHTML', function() {
+describe('Precompilation', function() {
     it('Should return correct parsed value', function() {
-      assert.equal(squirrelly.returnHTML('{{title}}', {title: 'squirrelly is awesome'}), 'squirrelly is awesome');
+      assert.equal(Sqrl.Render(Sqrl.Precompile('{{title}}'), {title: 'squirrelly is awesome'}), 'squirrelly is awesome');
     });
 });

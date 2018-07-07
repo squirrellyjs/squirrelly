@@ -19,8 +19,10 @@
     Sqrl.Utils = {} //For user-accessible ones
     Sqrl.Compiler = {} //For RegExp's, etc.
     Sqrl.Helpers = {} //For helpers, their namespaces
+    Sqrl.H = Sqrl.Helpers
     /*These two are technically just helpers, but in Squirrelly they're 1st-class citizens.*/
     Sqrl.Partials = {} //For partials
+    Sqrl.P = Sqrl.Partials
     Sqrl.Layouts = {} //For layouts
     Sqrl.Helper = function (name, callback) {
         Sqrl.Helpers[name] = callback
@@ -70,18 +72,18 @@
     }
 
     Sqrl.Filters.escape = Sqrl.Filters.e
-
+    Sqrl.F = Sqrl.Filters
 
     Sqrl.Compiler.RegExps = {
         /*These are the default RegExps, when the tag isn't changed*/
         helperRef: /{{\s*@(?:([\w$]*):)?\s*(.+?)\s*}}/g, //Helper Reference (with a @)
         globalRef: /{{\s*?([^#@.\(\\/]+?(?:[.[].*?)*?)((?:\|[\w$]+?)*)}}/g, //Global reference (No prefix), supports filters
-        helper: /{{ *?([\w$]+) *?\(([^\n]*)\) *?([\w$]*) *?}}([^]*?)((?:{{ *?# *?[\w$]* *?}}[^]*)*){{ *?\/ *?\1 *? \3 *?}}/g, //Helper
+        helper: /{{ *?([\w$]+) *?\(([^\n]*)\) *?([\w$]*) *?}}([^]*?)((?:{{ *?# *?([\w$]*) *?}}[^]*{{ *?\/ *?\6 *?}}\s*)*){{ *?\/ *?\1 *? \3 *?}}/g, //Helper
         helperBlock: /{{ *?# *?(\w*) *?}}([^]*){{ *?\/ *?\1 *?}}(?:\s*{{!--[\w$\s]*--}}\s*)*/g, //Helper block
         comment: /{{!--[^]*?--}}/g, //Comment regexp
         parameterGlobalRef: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\d(?:\.)?\d*|[[.@]\w+|(\w+)/g, //Parameter is a Global ref
         parameterHelperRef: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g, //To tell if a parameter is a helper ref p1 scope, p2 is ref
-        trim: /^ +| +$/gm
+        partial: /{{ *?(?:> *?([\w$]+)|include *?([\w$]+)) *?}}/g //To, obviously, get partials. Can be like {{>partial}} or {{include partial}}
     }
 
     Sqrl.Compiler.SetTags = function (otag, ctag) {
@@ -89,7 +91,7 @@
     }
 
     Sqrl.Precompile = function (str) {
-        var funcString = "\"use strict\";var tmpltRes=\"\";Sqrl.F=Sqrl.Filters;"
+        var funcString = "var tmpltRes=\"\";"
         var regexps = Sqrl.Compiler.RegExps
         /*To separate all non-helper blocks of text into global refs and not global refs. I'll probably make this more efficient sometime...*/
         function parseGlobalRefs(str) {
@@ -116,7 +118,7 @@
                         }
                         funcString += "tmpltRes+=" + returnStr + ";"
                     } else {
-                        funcString += returnStr
+                        funcString += "tmpltRes+=" + returnStr + ";"
                     }
                 }
                 lastMatchIndex = regexps.globalRef.lastIndex
@@ -166,7 +168,7 @@
         /*End of parseHelperRefs*/
         /*To parse the string into blocks: helpers and not helpers, after which it'll get parsed into refs and strings*/
         function parseString(strng) {
-            var str = strng.replace(regexps.comment, "") //.replace(/\n/g, "\\n").replace(/\"/g, "\\\"")
+            var str = strng.replace(regexps.comment, "").replace(/\"/g, "\\\"")
             var lastMatchIndex = 0;
             while ((m = regexps.helper.exec(str)) !== null) {
                 //p1 is helper name, p2 is helper parameters, p3 helper id, p4 helper first block, p5 everything else inside

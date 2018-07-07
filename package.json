@@ -2,7 +2,7 @@
   "name": "squirrelly",
   "version": "3.0.2",
   "description": "A simple yet powerful modern template engine that works in the browser, in Node.js, and with ExpressJS.",
-  "main": "index.js",
+  "main": "nnindex.js",
   "scripts": {
     "test": "mocha --exit"
   },
