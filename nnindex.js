@@ -24,7 +24,10 @@
     Sqrl.Partials = {} //For partials
     Sqrl.P = Sqrl.Partials
     Sqrl.Layouts = {} //For layouts
-    Sqrl.Helper = function (name, callback) {
+    Sqrl.registerLayout = function (name, callback) {
+
+    }
+    Sqrl.registerHelper = function (name, callback) {
         Sqrl.Helpers[name] = callback
     }
     Sqrl.Str = function (thing) { /*To make it more safe...I'll probably have people opt in for performance though*/
@@ -74,6 +77,25 @@
     Sqrl.Filters.escape = Sqrl.Filters.e
     Sqrl.F = Sqrl.Filters
 
+    Sqrl.builtInHelpers = {
+        if: function (regexps, params, blocks) {
+            var returnFunc = "if(" + params[0] + "){return '" + blocks.default({
+                hi: "hi"
+            }) + "'}else{"
+            if (typeof content !== 'undefined') {
+                content.replace(regexps.helperBlock, function (m, p1, p2) {
+                    if (p1 === "else") {
+                        returnFunc += p2
+                    }
+                })
+            }
+            returnFunc += "}"
+            return returnFunc
+        },
+    }
+
+    //console.log("if: " + Sqrl.builtInHelpers.if(Sqrl.Compiler.RegExps, ["hello === 3"], {default: function(opts) {return "hi"}}))
+
     Sqrl.Compiler.RegExps = {
         /*These are the default RegExps, when the tag isn't changed*/
         helperRef: /{{\s*@(?:([\w$]*):)?\s*(.+?)\s*}}/g, //Helper Reference (with a @)
@@ -106,22 +128,41 @@
             var firstblock = m[4] || ""
             var content = m[5] || ""
             funcString = parseGlobalRefs(str.slice(lastMatchIndex, m.index), varName, funcString, regexps)
-            //console.log("after GParse: " + funcString)
-            if (firstblock !== "") {
-                lastMatchIndex = regexps.helper.lastIndex
-                funcString += name + id + "={name: \"" + name + "\", id: \"" + id + "\", blocks: {default: function (hvals, hvals" + id + ") {" + parseString(firstblock || "", "block" + id + name) + "}}};"
-                break;
+
+            function createBlockFunction(name, id, content) {
+                var returnFunc = name + ": function (helpervals) {"
+                returnFunc += "var helpervals" + id + "=helpervals;" + parseString(content || "", "block" + name + id) + "}"
+                return returnFunc
             }
+            //if (firstblock !== "") { Don't think I need this protection?
+            lastMatchIndex = regexps.helper.lastIndex
+            funcString += name + id + "={name: \"" + name + "\", id: \"" + id + "\", params: [" + params.replace(regexps.parameterGlobalRef, function (match, p1) {
+                if (p1 === undefined || !p1) return match;
+                else return "options." + p1;
+            }).replace(regexps.parameterHelperRef, function (match, p1, p2) { //p1 scope, p2 string
+                if (typeof p1 === 'undefined') {
+                    p1 = ""
+                }
+                if (typeof p2 === 'undefined') return match;
+                else return "helpervals" + p1 + "." + p2;
+            }) + "], blocks: {";
+            funcString += createBlockFunction("default", id, firstblock).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
+            while ((m2 = regexps.helperBlock.exec(content)) !== null) {
+                console.log("innerStuff is: " + m2[2])
+                funcString += ","+createBlockFunction(m2[1], id, m2[2]).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
+            }
+            funcString += "}};"
+
+
+            break;
+            //}
             lastMatchIndex = regexps.helper.lastIndex
         }
 
         if (str.length > lastMatchIndex) {
-            //console.log("before GParse2: " + funcString)
             funcString = parseGlobalRefs(str.slice(lastMatchIndex, str.length), varName, funcString, regexps)
-            //console.log("after GParse2: " + funcString)
-
         }
-        //console.log("right before the end: " + funcString)
+        funcString += "return " + varName
         return funcString
     }
 
@@ -195,7 +236,7 @@
         //console.log("funcString is now: " + funcString)
         var regexps = Sqrl.Compiler.RegExps
 
-        var func = new Function("options", "Sqrl", funcString.replace(/\n/g, "\\n").replace(/\r/g, "\\r") + "return tRes;")
+        var func = new Function("options", "Sqrl", funcString.replace(/\n/g, "\\n").replace(/\r/g, "\\r"))
         return func
     }
 

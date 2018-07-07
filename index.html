@@ -21,7 +21,7 @@
             "Yo this is hola its a pretty cool thing so Ill say {{whassup|escaped}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}"
         var source = document.getElementById("template").innerHTML
         //var template = Sqrl.Precompile("{{hello}}       {{array}}{{!--this is a comment--}}")
-        comp1()
+        //comp1()
         //comp2()
 
         function comp1() {
@@ -52,11 +52,10 @@
     </script>
     <button onclick="comp1()">Compile</button>
     <button onclick="comp2()">Compile 2nd</button>
-    <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">he{{ If(usercount === 3) 1}}
-
-        d
-        do
-        {{/If 1}}</textarea>
+    <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
+he{{ If(usercount === 3) 1}}
+hi
+{{/If 1}}</textarea>
     <div id="output"></div>
     <script>
         function comp() {
