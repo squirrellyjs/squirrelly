@@ -18,7 +18,15 @@
     var Sqrl = {} //For all of the functions
     Sqrl.Utils = {} //For user-accessible ones
     Sqrl.Compiler = {} //For RegExp's, etc.
-    Sqrl.Helpers = {} //For helpers, their namespaces
+    Sqrl.Helpers = { //For helpers, their namespaces
+        If: function (args, content, blocks, options) {
+            if (args[0]) {
+                return content()
+            } else {
+                return blocks.else() || ""
+            }
+        }
+    }
     Sqrl.H = Sqrl.Helpers
     /*These two are technically just helpers, but in Squirrelly they're 1st-class citizens.*/
     Sqrl.Partials = {} //For partials
@@ -123,7 +131,7 @@
         while ((m = regexps.helper.exec(str)) !== null) {
             //p1 is helper name, p2 is helper parameters, p3 helper id, p4 helper first block, p5 everything else inside
             var name = m[1] || ""
-            var params = m[2] || ""
+            var args = m[2] || ""
             var id = m[3] || ""
             var firstblock = m[4] || ""
             var content = m[5] || ""
@@ -136,7 +144,8 @@
             }
             //if (firstblock !== "") { Don't think I need this protection?
             lastMatchIndex = regexps.helper.lastIndex
-            funcString += name + id + "={name: \"" + name + "\", id: \"" + id + "\", params: [" + params.replace(regexps.parameterGlobalRef, function (match, p1) {
+            var helperFuncName = name + id
+            funcString += helperFuncName + "={name: \"" + name + "\", id: \"" + id + "\", args: [" + args.replace(regexps.parameterGlobalRef, function (match, p1) {
                 if (p1 === undefined || !p1) return match;
                 else return "options." + p1;
             }).replace(regexps.parameterHelperRef, function (match, p1, p2) { //p1 scope, p2 string
@@ -152,6 +161,7 @@
                 funcString += ","+createBlockFunction(m2[1], id, m2[2]).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
             }
             funcString += "}};"
+            funcString += varName + "+=Sqrl.H." + name + "(" + helperFuncName + ".args, " + helperFuncName + ".blocks.default, " +  helperFuncName + ".blocks, options);"
 
 
             break;

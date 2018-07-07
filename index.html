@@ -55,16 +55,19 @@
     <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 he{{ If(usercount === 3) 1}}
 hi
+{{#else}}
+himm
+{{/else}}
 {{/If 1}}</textarea>
     <div id="output"></div>
     <script>
         function comp() {
             console.time("comp")
             let newtemplatefunction = Sqrl.Precompile(document.getElementById("input").value)
-            /*let result = newtemplate2({
-                whassup: "what'sup",
-                hi: "hola"
-            })*/
+            let result = newtemplatefunction({
+                usercount: "hi"
+            }, Sqrl)
+            document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")
             document.getElementById("output").innerHTML = newtemplatefunction
             console.log("Function returned by comp2: ")
