@@ -53,14 +53,12 @@
     <button onclick="comp1()">Compile</button>
     <button onclick="comp2()">Compile 2nd</button>
     <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
-he{{ If(usercount === 3) 1}}
-hi
+{{ if(4 === 3) 1}}
+The world is breaking!
 {{#else}}
-himm
+Math still works!
 {{/else}}
-{{/If 1}}
-{{Log("hi") 2}}
-{{/Log 2}}
+{{/if 1}}
 </textarea>
     <div id="output"></div>
     <script>
