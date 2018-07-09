@@ -38,6 +38,7 @@
     }
     Sqrl.registerHelper = function (name, callback) {
         Sqrl.Helpers[name] = callback
+        Sqrl.H = Sqrl.Helpers
     }
     Sqrl.Str = function (thing) { /*To make it more safe...I'll probably have people opt in for performance though*/
         if (typeof thing === "string") {
@@ -105,9 +106,9 @@
 
     Sqrl.Compiler.RegExps = {
         /*These are the default RegExps, when the tag isn't changed*/
-        helperRef: /{{\s*@(?:([\w$]*):)?\s*(.+?)\s*}}/g, //Helper Reference (with a @)
-        globalRef: /{{\s*?([^#@.\(\\/]+?(?:[.[].*?)*?)((?:\|[\w$]+?)*)}}/g, //Global reference (No prefix), supports filters
-        helper: /{{ *?([\w$]+) *?\(([^\n]*)\) *?([\w$]*) *?}}([^]*?)((?:{{ *?# *?([\w$]*) *?}}[^]*{{ *?\/ *?\6 *?}}\s*)*){{ *?\/ *?\1 *? \3 *?}}/g, //Helper
+        helperRef: /{{\s*@(?:([\w$]*):)?\s*(.+?)\s*((?: *?\| *?[\w$]* *?)* *?\|*)}}/g, //Helper Reference (with a @)
+        globalRef: /{{\s*?([^#@.\(\\/]+?(?:[.[].*?)*?)((?: *?\| *?[\w$]* *?)* *?\|*)}}/g, //Global reference (No prefix), supports filters
+        helper: /{{ *?([\w$]+) *?\(([^\n]*)\)((?: *?\| *?[\w$]* *?)* *?\|*) *?([\w$]*) *?}}([^]*?)((?:{{ *?# *?([\w$]*) *?}}[^]*{{ *?\/ *?\7 *?}}\s*)*){{ *?\/ *?\1 *? \4 *?}}/g, //Helper
         helperBlock: /{{ *?# *?(\w*) *?}}([^]*){{ *?\/ *?\1 *?}}(?:\s*{{!--[\w$\s]*--}}\s*)*/g, //Helper block
         comment: /{{!--[^]*?--}}/g, //Comment regexp
         parameterGlobalRef: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\d(?:\.)?\d*|[[.@]\w+|(\w+)/g, //Parameter is a Global ref
@@ -116,7 +117,10 @@
     }
 
     Sqrl.Compiler.SetTags = function (otag, ctag) {
-        /*TODO*/
+        var newRegExps = {
+        
+        }
+        return newRegExps
     }
 
     /*IMPORTANT PARSING FUNCTIONS*/
@@ -127,13 +131,14 @@
         var funcString = "var " + varName + "=\"\";"
         var str = strng.replace(regexps.comment, "")
         var lastMatchIndex = 0;
-        str.replace(regexps.helper, function (m, p1, p2, p3, p4, p5, p6, offset) {
+        str.replace(regexps.helper, function (m, p1, p2, p3, p4, p5, p6, p7, offset) {
             //p1 is helper name, p2 is helper parameters, p3 helper id, p4 helper first block, p5 everything else inside
             var name = p1 || ""
             var args = p2 || ""
-            var id = p3 || ""
-            var firstblock = p4 || ""
-            var content = p5 || ""
+            var filters = p3
+            var id = p4 || ""
+            var firstblock = p5 || ""
+            var content = p6 || ""
             funcString = parseGlobalRefs(str.slice(lastMatchIndex, offset), varName, funcString, regexps)
 
             function createBlockFunction(name, id, content) {

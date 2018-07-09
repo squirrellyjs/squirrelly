@@ -72,7 +72,9 @@ himm
                 return ""
             })
             let result = newtemplatefunction({
-                usercount: "hi"
+                usercount: "hi",
+                name: "Johnny",
+                othername: "Appleseed"
             }, Sqrl)
             document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")
