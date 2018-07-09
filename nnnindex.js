@@ -18,7 +18,7 @@
 	var Sqrl = {} //For all of the functions
 	Sqrl.Utils = {} //For user-accessible ones
 	Sqrl.Compiler = {} //For RegExp's, etc.
-	Sqrl.Helpers = { //For helpers, their namespaces
+	Sqrl.Helpers = { //For helpers, their namespaces: THIS ONE IS POINTLESS BECAUSE IT HAS A NATIVE IMPLEMENTATION IN BUILTINHELPERS
 		If: function (args, content, blocks, options) {
 			if (args[0]) {
 				return content()
@@ -88,15 +88,16 @@
 	Sqrl.F = Sqrl.Filters
 
 	Sqrl.builtInHelpers = {
-		if: function (param, blocks, varName, regexps) {
-			console.log("blocks: " + JSON.stringify(blocks))
-			var returnFunc = "if(" + param + "){" + varName + "+=" + blocks.default + "()}"
+		if: function (param, blocks, varName, regexps, ofilters, cfilters) { //Opening closing filters, like "Sqrl.F.e(Sqrl.F.d(" and "))"
+			var returnFunc = "if(" + param + "){" + varName + "+=" + blocks.default+"()}"
 			if (typeof blocks.else !== 'undefined') {
 				returnFunc += "else { " + varName + "+=" + blocks.else + "()}"
 			}
-			console.log("returnFunc is: " + returnFunc)
 			return returnFunc
 		},
+		each: function (param, blocks, varName, regexps, ofilters, cfilters) {
+
+		}
 	}
 
 	Sqrl.Compiler.RegExps = {
@@ -139,9 +140,10 @@
 			function createBlockFunction(name, id, content) {
 				var returnFunc = "function (helpervals) {"
 				returnFunc += "var helpervals" + id + "=helpervals;" + parseString(content || "", "block" + name + id) + "}"
+				console.log("returnFunc looks like: " + returnFunc)
 				return returnFunc
 			}
-			lastMatchIndex = regexps.helper.lastIndex
+			lastMatchIndex = offset + m.length
 			var helperFuncName = name + id
 			//The following 2 "replace"s are for converting args into array form, converting all helper refs and global refs into options.*, helpervals.*, etc
 			var params = args.replace(regexps.parameterGlobalRef, "options.")
@@ -155,21 +157,20 @@
 						return "helpervals" + p1 + "." + p2
 					}
 				})
-			if (typeof (helperFunc = Sqrl.builtInHelpers[name]) !== 'undefined') {
+			if (Sqrl.builtInHelpers.hasOwnProperty(name)) {
 				blockFunctions = {}
 				blockFunctions.default = createBlockFunction("default", id, firstblock)
-				while ((m2 = regexps.helperBlock.exec(content)) !== null) {
-					var blockName = m2[1]
-					blockFunctions[blockName] = createBlockFunction(blockName, id, m2[2]).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
-				}
-				funcString += helperFunc(params, blockFunctions, varName, regexps)
+				content.replace(regexps.helperBlock, function (m2, mp1, mp2) {
+					blockFunctions[mp1] = createBlockFunction(mp1, id, mp2).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
+				})
+				funcString += Sqrl.builtInHelpers[name](params, blockFunctions, varName, regexps)
 			} else {
 				funcString += "var " + helperFuncName + "={name: \"" + name + "\", id: \"" + id + "\", args: ["
 				funcString += params + "], blocks: {";
 				funcString += 'default :' + createBlockFunction("default", id, firstblock) //.replace(/\n/g, "\\n").replace(/\r/g, "\\r")
-				while ((m2 = regexps.helperBlock.exec(content)) !== null) {
-					funcString += "," + m2[1] + ":" + createBlockFunction(m2[1], id, m2[2]) //.replace(/\n/g, "\\n").replace(/\r/g, "\\r")
-				}
+				content.replace(regexps.helperBlock, function (m2, mp1, mp2) {
+					funcString += "," + mp1 + ":" + createBlockFunction(mp1, id, mp2) //.replace(/\n/g, "\\n").replace(/\r/g, "\\r")
+				})
 				funcString += "}};"
 				funcString += varName + "+=Sqrl.H." + name + "(" + helperFuncName + ".args, " + helperFuncName + ".blocks.default, " + helperFuncName + ".blocks, options);"
 			}
@@ -222,24 +223,23 @@
 	/*To separate all non-global refs into helper refs and strings*/
 	function parseHelperRefs(str, varName, funcString, regexps) {
 		var lastMatchIndex = 0;
-		while ((m = regexps.helperRef.exec(str)) !== null) {
-			var content = m[2]
+		str.replace(regexps.helperRef, function (m, p1, p2, p3, offset) {
+			var content = p2
 			if (offset > lastMatchIndex) { //Block before first match
 				var stringVal = str.slice(lastMatchIndex, offset).replace(/\"/g, "\\\"")
 				if (stringVal !== "") {
 					funcString += varName + "+=\"" + stringVal + "\";"
 				}
 			}
-			if (m[1] === undefined || !m[1]) {
+			if (p1 === undefined || !p1) {
 				var scope = ""
 				funcString += varName + "+=helpervals." + content + ";" //hvals stands for helper values (their own namespaces) and "c" for current. Trying to keep space down
 			} else {
-				var scope = m[1]
+				var scope = p1
 				funcString += varName + "+=helpervals" + scope + "." + content + ";"
-
 			}
-			lastMatchIndex = regexps.helperRef.lastIndex
-		}
+			lastMatchIndex = offset + m.length
+		})
 		if (str.length > lastMatchIndex) { //And block after last match
 			var stringVal = str.slice(lastMatchIndex, str.length).replace(/\"/g, "\\\"")
 			if (stringVal !== "") {
