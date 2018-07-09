@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script src="nnindex.js"></script>
+    <script src="nnnindex.js"></script>
 </head>
 
 <body>
@@ -58,12 +58,19 @@ hi
 {{#else}}
 himm
 {{/else}}
-{{/If 1}}</textarea>
+{{/If 1}}
+{{Log("hi") 2}}
+{{/Log 2}}
+</textarea>
     <div id="output"></div>
     <script>
         function comp() {
             console.time("comp")
             let newtemplatefunction = Sqrl.Precompile(document.getElementById("input").value)
+            Sqrl.registerHelper("Log", function (args, content, blocks, options) {
+                console.log("Logging: " + args[0])
+                return ""
+            })
             let result = newtemplatefunction({
                 usercount: "hi"
             }, Sqrl)

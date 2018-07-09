@@ -125,17 +125,16 @@
     function parseString(strng, varName, regexps) {
         regexps = regexps || Sqrl.Compiler.RegExps
         var funcString = "var " + varName + "=\"\";"
-        var str = strng.replace(regexps.comment, "").replace(/\"/g, "\\\"")
+        var str = strng.replace(regexps.comment, "")
         var lastMatchIndex = 0;
-        while ((m = regexps.helper.exec(str)) !== null) {
+        str.replace(regexps.helper, function (m, p1, p2, p3, p4, p5, p6, offset) {
             //p1 is helper name, p2 is helper parameters, p3 helper id, p4 helper first block, p5 everything else inside
-            var name = m[1] || ""
-            var args = m[2] || ""
-            var id = m[3] || ""
-            var firstblock = m[4] || ""
-            var content = m[5] || ""
-            console.log("another match with id: " +id)
-            funcString = parseGlobalRefs(str.slice(lastMatchIndex, m.index), varName, funcString, regexps)
+            var name = p1 || ""
+            var args = p2 || ""
+            var id = p3 || ""
+            var firstblock = p4 || ""
+            var content = p5 || ""
+            funcString = parseGlobalRefs(str.slice(lastMatchIndex, offset), varName, funcString, regexps)
 
             function createBlockFunction(name, id, content) {
                 var returnFunc = name + ": function (helpervals) {"
@@ -145,11 +144,11 @@
             lastMatchIndex = regexps.helper.lastIndex
             var helperFuncName = name + id
             //The following 2 "replace"s are for converting args into array form, converting all helper refs and global refs into options.*, helpervals.*, etc
-            funcString += helperFuncName + "={name: \"" + name + "\", id: \"" + id + "\", args: [" + args.replace(regexps.parameterGlobalRef, function (match, p1) {
+            funcString += "var " + helperFuncName + "={name: \"" + name + "\", id: \"" + id + "\", args: ["
+            var params = args.replace(regexps.parameterGlobalRef, function (match, p1) {
                 if (p1 === undefined || !p1) {
                     return match
                 } else {
-                    console.log("p1 is : " + p1)
                     return "options." + p1
                 };
             }).replace(regexps.parameterHelperRef, function (match, p1, p2) { //p1 scope, p2 string
@@ -161,7 +160,8 @@
                     }
                     return "helpervals" + p1 + "." + p2
                 }
-            }) + "], blocks: {";
+            })
+            funcString += params + "], blocks: {";
             funcString += createBlockFunction("default", id, firstblock).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
             while ((m2 = regexps.helperBlock.exec(content)) !== null) {
                 funcString += "," + createBlockFunction(m2[1], id, m2[2]).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
@@ -169,9 +169,8 @@
             funcString += "}};"
             funcString += varName + "+=Sqrl.H." + name + "(" + helperFuncName + ".args, " + helperFuncName + ".blocks.default, " + helperFuncName + ".blocks, options);"
 
-            break;//Otherwise it goes into an infinite loop
-            lastMatchIndex = regexps.helper.lastIndex
-        }
+            lastMatchIndex = Number(offset) + m.length
+        })
 
         if (str.length > lastMatchIndex) {
             funcString = parseGlobalRefs(str.slice(lastMatchIndex, str.length), varName, funcString, regexps)
@@ -181,12 +180,14 @@
     }
 
     function parseGlobalRefs(str, varName, funcString, regexps) {
+        var offset;
         var lastMatchIndex = 0;
-        while ((m = regexps.globalRef.exec(str)) !== null) {
-            var content = m[1]
-            var filters = m[2]
-            if (m.index > lastMatchIndex) { //Block before the first match, in between each of the matches
-                funcString = parseHelperRefs(str.slice(lastMatchIndex, m.index), varName, funcString, regexps)
+        str.replace(regexps.globalRef, function (m, p1, p2, offset) {
+            offset = offset
+            var content = p1
+            var filters = p2
+            if (offset > lastMatchIndex) { //Block before the first match, in between each of the matches
+                funcString = parseHelperRefs(str.slice(lastMatchIndex, offset), varName, funcString, regexps)
             }
             if (content !== "") {
                 var returnStr = "Sqrl.F.d(options." + content + ")||\"\""
@@ -205,8 +206,9 @@
                     funcString += varName + "+=" + returnStr + ";"
                 }
             }
-            lastMatchIndex = regexps.globalRef.lastIndex
-        }
+            lastMatchIndex = offset + m.length
+        })
+
         if (str.length > lastMatchIndex) { //Block after the last match
             funcString = parseHelperRefs(str.slice(lastMatchIndex, str.length), varName, funcString, regexps)
         }
@@ -218,8 +220,8 @@
         var lastMatchIndex = 0;
         while ((m = regexps.helperRef.exec(str)) !== null) {
             var content = m[2]
-            if (m.index > lastMatchIndex) { //Block before first match
-                var stringVal = str.slice(lastMatchIndex, m.index) //.replace(/\n/g, "\\\n")
+            if (offset > lastMatchIndex) { //Block before first match
+                var stringVal = str.slice(lastMatchIndex, offset).replace(/\"/g, "\\\"")
                 if (stringVal !== "") {
                     funcString += varName + "+=\"" + stringVal + "\";"
                 }
@@ -235,7 +237,7 @@
             lastMatchIndex = regexps.helperRef.lastIndex
         }
         if (str.length > lastMatchIndex) { //And block after last match
-            var stringVal = str.slice(lastMatchIndex, str.length) //.replace(/\n/g, "\\\n")
+            var stringVal = str.slice(lastMatchIndex, str.length).replace(/\"/g, "\\\"")
             if (stringVal !== "") {
                 funcString += varName + "+=\"" + stringVal + "\";"
             }
