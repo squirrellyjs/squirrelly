@@ -89,10 +89,12 @@
 
 	Sqrl.builtInHelpers = {
 		if: function (param, blocks, varName, regexps, ofilters, cfilters) { //Opening closing filters, like "Sqrl.F.e(Sqrl.F.d(" and "))"
+			console.log("param: " + param + ", blocks: " + JSON.stringify(blocks) + ", varName: " + varName)
 			var returnFunc = "if(" + param + "){" + varName + "+=" + blocks.default+"()}"
-			if (typeof blocks.else !== 'undefined') {
+			if (blocks.hasOwnProperty('else')) {
 				returnFunc += "else { " + varName + "+=" + blocks.else + "()}"
 			}
+			console.log("returnFunc at if: " + returnFunc)
 			return returnFunc
 		},
 		each: function (param, blocks, varName, regexps, ofilters, cfilters) {
@@ -128,7 +130,7 @@
 		var str = strng.replace(regexps.comment, "")
 		var lastMatchIndex = 0;
 		str.replace(regexps.helper, function (m, p1, p2, p3, p4, p5, p6, p7, offset) {
-			//p1 is helper name, p2 is helper parameters, p3 helper id, p4 helper first block, p5 everything else inside
+			//p1 is helper name, p2 is helper parameters, p3 filters, p4 helper id, p5 helper first block, p6 everything else inside
 			var name = p1 || ""
 			var args = p2 || ""
 			var filters = p3
@@ -138,9 +140,10 @@
 			funcString = parseGlobalRefs(str.slice(lastMatchIndex, offset), varName, funcString, regexps)
 
 			function createBlockFunction(name, id, content) {
+				//console.log("creating block with name: " + name + ", id: " + id + ", content: " + content)
 				var returnFunc = "function (helpervals) {"
 				returnFunc += "var helpervals" + id + "=helpervals;" + parseString(content || "", "block" + name + id) + "}"
-				console.log("returnFunc looks like: " + returnFunc)
+				//console.log("returnFunc looks like: " + returnFunc + ", with id: " + id + ", name: " + name)
 				return returnFunc
 			}
 			lastMatchIndex = offset + m.length
@@ -161,8 +164,15 @@
 				blockFunctions = {}
 				blockFunctions.default = createBlockFunction("default", id, firstblock)
 				content.replace(regexps.helperBlock, function (m2, mp1, mp2) {
-					blockFunctions[mp1] = createBlockFunction(mp1, id, mp2).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
+					console.log("name: " + mp1 + ", id: " + id + ", content: " + mp2)
+					var bFunc = createBlockFunction(mp1, id, mp2).replace(/\n/g, "\\n").replace(/\r/g, "\\r")
+					console.log("createBlockFunctionResult: " + bFunc)
+					blockFunctions[mp1] = bFunc
+					blockFunctions["hey"] = "hi"
+					console.log("blockFunctions 169: " + JSON.stringify(blockFunctions))
+					console.log("blockFunctions[mp1] 169: " + blockFunctions[mp1])
 				})
+				console.log("blockFunctions: " + JSON.stringify(blockFunctions))
 				funcString += Sqrl.builtInHelpers[name](params, blockFunctions, varName, regexps)
 			} else {
 				funcString += "var " + helperFuncName + "={name: \"" + name + "\", id: \"" + id + "\", args: ["
@@ -185,10 +195,8 @@
 	}
 
 	function parseGlobalRefs(str, varName, funcString, regexps) {
-		var offset;
 		var lastMatchIndex = 0;
 		str.replace(regexps.globalRef, function (m, p1, p2, offset) {
-			offset = offset
 			var content = p1
 			var filters = p2
 			if (offset > lastMatchIndex) { //Block before the first match, in between each of the matches
