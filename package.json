@@ -2,18 +2,20 @@
   "name": "squirrelly",
   "version": "3.0.2",
   "description": "A simple yet powerful modern template engine that works in the browser, in Node.js, and with ExpressJS.",
-  "main": "nnnindex.js",
+  "main": "squirrelly.js",
   "scripts": {
     "test": "mocha --exit"
   },
   "keywords": [
-    "express",
     "template",
     "engine",
     "squirrelly",
     "html",
     "expressjs",
-    "sqrl"
+    "sqrl",
+    "pug",
+    "handlebars",
+    "swig"
   ],
   "author": "Ben Gubler <nebrelbug@gmail.com> (https://bengubler.com)",
   "license": "ISC",
@@ -27,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/nebrelbug/squirrelly/issues"
   },
-  "homepage": "https://github.com/nebrelbug/squirrelly#readme",
+  "homepage": "https://squirrelly.js.org",
   "dependencies": {},
   "devDependencies": {
     "express": "^4.16.3",
