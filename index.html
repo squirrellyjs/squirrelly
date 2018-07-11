@@ -53,28 +53,64 @@
     <button onclick="comp1()">Compile</button>
     <button onclick="comp2()">Compile 2nd</button>
     <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
-        {{foreach(~~accounts) 1}}
-        <div>
-            {{if (@this.status === 'closed') 2}}
-            <div>
-                Your account has been closed!
+        <div class="search-results-container">
+    
+            <div class="searching" id="searching">
+                <div class="wait-indicator-icon"></div> Searching...
             </div>
-            {{#else}}
-            {{if (@this.status === 'suspended') 3}}
-            <div>
-                Your account has been temporarily suspended
+        
+            <div id="resultsContainer">
+                <div class="hd">
+                    <span class="count"><span id="count">{{totalCount}}</span> results</span>
+                    <div class="view-modifiers">
+                        <div class="view-select">
+                            View: 
+                            <div class="view-icon view-icon-selected" id="viewIconGallery">
+                                <i class="icon-th"></i>
+                            </div>
+                            <div class="view-icon" id="viewIconList">
+                                <i class="icon-th-list"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div id="resultsTarget">
+                    <div class="search-results view-{{view}}">
+                        {{each(~~searchRecords) 1}}
+                        <div class="search-item">
+                            <div class="search-item-container drop-shadow">
+                                <div class="img-container">
+                                    <img src="{{@this.imgUrl}}">
+                                </div>
+                                <h4 class="title">
+                                    <a href="{{@this.viewItemUrl}}">{{@this.title}}</a>
+                                </h4>
+                                
+                                {{@this.description}}
+        
+                                {{if(@this.featured) 2}}
+                                <div>
+                                    Featured!
+                                </div>
+                                {{/if 2}}
+                                {{if(@this.sizes) 3}}
+                                <div>
+                                    Sizes available:
+                                    <ul>
+                                        {{each(@this.sizes) 4}}
+                                        <li>{{@this}}</li>
+                                        {{/each 4}}
+                                    </ul>
+                                </div>
+                                {{/if 3}}
+                            </div>
+                        </div>
+                        {{/each 1}}
+                    </div>
+                </div>
             </div>
-            {{#else}}
-            <div>
-                Bank balance:
-                <span class={{if(@this.balance < 0) balancecheck}}'negative'{{#else}}'positive'{{/else}}{{/if balancecheck}}>{{@this.balanceFormatted}}</span>
-            </div>
-            {{/else}}
-            {{/if 3}}
-            {{/else}}
-            {{/if 2}}
         </div>
-        {{/foreach 1}}
 </textarea>
     <div id="output"></div>
     <script>
@@ -86,26 +122,166 @@
                 return ""
             })
             let result = newtemplatefunction({
-            "accounts": [
+    "totalCount": "20",
+    "view": "list",
+    "searchRecords": [
         {
-            "balance": 0,
-            "balanceFormatted": "$0.00",
-            "status": "open"
+            "imgUrl": "0123ace3-e561-49d7-8fcb-a7721f4d491b.jpg",
+            "viewItemUrl": "http://foo/9bcbe06e-b436-4779-a88f-a064a6962094",
+            "title": "Namebox",
+            "description": "Reprehenderit laboris culpa eiusmod occaecat. Reprehenderit occaecat quis tempor duis officia. Sint nulla sit magna ut minim eu voluptate et. Incididunt excepteur tempor nulla aliquip et proident duis velit elit in ex.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
         },
         {
-            "balance": 10,
-            "balanceFormatted": "$10.00",
-            "status": "closed"
+            "imgUrl": "c862df35-234a-49d6-baed-4b0562ee406e.jpg",
+            "viewItemUrl": "http://foo/a3285409-2366-4c7a-b077-77cf3a6fc588",
+            "title": "Arctiq",
+            "description": "Do nulla aliquip aliquip aute voluptate occaecat ipsum. Veniam eiusmod officia eu eiusmod qui ut magna fugiat et exercitation. Mollit voluptate consequat dolore consequat aliquip laborum.\r\n",
+            "featured": false,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
         },
         {
-            "balance": -100,
-            "balanceFormatted": "$-100.00",
-            "status": "suspended"
+            "imgUrl": "8d489a51-c182-4a54-ad8f-0ce185b9fd6a.jpg",
+            "viewItemUrl": "http://foo/3094ca3a-a3a7-4a7b-90c6-bb363313206e",
+            "title": "Niquent",
+            "description": "Deserunt excepteur sint Lorem in occaecat veniam ea qui id qui eiusmod veniam. Ullamco ea consequat commodo fugiat. Ex esse duis labore laboris adipisicing sit est duis incididunt consectetur enim proident tempor. Veniam aliqua pariatur reprehenderit tempor officia esse incididunt nostrud sit ea. Consectetur tempor Lorem nulla est.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
         },
         {
-            "balance": 999,
-            "balanceFormatted": "$999.00",
-            "status": "open"
+            "imgUrl": "fbc4ad24-1d42-4d79-830b-6c38d0bf97a6.jpg",
+            "viewItemUrl": "http://foo/0ed3c42b-d49f-48b5-8fb8-c195859a32f8",
+            "title": "Remotion",
+            "description": "Amet consequat deserunt velit anim exercitation sunt excepteur culpa labore laborum quis Lorem ipsum fugiat. Consequat esse officia do eiusmod dolore sunt nulla pariatur aute et ullamco. Dolor nulla excepteur in excepteur laborum adipisicing consequat. Ea ullamco Lorem duis reprehenderit qui reprehenderit exercitation veniam occaecat id amet. Labore duis irure mollit eu Lorem id laborum fugiat eiusmod aliqua anim nisi Lorem. Ex reprehenderit elit laboris id aliqua aute. Nisi nostrud tempor culpa nisi et id.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "93f4145e-f16b-4a9c-8e87-7f87d2aade93.jpg",
+            "viewItemUrl": "http://foo/794a4828-21ea-4585-a256-0a1639a8cf80",
+            "title": "Octocore",
+            "description": "Cupidatat nisi mollit sint elit ea ad id sint ea ad. Duis proident qui non dolore in ut do et elit fugiat commodo. Non anim in anim Lorem tempor do elit esse anim anim non ipsum culpa. Cillum Lorem consectetur pariatur esse magna exercitation aliquip tempor occaecat laborum in sunt consequat ea. Id laboris magna id ut deserunt nulla dolor occaecat adipisicing. Enim excepteur aute ex dolore aute irure veniam pariatur pariatur culpa amet. Est proident et ea ullamco irure dolore eu culpa sint excepteur Lorem Lorem quis ad.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "0471877b-2709-4df3-b815-20c4a789c6f3.jpg",
+            "viewItemUrl": "http://foo/cc2ce90a-cb0c-4ccd-880b-c4f78051aeb5",
+            "title": "Spherix",
+            "description": "Consequat esse dolor ad cillum nostrud do ex nulla adipisicing adipisicing. Aute id reprehenderit in elit anim adipisicing reprehenderit adipisicing voluptate velit nulla aliquip. Mollit et id voluptate duis ad cillum ipsum ex adipisicing veniam ex excepteur. Commodo reprehenderit ut anim minim aliquip in. Sunt anim fugiat voluptate excepteur amet nisi et nulla consectetur. Deserunt enim adipisicing ut exercitation minim amet labore nulla.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "86106f6e-66d8-4424-8387-7b94deab09da.jpg",
+            "viewItemUrl": "http://foo/73e0480d-284e-490d-8bf6-4993a6e9e34b",
+            "title": "Quarex",
+            "description": "Labore aliqua magna consequat cupidatat incididunt velit dolore occaecat. Elit cillum reprehenderit consectetur quis officia cillum qui dolore laboris sint do duis in fugiat. Laborum duis sit ut sint quis ex nisi cillum veniam id pariatur irure. Ullamco quis id laboris proident. Nostrud elit adipisicing ut velit Lorem non eiusmod.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "0caedced-2ac1-4f99-9658-e9f587f2079b.jpg",
+            "viewItemUrl": "http://foo/a96d766f-3d76-4e53-9f22-75406267baef",
+            "title": "Supremia",
+            "description": "Reprehenderit eu occaecat enim veniam cillum ut commodo Lorem ullamco mollit. Culpa sunt veniam nulla tempor velit eiusmod ea nostrud ipsum occaecat cillum. Nisi ea magna proident reprehenderit do anim ipsum elit. Qui aliqua laboris amet consequat consectetur proident occaecat aute amet occaecat labore dolor. Nostrud velit consectetur occaecat quis.\r\n",
+            "featured": false,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "a8b45524-da31-4b1e-b069-e75a952a28c2.jpg",
+            "viewItemUrl": "http://foo/0c912300-1586-41bb-9fe1-fa5dd33ab7d7",
+            "title": "Amtap",
+            "description": "Mollit mollit sit veniam aliqua consequat fugiat ullamco qui proident. Deserunt fugiat occaecat ad tempor mollit non cillum ullamco consequat commodo est. Occaecat qui cupidatat ad sunt cillum ex pariatur qui aliquip voluptate duis. Aliqua minim deserunt veniam fugiat sunt occaecat non Lorem ullamco do. Aliqua id id irure laborum voluptate excepteur pariatur labore enim dolor magna eu.\r\n",
+            "featured": false,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "611df79a-723a-4e89-9560-65324c252c24.jpg",
+            "viewItemUrl": "http://foo/0f17b996-4514-4ff7-8e41-b42bdf314c13",
+            "title": "Qiao",
+            "description": "Eu proident ipsum ea adipisicing commodo velit non non magna veniam duis id elit consectetur. Eu proident excepteur laboris ex veniam in exercitation culpa consequat adipisicing magna. Pariatur consectetur ea eu duis elit reprehenderit sint. Aliqua tempor adipisicing nostrud ullamco irure deserunt ullamco. Nisi officia ex reprehenderit et labore mollit.\r\n",
+            "featured": false,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "81a4d095-b88b-4f7a-b3af-070480916b38.jpg",
+            "viewItemUrl": "http://foo/faa115f8-5e27-4058-9f45-4285aff9da0c",
+            "title": "Pushcart",
+            "description": "Et exercitation et magna incididunt irure commodo tempor ullamco duis consequat. Commodo labore qui quis ut aliqua cillum. Sit velit consectetur ipsum irure aute excepteur tempor reprehenderit minim esse aliquip velit dolor. Est minim do ipsum cupidatat fugiat anim ex eiusmod. Commodo elit in duis sint quis. Incididunt duis eu sit ex nisi.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "91bf0e38-44f9-444a-ab0e-a5ca407b5ab1.jpg",
+            "viewItemUrl": "http://foo/7aaf918d-175a-4d29-8eca-08b6516b1758",
+            "title": "Eweville",
+            "description": "Laborum commodo eu dolore adipisicing irure sit do. Nostrud esse cupidatat deserunt mollit consectetur non nostrud cillum quis velit enim velit. Ut laboris nostrud veniam pariatur esse et consequat eu exercitation esse occaecat irure. Lorem est nisi aliqua ipsum enim ad ea elit esse ipsum magna dolor minim esse. Et pariatur amet Lorem anim anim dolore consectetur nostrud ullamco quis quis.\r\n",
+            "featured": false,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "2d1ac1b9-5c2c-4c5c-be11-05f2d7770a7e.jpg",
+            "viewItemUrl": "http://foo/0b0d24da-e900-4ec7-8182-d3d4c4a97447",
+            "title": "Senmei",
+            "description": "Proident dolor laboris minim dolor elit fugiat qui nostrud incididunt nulla irure nisi ex. Ex irure et esse Lorem. Id ullamco laboris irure nostrud nostrud dolor commodo incididunt cupidatat aliqua anim aliquip dolore. Minim anim aute incididunt cillum ex cillum aliquip ut adipisicing. Esse laborum adipisicing Lorem in amet deserunt in. Eiusmod consequat culpa tempor proident tempor ad. Duis officia proident dolor culpa sint elit voluptate aliquip veniam ad incididunt.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "baba9d1a-2d1a-44a6-b366-d10113d5efc0.jpg",
+            "viewItemUrl": "http://foo/428488e1-029c-4b7d-b25b-5e4a69b63e64",
+            "title": "Maximind",
+            "description": "Tempor fugiat mollit aute dolore nulla ex ad sunt ullamco aliqua veniam fugiat ad voluptate. Nostrud nisi culpa velit laborum id minim laborum tempor exercitation. Incididunt culpa cupidatat do duis proident duis ut cillum Lorem ex occaecat ad. Excepteur labore amet anim ex culpa. Exercitation sint nulla pariatur velit mollit tempor nulla aliquip deserunt ut. Officia adipisicing do ut excepteur cillum enim id proident anim et.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "ce34a088-17c1-4c0b-9b97-3b2334521b6c.jpg",
+            "viewItemUrl": "http://foo/0e07e5e5-1f1d-46bc-941a-5539f49b62f4",
+            "title": "Blurrybus",
+            "description": "Cupidatat quis laborum sunt minim esse. Magna adipisicing et deserunt esse est deserunt. Cupidatat esse fugiat veniam ea nisi laborum officia minim Lorem eiusmod excepteur dolore commodo quis. Laboris consequat ad eu voluptate enim fugiat et.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "588b83d7-40af-45d0-bb27-a213df72ff3a.jpg",
+            "viewItemUrl": "http://foo/b2d57960-ee66-42e2-9192-14c7caea79dd",
+            "title": "Virva",
+            "description": "Amet ut aliquip fugiat aute in. Consectetur sunt id ut occaecat sunt aliqua consectetur proident qui fugiat et adipisicing fugiat id. Irure mollit eiusmod enim id ex magna occaecat elit. Esse eu eiusmod aliqua exercitation aliquip.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "137227dc-1b9f-4f6c-91f6-247c3850221b.jpg",
+            "viewItemUrl": "http://foo/a96a3cca-3fb1-4f33-90b1-929273373eba",
+            "title": "Centregy",
+            "description": "Ex ex fugiat consectetur non exercitation ex irure. Minim sunt ullamco enim aute do esse labore est veniam aliquip do. Duis mollit laboris aute adipisicing do ut irure ipsum magna.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "1263c331-6f3c-45aa-be6b-b83662929b8f.jpg",
+            "viewItemUrl": "http://foo/0d0f88b7-e15e-4b8d-80ec-1edc03b80a5b",
+            "title": "Dancerity",
+            "description": "Aliqua dolore enim proident proident eiusmod consequat fugiat aliqua sunt id elit ea. Duis mollit mollit pariatur culpa sint sunt minim proident magna irure eu consectetur. In consequat pariatur do veniam irure Lorem ipsum cupidatat dolor minim. Laboris cillum culpa esse consequat nostrud. Aliqua veniam officia quis est in quis et ipsum excepteur.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "a1b01633-78db-44e0-b298-dfa38b5b22d2.jpg",
+            "viewItemUrl": "http://foo/7a544895-fef4-4a62-84b0-fc275b19a2bb",
+            "title": "Oceanica",
+            "description": "Veniam nostrud nisi minim elit id in anim nisi enim aliquip sit nisi. Dolor mollit culpa ullamco incididunt qui veniam. Occaecat eu voluptate aliquip aliquip quis do nisi veniam ullamco tempor. Adipisicing tempor tempor deserunt aute elit deserunt dolor et proident proident eiusmod est culpa.\r\n",
+            "featured": true,
+            "sizes": ["S", "M", "L", "XL", "XXL"]
+        },
+        {
+            "imgUrl": "45d2af8c-6f16-4e49-a7c1-586ac232f1ec.jpg",
+            "viewItemUrl": "http://foo/84447b32-852b-48ff-968f-712edb038913",
+            "title": "Synkgen",
+            "description": "Laboris nisi exercitation adipisicing ad dolore magna reprehenderit quis. Excepteur tempor ad aliquip veniam. Exercitation esse tempor nisi dolore. Veniam ex eiusmod voluptate id officia. Esse ut officia aliqua ex amet aliqua.\r\n"
         }
     ]
 }, Sqrl)

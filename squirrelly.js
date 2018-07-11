@@ -91,9 +91,9 @@
 
     Sqrl.builtInHelpers = {
         if: function (param, blocks, varName, regexps, ofilters, cfilters) { // Opening closing filters, like "Sqrl.F.e(Sqrl.F.d(" and "))"
-            var returnFunc = 'if(' + param + '){' + varName + '+=' + blocks.default + '(helpervals||{})}'
+            var returnFunc = 'if (typeof helpervals === \'undefined\') helpervals = {}; if(' + param + '){' + varName + '+=' + blocks.default + '(helpervals)}'
             if (blocks.hasOwnProperty('else')) {
-                returnFunc += 'else { ' + varName + '+=' + blocks.else + '(helpervals||{})}'
+                returnFunc += 'else { ' + varName + '+=' + blocks.else + '(helpervals)}'
             }
             return returnFunc
         },
