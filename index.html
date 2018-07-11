@@ -53,15 +53,28 @@
     <button onclick="comp1()">Compile</button>
     <button onclick="comp2()">Compile 2nd</button>
     <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
-{{ if(3 === 3) 1}}
-Math works!
-{{#else}}
-Math is broken
-{{if (4 === 5) 3}}
-And is even more broken
-{{/if 3}}
-{{/else}}
-{{/if 1}}
+        {{foreach(~~accounts) 1}}
+        <div>
+            {{if (@this.status === 'closed') 2}}
+            <div>
+                Your account has been closed!
+            </div>
+            {{#else}}
+            {{if (@this.status === 'suspended') 3}}
+            <div>
+                Your account has been temporarily suspended
+            </div>
+            {{#else}}
+            <div>
+                Bank balance:
+                <span class={{if(@this.balance < 0) balancecheck}}'negative'{{#else}}'positive'{{/else}}{{/if balancecheck}}>{{@this.balanceFormatted}}</span>
+            </div>
+            {{/else}}
+            {{/if 3}}
+            {{/else}}
+            {{/if 2}}
+        </div>
+        {{/foreach 1}}
 </textarea>
     <div id="output"></div>
     <script>
@@ -73,10 +86,29 @@ And is even more broken
                 return ""
             })
             let result = newtemplatefunction({
-                usercount: "hi",
-                name: "Johnny",
-                othername: "Appleseed"
-            }, Sqrl)
+            "accounts": [
+        {
+            "balance": 0,
+            "balanceFormatted": "$0.00",
+            "status": "open"
+        },
+        {
+            "balance": 10,
+            "balanceFormatted": "$10.00",
+            "status": "closed"
+        },
+        {
+            "balance": -100,
+            "balanceFormatted": "$-100.00",
+            "status": "suspended"
+        },
+        {
+            "balance": 999,
+            "balanceFormatted": "$999.00",
+            "status": "open"
+        }
+    ]
+}, Sqrl)
             document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")
             document.getElementById("output").innerHTML = newtemplatefunction

@@ -18,16 +18,17 @@
     var Sqrl = {} // For all of the functions
     Sqrl.Utils = {} // For user-accessible ones
     Sqrl.Compiler = {} // For RegExp's, etc.
-    Sqrl.Helpers = { // For helpers, their namespaces: THIS ONE IS POINTLESS BECAUSE IT HAS A NATIVE IMPLEMENTATION IN BUILTINHELPERS
-		/* THIS ONE IS POINTLESS BECAUSE IT HAS A NATIVE IMPLEMENTATION IN BUILTINHELPERS BUT IT'S GOOD TO TEST, REMEMBER ORDER OF PARAMS
-		If: function (args, content, blocks, options) {
-		  if (args[0]) {
-				return content()
-			} else {
-				if (blocks.else) return blocks.else() || ""
-				else return ""
-			}
-		} */
+    Sqrl.Helpers = { // For helpers
+        Date: function (args, content, blocks, options) {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+            if (dd < 10) {dd = '0' + dd}
+            if (mm < 10) {mm = '0' + mm}
+            today = mm + '/' + dd + '/' + yyyy;
+            return today
+        }
     }
     Sqrl.H = Sqrl.Helpers
     /* These two are technically just helpers, but in Squirrelly they're 1st-class citizens. */
@@ -90,14 +91,25 @@
 
     Sqrl.builtInHelpers = {
         if: function (param, blocks, varName, regexps, ofilters, cfilters) { // Opening closing filters, like "Sqrl.F.e(Sqrl.F.d(" and "))"
-            var returnFunc = 'if(' + param + '){' + varName + '+=' + blocks.default + '()}'
+            var returnFunc = 'if(' + param + '){' + varName + '+=' + blocks.default + '(helpervals||{})}'
             if (blocks.hasOwnProperty('else')) {
-                returnFunc += 'else { ' + varName + '+=' + blocks.else + '()}'
+                returnFunc += 'else { ' + varName + '+=' + blocks.else + '(helpervals||{})}'
             }
             return returnFunc
         },
         each: function (param, blocks, varName, regexps, ofilters, cfilters) {
-
+            var returnFunc = 'for (var i = 0; i < ' + param + '.length ;i++) {'
+                + varName + '+=' + blocks.default + '({this: ' + param + '[i], index: i})}'
+            return returnFunc
+        },
+        foreach: function (param, blocks, varName, regexps, ofilters, cfilters) {
+            var returnFunc = 'for (var key in ' + param + ') {if (!' + param + '.hasOwnProperty(key)) continue;'
+                + varName + '+=' + blocks.default + '({this: ' + param + '[key], key: key})}'
+            return returnFunc
+        },
+        log: function (param, blocks, varName, regexps, ofilters, cfilters) {
+            var returnFunc = 'console.log(' + param + ');'
+            return returnFunc
         }
     }
 
