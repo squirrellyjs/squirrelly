@@ -43,17 +43,17 @@ compiledTemplate = Sqrl.Render(templateFunction, {
 })
 ```
 ## Syntax
-[The Basics](#the-basics)
-[References](#references)
--- [Global References](#global-references)
--- [Helper References](#helper-references)
-[Helpers](#helpers)
--- [Passing Parameters to Helpers](#passing-parameters-to-helpers)
--- [Writing Helpers]()
--- [Built-In Helpers]()
-[Filters](#filters)
--- [Using Filters](#filters)
-[Tags](#tags) (Not implemented yet, just the future spec)
+- [The Basics](#the-basics)
+- [References](#references)
+    - [Global References](#global-references)
+    - [Helper References](#helper-references)
+- [Helpers](#helpers)
+    - [Passing Parameters to Helpers](#passing-parameters-to-helpers)
+    - [Writing Helpers]()
+    - [Built-In Helpers]()
+- [Filters](#filters)
+    - [Using Filters](#filters)
+- [Tags](#tags) (Not implemented yet, just the future spec)
 
 ### The Basics:
 There are 4 types of language items in Squirrelly:
