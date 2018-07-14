@@ -74,24 +74,39 @@
             Sqrl.defaultFilters.e = false
         }
     }
-    Sqrl.Filters = {
+    Sqrl.escMap = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+        "/": "&#x2F;",
+        "`": "&#x60;",
+        "=": "&#x3D;"
+    }
+    Sqrl.F = { //F stands for filters
         d: function (str) {
             return str
         },
         e: function (str) {
-            return String(str).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;').replace('/', '&#x2F;').replace('`', '&#x60;').replace('=', '&#x3D;')
-        },
-        reverse: function (str) {
-            var out = ''
-            for (var i = str.length - 1; i >= 0; i--) {
-                out += str.charAt(i)
+            //To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
+            function replaceChar(s) {
+                return Sqrl.escMap[s]
             }
-            return out || str
+            var newStr = String(str)
+            var result = /[&<>"'`=\/]/.test(newStr) ? newStr.replace(/[&<>"'`=\/]/g, replaceChar) : newStr
+            return result
         }
+        //Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
     }
 
-    Sqrl.Filters.escape = Sqrl.Filters.e
-    Sqrl.F = Sqrl.Filters
+    Sqrl.F.escape = Sqrl.F.e
+    Sqrl.Filters = Sqrl.F
+
+    Sqrl.registerFilter = function (name, callback) {
+        Sqrl.F[name] = callback
+        Sqrl.Filters = Sqrl.F
+    }
 
     Sqrl.builtInHelpers = {
         if: function (param, blocks, varName, regexps, ofilters, cfilters) { // Opening closing filters, like "Sqrl.F.e(Sqrl.F.d(" and "))"
@@ -131,7 +146,14 @@
 
     Sqrl.Compiler.SetTags = function (otag, ctag) {
         var newRegExps = {
-
+            helperRef: /{{\s*@(?:([\w$]*):)?\s*(.+?)\s*((?: *?\| *?[\w$]* *?)* *?\|*)}}/g,
+            globalRef: /{{\s*?([^#@.\(\\/]+?(?:[.[].*?)*?)((?: *?\| *?[\w$]* *?)* *?\|*)}}/g,
+            helper: /{{ *?([\w$]+) *?\(([^\n]*)\)((?: *?\| *?[\w$]* *?)* *?\|*) *?([\w$]*) *?}}([^]*?)((?:{{ *?# *?([\w$]*) *?}}[^]*{{ *?\/ *?\7 *?}}\s*)*){{ *?\/ *?\1 *? \4 *?}}/g,
+            helperBlock: /{{ *?# *?(\w*) *?}}([^]*){{ *?\/ *?\1 *?}}(?:\s*{{!--[\w$\s]*--}}\s*)*/g,
+            comment: /{{!--[^]*?--}}/g,
+            parameterGlobalRef: /~~/g,
+            parameterHelperRef: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g,
+            partial: RegExp(otag + " *?(?:>|include) *?([\\w$]*)((?: *?\\| *?[\\w$]* *?)* *?\\|*)" + ctag, "g")
         }
         return newRegExps
     }
@@ -206,6 +228,28 @@
         return funcString
     }
 
+    function returnFiltered(filterString, initialString) {
+        var filtersArray;
+        if (typeof filterString !== 'undefined' && filterString !== null) {
+            filtersArray = filterString.split('|')
+            for (var i = 0; i < filtersArray.length; i++) {
+                filtersArray[i] = filtersArray[i].trim()
+                if (filtersArray[i] === "") continue
+                if (filtersArray[i] === "unescape" || filtersArray[i] === "u") continue
+                if (Sqrl.defaultFilters.e && (filtersArray[i] === "e" || filtersArray[i] === "escape")) continue
+                initialString = 'Sqrl.F.' + filtersArray[i] + '(' + initialString + ')'
+            }
+        }
+        for (key in Sqrl.defaultFilters) {
+            if (Sqrl.defaultFilters[key] === true) {
+                //There's gotta be a more efficient way to do this
+                if (typeof filtersArray !== 'undefined' && (filtersArray.includes("u") || filtersArray.includes("unescape")) && (key === "e" || key === "escape")) continue;
+                initialString = 'Sqrl.F.' + key + '(' + initialString + ')'
+            }
+        }
+        return initialString
+    }
+
     function parseGlobalRefs(str, varName, funcString, regexps) {
         var lastMatchIndex = 0
         str.replace(regexps.globalRef, function (m, p1, p2, offset) {
@@ -215,21 +259,9 @@
                 funcString = parseHelperRefs(str.slice(lastMatchIndex, offset), varName, funcString, regexps)
             }
             if (content !== '') {
-                var returnStr = 'Sqrl.F.d(options.' + content + ')||""'
-                for (key in Sqrl.defaultFilters) {
-                    if (Sqrl.defaultFilters[key] === true) {
-                        returnStr = 'Sqrl.F.' + key + '(' + returnStr + ')'
-                    }
-                }
-                if (typeof filters !== 'undefined' && filters !== null) {
-                    var filtersArray = filters.split('|')
-                    for (var i = 1; i < filtersArray.length; i++) {
-                        returnStr = 'Sqrl.F.' + filtersArray[i] + '(' + returnStr + ')'
-                    }
-                    funcString += varName + '+=' + returnStr + ';'
-                } else {
-                    funcString += varName + '+=' + returnStr + ';'
-                }
+                var returnStr = 'Sqrl.F.d(options.' + content + '||"")'
+                returnStr = returnFiltered(filters, returnStr)
+                funcString += varName + '+=' + returnStr + ';'
             }
             lastMatchIndex = offset + m.length
         })
@@ -245,17 +277,21 @@
         var lastMatchIndex = 0
         str.replace(regexps.helperRef, function (m, p1, p2, p3, offset) {
             var content = p2
+            var filters = p3
             if (offset > lastMatchIndex) { // Block before first match
                 var stringVal = str.slice(lastMatchIndex, offset).replace(/\"/g, '\\"')
                 if (stringVal !== '') {
                     funcString += varName + '+="' + stringVal + '";'
                 }
             }
+            var returnStr;
             if (p1 === undefined || !p1) {
-                funcString += varName + '+=helpervals.' + content + ';' // hvals stands for helper values (their own namespaces) and "c" for current. Trying to keep space down
+                returnStr = 'Sqrl.F.d(helpervals.' + content + ')' // hvals stands for helper values (their own namespaces) and "c" for current. Trying to keep space down
             } else {
-                funcString += varName + '+=helpervals' + p1 + '.' + content + ';' // p1 is scope
+                returnStr = 'Sqrl.F.d(helpervals' + p1 + '.' + content + ")" // p1 is scope
             }
+            returnStr = returnFiltered(filters, returnStr)
+            funcString += varName + '+=' + returnStr + ';'
             lastMatchIndex = offset + m.length
         })
         if (str.length > lastMatchIndex) { // And block after last match

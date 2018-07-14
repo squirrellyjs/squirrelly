@@ -54,25 +54,38 @@
     <button onclick="comp2()">Compile 2nd</button>
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hey guys, welcome to Squirrelly! Feel free to hack, or style this page, cause it's ugly.
-Escaped output: {{htmlstuff|escape}}
+Escaped output: {{htmlstuff}}
+{{each(~~arr) 1}}
+The index is {{@index}} and output is {{@this}}
+{{/each 1}}
 </textarea>
     <div id="output"></div>
     <script>
+        Sqrl.registerFilter("reverse", function (str) {
+            var out = ''
+            for (var i = str.length - 1; i >= 0; i--) {
+                out += str.charAt(i)
+            }
+            return out || str
+        })
+
+        Sqrl.defaultFilters.reverse = true
+        Sqrl.autoEscape(true)
+
+
         function comp() {
             console.time("comp")
             let newtemplatefunction = Sqrl.Precompile(document.getElementById("input").value)
-            Sqrl.registerHelper("Log", function (args, content, blocks, options) {
-                console.log("Logging: " + args[0])
-                return ""
-            })
+
+            console.log("Function returned by comp: ")
+            console.log(newtemplatefunction.toString())
             let result = newtemplatefunction({
-                htmlstuff: "<p>alert('hey')</p>"
+                htmlstuff: "<script>alert('hey')<\/script><p>alert('hey')</p><p>alert('hey')</p><p>alert('hey')</p>",
+                arr: ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 3*4]
             }, Sqrl)
             document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")
             document.getElementById("output").innerHTML = newtemplatefunction
-            console.log("Function returned by comp: ")
-            console.log(newtemplatefunction.toString())
 
         }
         comp()
