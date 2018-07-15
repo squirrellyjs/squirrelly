@@ -1,3 +1,4 @@
+
 # squirrelly 
 [![Build Status](https://travis-ci.org/nebrelbug/squirrelly.svg?branch=master)](https://travis-ci.org/nebrelbug/squirrelly) [![dependencies Status](https://david-dm.org/nebrelbug/squirrelly/status.svg)](https://david-dm.org/nebrelbug/squirrelly) [![version](https://img.shields.io/npm/v/squirrelly.svg)](https://www.npmjs.com/package/squirrelly) [![npm downloads](https://img.shields.io/npm/dt/squirrelly.svg)](https://www.npmjs.com/package/squirrelly) [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/nebrelbug/squirrelly.svg)](https://github.com/nebrelbug/squirrelly) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)
 
@@ -49,25 +50,21 @@ compiledTemplate = Sqrl.Render(templateFunction, {
     - [Helper References](#helper-references)
 - [Helpers](#helpers)
     - [Passing Parameters to Helpers](#passing-parameters-to-helpers)
-    - [Writing Helpers]()
-    - [Built-In Helpers]()
+    - [Writing Helpers](#writing-helpers)
+    - [Built-In Helpers](#built-in-helpers)
 - [Filters](#filters)
     - [Using Filters](#filters)
 - [Tags](#tags) (Not implemented yet, just the future spec)
 
 ### The Basics:
 There are 4 types of language items in Squirrelly:
-- References (global and helper).
--- These are references to the actual data of options that are passed in.
-- Helpers
--- These are for logic in the template. Loops and conditionals are both implemented as helpers.
-- Filters
--- These are for processing a string after it's been evaluated. Escaping and trimming are done with filters.
-- Tags (still in development)
--- When tags are complete, they'll provide customizable syntax that will be parsed with the template. Partials, layouts, and custom delimeters will be implemented with tags.
+- [References](#references) ([global](#global-references) and [helper](#helper-references)). These are references to the actual data of options that are passed in.
+- [Helpers](#helpers). These are for logic in the template. Loops and conditionals are both implemented as helpers.
+- [Filters](#filters). These are for processing a string after it's been evaluated. Escaping and trimming are done with filters.
+- [Tags](#tags) (still in development). When tags are complete, they'll provide customizable syntax that will be parsed with the template. Partials, layouts, and custom delimeters will be implemented with tags.
 
 ### References
-In Squirrelly, a reference is anything between the opening delimeter (by default `{{`) and the closing delimeter (by default `}}`). It acts as a reference to a value that's passed in as an option to the template. There are two types of references, [global references]() and [helper references]().
+In Squirrelly, a reference is anything between the opening delimeter (by default `{{`) and the closing delimeter (by default `}}`). It acts as a reference to a value that's passed in as an option to the template. There are two types of references, [global references](#global-references) and [helper references](#helper-references).
 
 #### Global References
 Basic syntax:
@@ -222,6 +219,42 @@ Example: `{{include mypartial}}` would be a tag, as well as `{{**do stuff**}}`. 
 ## Examples
 
 ### If Statements
+```
+{{if(options.username) 1}}
+Display this
+{{#else}}
+Display this instead
+{{/else}}
+{{/if 1}}
+```
+```
+{{if(options.followerCount * 3 < 8) 1}}
+You don't have very many followers
+{{#else}}
+You have at least 3 followers
+{{/else}}
+{{/if 1}}
+```
+
+### Foreach loops (looping over objects)
+```
+{{foreach(options.users) 1}}
+Name: {{@this.username}}, Followers: {{@this.followers}}
+{{/foreach 1}}
+```
+### For loops (looping over arrays)
+```
+{{for(options.followers) 1}}
+Follower number {{@this.index}}: {{@this.username}}
+{{/for 1}}
+```
+### Logging (to the console)
+```
+{{log("The follower count is:" + options.followers) 1}}
+{{/log 1}}
+```
+
+
 ## Tests
 
 The default test can be run with `npm test`, and it just checks that compiling and rendering a simple template results in the correct string.
@@ -234,10 +267,8 @@ accepted using GitHub pull requests; for more information, see
 
 For a good pull request, we ask you provide the following:
 
-1. Include a clear description of your pull request in the description
-   with the basic "what" and "why"s for the request.
-2. The test should pass. GitHub will automatically run
-   the tests as well, to act as a safety net.
+1. Include a clear description of your pull request in the description with the basic "what" and "why"s for the request.
+2. The test should pass. GitHub will automatically run the tests as well, to act as a safety net.
 3. The pull request should include tests for the change. A new feature should have tests for the new feature and bug fixes should include a test that fails without the corresponding code change and passes after they are applied.
 5. If the pull request is a new feature, please include appropriate documentation in the `README.md` file as well.
 6. Keep a consistent coding style.
