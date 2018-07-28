@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script src="squirrelly.js"></script>
+    <script src="newsquirrelly.js"></script>
 </head>
 
 <body>
@@ -55,12 +55,9 @@
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hey guys, welcome to Squirrelly! Feel free to hack, or style this page, cause it's ugly.
 Escaped output: {{htmlstuff}}
-{{Date(options.hello === 3, "hey", 4) 2}}
-This is the content
-{{#newblock}}
-This is the new block.
-{{/newblock}}
-{{/Date 2}}
+{{each(~~arr) 1}}
+The index is {{@index}} and output is {{@this}}
+{{/each 1}}
 </textarea>
     <div id="output"></div>
     <script>
