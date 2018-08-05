@@ -108,8 +108,6 @@
 			Sqrl.Filters = Sqrl.F
 		}
 
-		//RegEx for global references: {{\s*?([^#@.\(\\/]+?(?:[.[].*?)*?)((?: *?\| *?[\w$]* *?)* *?\|*)}}
-		//RegEx for helper references: {{\s*@(?:([\w$]*):)?\s*(.+?)\s*((?: *?\| *?[\w$]* *?)* *?\|*)}}
 		//Total RegEx:
 		/* START REGEXP
 		{{ *? //the beginning
@@ -128,15 +126,24 @@
 		(?:\/ *?([a-zA-Z_$]+[\w]*))
 		| //now if a helper block
 		(?:# *?([a-zA-Z_$]+[\w]*))
+		| //now if a possible macro
+		(?:([^]+?))
 		) //end or for each possible tag
 		 *?}}		
 
 		END REGEXP*/
 /*
 p1: global ref main
-p2: helper ref id
-p3: 
-		Which equals: {{ *?(?:(?:(?:([a-zA-Z_$]+ *?(?:[^\s\w\($]+[^\n]*)*))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[^\n]+ *?)*)*) *?}}
+p2: helper ref id (with ':' after it) or path
+p3: helper ref main
+p4: filters
+p5: helper name
+p6: helper parameters
+p7: helper id
+p8: helper cTag name
+p9: helper block name
+p10: possible macro
+		Which equals: /{{ *?(?:(?:(?:(?:([a-zA-Z_$]+[\w]* *?(?:[^\s\w\($]+[^\n]*)*))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[^\n]+ *?)*)*)|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$]+[\w]*))|(?:# *?([a-zA-Z_$]+[\w]*))|(?:([^]+?))) *?}}/g
 		Here's the RegExp I use to turn the expanded version between START REGEXP and END REGEXP to a working one: I replace [\f\n\r\t\v\u00a0\u1680\u2000\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]| \/\/[\w ']+\n with nothing.
 		
 		*/
