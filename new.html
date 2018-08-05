@@ -8,56 +8,22 @@
 <body>
     <div id="result1"></div>
     <p>--------------------</p>
-    <div id="result2"></div>
-    <p>--------------------</p>
+    <div id="functionResult"></div>
 
-    <script id="template" type="text/squirrelly">
-        <div>
-            {{A|reverse}} {{B|reverse}} {{C|reverse}} {{D|reverse}} {{E|reverse}}
-        </div>
-    </script>
-    <script>
-        var source2 =
-            "Yo this is hola its a pretty cool thing so Ill say {{whassup|escaped}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}Yo this is hola its a pretty cool thing so Ill say {{whassup}} and {{hi}} and everything and it will be so cool and awesome and Ill say {{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}{{whassup}}"
-        var source = document.getElementById("template").innerHTML
-        //var template = Sqrl.Precompile("{{hello}}       {{array}}{{!--this is a comment--}}")
-        //comp1()
-        //comp2()
-
-        function comp1() {
-            console.time("comp1")
-            let newtemplate = Sqrl.Precompile(source)
-            console.timeEnd("comp1")
-            let result = Sqrl.Render(newtemplate, {
-                A: "HI"
-            })
-            document.getElementById("result1").innerHTML = result
-            console.log("Function returned by comp1: ")
-            console.log(newtemplate.toString())
-        }
-
-        function comp2() {
-            console.time("comp2")
-            let newtemplate2 = Sqrl.Precompile(source2)
-            let result = Sqrl.Render(newtemplate2, {
-                whassup: "<p>whassup</p>",
-                hi: "hola"
-            })
-            console.timeEnd("comp2")
-            document.getElementById("result2").innerHTML = result
-            console.log("Function returned by comp2: ")
-            console.log(newtemplate2.toString())
-
-        }
-    </script>
-    <button onclick="comp1()">Compile</button>
-    <button onclick="comp2()">Compile 2nd</button>
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hey guys, welcome to Squirrelly! Feel free to hack, or style this page, cause it's ugly.
-Escaped output: {{htmlstuff}}
-{{each(~~arr) 1}}
-The index is {{@index}} and output is {{@this}}
-{{/each}}
+{{helper(params) randomid}}
+{{helper2(params2)}}
+
+{{@ hhey|hey}}
+{{hey | hi | hey | }}
+{{@hi:hey}}
+{{@../hey}}
+{{hi hey}}
+{{hi * 4}}
+{{hi(parameters) id}}
+{{/ hey}}
+{{#block}}
 </textarea>
     <div id="output"></div>
     <script>
@@ -74,6 +40,7 @@ The index is {{@index}} and output is {{@this}}
 
 
         function comp() {
+            console.clear()
             console.time("comp")
             let newtemplatefunction = Sqrl.Precompile(document.getElementById("input").value)
 
@@ -85,11 +52,12 @@ The index is {{@index}} and output is {{@this}}
             }, Sqrl)
             document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")
-            document.getElementById("output").innerHTML = newtemplatefunction
+            document.getElementById("funcitonResult").innerHTML = newtemplatefunction
 
         }
         comp()
     </script>
+    <p>Helper is called with (args, content, blocks, options)</p>
 </body>
 
 </html>
