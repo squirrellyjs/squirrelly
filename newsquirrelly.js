@@ -250,22 +250,7 @@
 				}
 				return initialString
 			}
-			/*if (m[1] === null || typeof m[1] === "undefined") {
-				var previous = outstanding[oLength];
-				if (previous && previous === m[4]) {
-					console.log("lastIndex --> cTag: " + str.slice(lastIndex, m.index))
-					//outstanding.pop(); don't actually need this
-					oLength -= 1;
-				}
-				lastIndex = m[0].length + m.index
-			} else {
-				oLength += 1;
-				console.log("lastIndex: " + regEx.lastIndex)
-				console.log("lastIndex --> oTag: " + str.slice(lastIndex, m.index))
-				outstanding[oLength] = m[1];
-				lastIndex = m[0].length + m.index
-				//console.log("outstanding: " + JSON.stringify(outstanding))
-			}*/
+
 		}
 		if (str.length > regEx.lastIndex) {
 			funcStr += 'tmpltRes+=\'' + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
