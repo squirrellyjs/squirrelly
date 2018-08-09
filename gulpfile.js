@@ -1,5 +1,4 @@
 var gulp = require('gulp')
-const compiler = require('google-closure-compiler-js').gulp()
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 
