@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script src="ugly.min.js"></script>
+    <script src="squirrelly.js"></script>
 </head>
 
 <body>
@@ -11,11 +11,17 @@
     <div id="functionResult"></div>
 
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
-Beginning of 
+Hi
+{{if(4===3)}}
+AAAAAHHH!
+{{#else}}
+Math works
+{{/if}} Nooooo
+Hey h
 </textarea>
     <div id="output"></div>
     <script>
-        Sqrl.registerFilter("reverse", function (str) {
+        Sqrl.defineFilter("reverse", function (str) {
             var out = ''
             for (var i = str.length - 1; i >= 0; i--) {
                 out += str.charAt(i)
@@ -40,12 +46,32 @@ Beginning of
             }, Sqrl)
             document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")
-            document.getElementById("funcitonResult").innerHTML = newtemplatefunction
+            document.getElementById("functionResult").innerHTML = newtemplatefunction
 
         }
         comp()
     </script>
     <p>Helper is called with (args, content, blocks, options)</p>
+    <pre>Native helper: 		if: {
+        helperStart: function (varName, id) {
+            return "if("
+        },
+        afterParams: function (varName, id) {
+            return ") {"
+        },
+        contentStart: function (varName, id) {
+            return varName + "+=("
+        },
+        helperEnd: function (varName, id) {
+            return ")()}"
+        },
+        namespace: {},
+        blocks: {
+            else: function (varName, id) {
+                return ")()} else {" + varName + "+=("
+            }
+        }
+    },</pre>
 </body>
 
 </html>

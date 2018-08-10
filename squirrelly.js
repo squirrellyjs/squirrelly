@@ -32,6 +32,15 @@
 			}
 			today = mm + '/' + dd + '/' + yyyy;
 			return today
+		},
+		If: function (args, content, blocks, options) {
+			if (args[0]) {
+				return content()
+			} else {
+				if (blocks && blocks.else) {
+					return blocks.else()
+				}
+			}
 		}
 	}
 	Sqrl.H = Sqrl.Helpers
@@ -42,7 +51,7 @@
 	Sqrl.registerLayout = function (name, callback) {
 
 	}
-	Sqrl.registerHelper = function (name, callback) {
+	Sqrl.defineHelper = function (name, callback) {
 		Sqrl.Helpers[name] = callback
 		Sqrl.H = Sqrl.Helpers
 	}
@@ -103,18 +112,32 @@
 	Sqrl.F.escape = Sqrl.F.e
 	Sqrl.Filters = Sqrl.F
 
-	Sqrl.registerFilter = function (name, callback) {
+	Sqrl.defineFilter = function (name, callback) {
 		Sqrl.F[name] = callback
 		Sqrl.Filters = Sqrl.F
 	}
 
-	Sqrl.builtInHelpers = {
-		if: function (param, blocks, varName, regexps, ofilters, cfilters) { // Opening closing filters, like "Sqrl.F.e(Sqrl.F.d(" and "))"
-			var returnFunc = 'if (typeof helpervals === \'undefined\') helpervals = {}; if(' + param + '){' + varName + '+=' + blocks.default+'(helpervals)}'
-			if (blocks.hasOwnProperty('else')) {
-				returnFunc += 'else { ' + varName + '+=' + blocks.else + '(helpervals)}'
+	Sqrl.nativeHelpers = {
+		if: {
+			helperStart: function (varName, id) {
+				Sqrl.nativeHelpers.if.namespace.mostRecentVarName = varName
+				console.log("most recent varname: " + varName)
+				return "if("
+			},
+			afterParams: function (varName, id) {
+				return ") {" + varName + "+=("
+			},
+			helperEnd: function (varName, id) {
+				return ")()}"
+			},
+			namespace: {},
+			blocks: {
+				else: function (varName, id) {
+					var elseVarName = Sqrl.nativeHelpers.if.namespace.mostRecentVarName
+
+					return ")()} else {" + elseVarName + "+=("
+				}
 			}
-			return returnFunc
 		},
 		each: function (param, blocks, varName, regexps, ofilters, cfilters) {
 			var returnFunc = 'for (var i = 0; i < ' + param + '.length ;i++) {' +
@@ -140,15 +163,17 @@
 		var helperArray = [];
 		var helperNumber = -1;
 		var helperAutoId = 0;
-		var varNames = ["tmpltRes"]
-		var varNameIndex = 0
 		var helperContainsBlocks = {};
 		while ((m = regEx.exec(str)) !== null) {
 			// This is necessary to avoid infinite loops with zero-width matches
 			if (m.index === regEx.lastIndex) {
 				regex.lastIndex++;
 			}
-			varName = varNames[varNameIndex]
+			if (helperNumber < 0) { //If content isn't inside a helper, varName = tmpltRes, otherwise blockRes
+				varName = "tmpltRes"
+			} else {
+				varName = "blockRes"
+			}
 			if (funcStr === "") {
 				funcStr += "var tmpltRes=\'" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
 			} else {
@@ -170,14 +195,20 @@
 					id = helperAutoId;
 					helperAutoId++;
 				}
+				var native = false
+				console.log(JSON.stringify(Sqrl.nativeHelpers))
+				if (Sqrl.nativeHelpers.hasOwnProperty(m[5])) {
+					console.log("native")
+					native = true
+				}
 				helperNumber += 1;
 				var helperTag = {
 					name: m[5],
-					parameters: m[6],
-					id: id
+					id: id,
+					native: native
 				}
 				var params = m[6] || ""
-				params = '[' + params.replace(parameterHelperRefRegEx, function (m, p1, p2) { // p1 scope, p2 string
+				params = params.replace(parameterHelperRefRegEx, function (m, p1, p2) { // p1 scope, p2 string
 					if (typeof p2 === 'undefined') {
 						return m
 					} else {
@@ -186,24 +217,52 @@
 						}
 						return 'helpervals' + p1 + '.' + p2
 					}
-				}) + ']'
+				})
+				if (!native) {
+					params = '[' + params + ']'
+				}
 				helperArray[helperNumber] = helperTag;
-				funcStr += varName + '+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;var blockRes="";'
-				varNameIndex += 1;
-				varNames[varNameIndex] = 'blockRes'
+				if (native) {
+					var nativeObj = Sqrl.nativeHelpers[m[5]]
+					funcStr += nativeObj.helperStart(varName, id) + params + nativeObj.afterParams(varName, id) + 'function(hvals){var hvals' + id + '=hvals;var blockRes="";'
+				} else {
+					funcStr += varName + '+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
+				}
 			} else if (m[8]) {
 				//It's a helper cTag.
 				var mostRecentHelper = helperArray[helperNumber];
-				if (mostRecentHelper && mostRecentHelper === m[4]) {
-					//console.log("lastIndex --> cTag: " + str.slice(lastIndex, m.index))
-					//outstanding.pop(); don't actually need this
+				if (mostRecentHelper && mostRecentHelper.name === m[8]) {
 					helperNumber -= 1;
+					if (mostRecentHelper.native === true) {
+						funcStr += 'return blockRes}' + Sqrl.nativeHelpers[mostRecentHelper.name].helperEnd(varName, mostRecentHelper.id)
+					} else {
+						if (helperContainsBlocks[mostRecentHelper.id]) {
+							funcStr += "return blockRes}});"
+						} else {
+							funcStr += "return blockRes});"
+						}
+					}
+				} else {
+					console.error("Sorry, it doesn't appear that your closing helper tag matches your opening one.")
 				}
 			} else if (m[9]) {
 				//It's a helper block.
-				var parentId = helperArray[helperNumber].id
-				console.log("parentId: " + parentId)
-				helperContainsBlocks[parentId] = true
+				var parent = helperArray[helperNumber]
+				if (parent.native) {
+					var nativeH = Sqrl.nativeHelpers[parent.name]
+					if (nativeH.blocks && nativeH.blocks[m[9]]) {
+						funcStr += "return blockRes}" + nativeH.blocks[m[9]](varName, parent.id) + 'function(hvals){var hvals' + id + '=hvals;var blockRes=\'\';'
+					} else {
+						console.warn("Oops, looks like that native helper isn't configured to accept that block.")
+					}
+				} else {
+					if (!helperContainsBlocks[parent.id]) {
+						funcStr += "return blockRes}, {" + m[9] + ":function(hvals){var hvals" + parentId + "=hvals;var blockRes=\'\';"
+						helperContainsBlocks[parent.id] = true
+					} else {
+						funcStr += "return blockRes}}," + m[9] + ":function(hvals){var hvals" + parentId + "=hvals;var blockRes=\'\';"
+					}
+				}
 			} else if (m[10]) {
 				//It's a possible macro.
 			} else {
@@ -220,10 +279,8 @@
 				if (typeof id !== 'undefined') {
 					if (/(?:\.\.\/)+/g.test(id)) {
 						prefix = helperArray[helperNumber - (id.length / 3)].id
-						console.log("prefix: " + prefix)
 					} else {
 						prefix = id.slice(0, -1)
-						console.log("prefix: " + prefix)
 					}
 				}
 				return "'" + name + "'"
@@ -253,7 +310,11 @@
 
 		}
 		if (str.length > regEx.lastIndex) {
-			funcStr += 'tmpltRes+=\'' + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
+			if (funcStr === "") {
+				funcStr += "var tmpltRes=\'" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
+			} else if (lastIndex !== str.length) {
+				funcStr += "tmpltRes+=\'" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
+			}
 		}
 		funcStr += 'return tmpltRes'
 		//console.log("funcString is: " + funcStr)
