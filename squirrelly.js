@@ -32,15 +32,6 @@
 			}
 			today = mm + '/' + dd + '/' + yyyy;
 			return today
-		},
-		If: function (args, content, blocks, options) {
-			if (args[0]) {
-				return content()
-			} else {
-				if (blocks && blocks.else) {
-					return blocks.else()
-				}
-			}
 		}
 	}
 	Sqrl.H = Sqrl.Helpers
@@ -55,18 +46,24 @@
 		Sqrl.Helpers[name] = callback
 		Sqrl.H = Sqrl.Helpers
 	}
-	Sqrl.Str = function (thing) { /* To make it more safe...I'll probably have people opt in for performance though */
-		if (typeof thing === 'string') {
-			return thing
-		} else if (typeof thing === 'object') {
-			return JSON.stringify(thing)
-		} else {
-			return thing.toString()
-		}
-	}
+	/*
+		Sqrl.Str = function (thing) { // To make it more safe...I'll probably have people opt in for performance though
+			if (typeof thing === 'string') {
+				return thing
+			} else if (typeof thing === 'object') {
+				return JSON.stringify(thing)
+			} else {
+				return thing.toString()
+			}
+	}*/
 
 	Sqrl.Render = function (template, options) {
-		return template(options, Sqrl)
+		if (typeof template === "function") {
+			return template(options, Sqrl)
+		} else if (typeof template === "string") {
+			var templateFunc = Sqrl.Precompile(template)
+			return templateFunc(options, Sqrl)
+		}
 	}
 
 	Sqrl.defaultFilters = { // All strings are automatically passed through the "d" filter (stands for default, but is shortened to save space)
@@ -103,8 +100,11 @@
 				return Sqrl.escMap[s]
 			}
 			var newStr = String(str)
-			var result = /[&<>"'`=\/]/.test(newStr) ? newStr.replace(/[&<>"'`=\/]/g, replaceChar) : newStr
-			return result
+			if (/[&<>"'`=\/]/.test(newStr)) {
+				return newStr.replace(/[&<>"'`=\/]/g, replaceChar)
+			} else {
+				return newStr
+			}
 		}
 		//Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
 	}
@@ -257,10 +257,10 @@
 					}
 				} else {
 					if (!helperContainsBlocks[parent.id]) {
-						funcStr += "return blockRes}, {" + m[9] + ":function(hvals){var hvals" + parentId + "=hvals;var blockRes=\'\';"
+						funcStr += "return blockRes}, {" + m[9] + ":function(hvals){var hvals" + parent.id + "=hvals;var blockRes=\'\';"
 						helperContainsBlocks[parent.id] = true
 					} else {
-						funcStr += "return blockRes}}," + m[9] + ":function(hvals){var hvals" + parentId + "=hvals;var blockRes=\'\';"
+						funcStr += "return blockRes}," + m[9] + ":function(hvals){var hvals" + parent.id + "=hvals;var blockRes=\'\';"
 					}
 				}
 			} else if (m[10]) {

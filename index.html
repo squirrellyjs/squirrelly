@@ -17,6 +17,13 @@ AAAAAHHH!
 {{#else}}
 Math works
 {{/if}} Nooooo
+{{ben()}}
+Hi
+{{#pineapple}}
+This is a pineapple
+{{#gubler}}
+Gublers
+{{/ben}}
 Hey h
 </textarea>
     <div id="output"></div>
@@ -27,6 +34,10 @@ Hey h
                 out += str.charAt(i)
             }
             return out || str
+        })
+
+        Sqrl.defineHelper("ben", function(args, content, blocks, options) {
+            return "The content of gubler: " + blocks.gubler() + ", the content of pineapple: " + blocks.pineapple()
         })
 
         Sqrl.defaultFilters.reverse = true
@@ -40,6 +51,7 @@ Hey h
 
             console.log("Function returned by comp: ")
             console.log(newtemplatefunction.toString())
+            console.log("typeof newtemplatefunction: " + typeof newtemplatefunction)
             let result = newtemplatefunction({
                 htmlstuff: "<script>alert('hey')<\/script><p>alert('hey')</p><p>alert('hey')</p><p>alert('hey')</p>",
                 arr: ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 3*4]
