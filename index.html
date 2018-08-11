@@ -54,7 +54,11 @@ Hey h
             console.log("typeof newtemplatefunction: " + typeof newtemplatefunction)
             let result = newtemplatefunction({
                 htmlstuff: "<script>alert('hey')<\/script><p>alert('hey')</p><p>alert('hey')</p><p>alert('hey')</p>",
-                arr: ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 3*4]
+                arr: ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 3*4],
+                obj: {
+                    firstchild: "HI",
+                    secondchild: "HEY"
+                }
             }, Sqrl)
             document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")

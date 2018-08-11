@@ -15,37 +15,92 @@
 		root.Sqrl = factory()
 	}
 })(typeof self !== 'undefined' ? self : this, function (fs) {
-	var Sqrl = {} // For all of the functions
-	Sqrl.Utils = {} // For user-accessible ones
-	Sqrl.Compiler = {} // For RegExp's, etc.
-	Sqrl.Helpers = { // For helpers
-		Date: function (args, content, blocks, options) {
-			var today = new Date();
-			var dd = today.getDate();
-			var mm = today.getMonth() + 1; //January is 0!
-			var yyyy = today.getFullYear();
-			if (dd < 10) {
-				dd = '0' + dd
+	var Sqrl = {
+		Compiler: {},
+		Helpers: { // For helpers
+			Date: function (args, content, blocks, options) {
+				var today = new Date();
+				var dd = today.getDate();
+				var mm = today.getMonth() + 1; //January is 0!
+				var yyyy = today.getFullYear();
+				if (dd < 10) {
+					dd = '0' + dd
+				}
+				if (mm < 10) {
+					mm = '0' + mm
+				}
+				today = mm + '/' + dd + '/' + yyyy;
+				return today
 			}
-			if (mm < 10) {
-				mm = '0' + mm
+		},
+		Partials: {},
+		Layouts: {},
+		registerLayout: function (name, callback) {
+
+		},
+		defineHelper: function (name, callback) {
+			Sqrl.Helpers[name] = callback
+			Sqrl.H = Sqrl.Helpers
+		},
+		Render: function (template, options) {
+			if (typeof template === "function") {
+				return template(options, Sqrl)
+			} else if (typeof template === "string") {
+				var templateFunc = Sqrl.Precompile(template)
+				return templateFunc(options, Sqrl)
 			}
-			today = mm + '/' + dd + '/' + yyyy;
-			return today
+		},
+		defaultFilters: { // All strings are automatically passed through the "d" filter (stands for default, but is shortened to save space)
+			//, and then each of the default filters the user
+			// Has set to true. This opens up a realm of possibilities like autoEscape, etc.
+			// List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names
+			e: false // Escape is turned off by default for performance
+		},
+		autoEscape: function (bool) {
+			if (bool) {
+				Sqrl.defaultFilters.e = true
+			} else {
+				Sqrl.defaultFilters.e = false
+			}
+		},
+		escMap: {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			'"': "&quot;",
+			"'": "&#39;",
+			"/": "&#x2F;",
+			"`": "&#x60;",
+			"=": "&#x3D;"
+		},
+		F: { //F stands for filters
+			d: function (str) {
+				return str
+			},
+			e: function (str) {
+				//To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
+				function replaceChar(s) {
+					return Sqrl.escMap[s]
+				}
+				var newStr = String(str)
+				if (/[&<>"'`=\/]/.test(newStr)) {
+					return newStr.replace(/[&<>"'`=\/]/g, replaceChar)
+				} else {
+					return newStr
+				}
+			}
+			//Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
+		},
+		defineFilter: function (name, callback) {
+			Sqrl.F[name] = callback
+			Sqrl.Filters = Sqrl.F
 		}
 	}
+	//Shorthands
 	Sqrl.H = Sqrl.Helpers
-	/* These two are technically just helpers, but in Squirrelly they're 1st-class citizens. */
-	Sqrl.Partials = {} // For partials
 	Sqrl.P = Sqrl.Partials
-	Sqrl.Layouts = {} // For layouts
-	Sqrl.registerLayout = function (name, callback) {
-
-	}
-	Sqrl.defineHelper = function (name, callback) {
-		Sqrl.Helpers[name] = callback
-		Sqrl.H = Sqrl.Helpers
-	}
+	Sqrl.F.escape = Sqrl.F.e
+	Sqrl.Filters = Sqrl.F
 	/*
 		Sqrl.Str = function (thing) { // To make it more safe...I'll probably have people opt in for performance though
 			if (typeof thing === 'string') {
@@ -56,66 +111,6 @@
 				return thing.toString()
 			}
 	}*/
-
-	Sqrl.Render = function (template, options) {
-		if (typeof template === "function") {
-			return template(options, Sqrl)
-		} else if (typeof template === "string") {
-			var templateFunc = Sqrl.Precompile(template)
-			return templateFunc(options, Sqrl)
-		}
-	}
-
-	Sqrl.defaultFilters = { // All strings are automatically passed through the "d" filter (stands for default, but is shortened to save space)
-		//, and then each of the default filters the user
-		// Has set to true. This opens up a realm of possibilities like autoEscape, etc.
-		// List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names
-		e: false // Escape is turned off by default for performance
-	}
-
-	Sqrl.autoEscape = function (bool) {
-		if (bool) {
-			Sqrl.defaultFilters.e = true
-		} else {
-			Sqrl.defaultFilters.e = false
-		}
-	}
-	Sqrl.escMap = {
-		"&": "&amp;",
-		"<": "&lt;",
-		">": "&gt;",
-		'"': "&quot;",
-		"'": "&#39;",
-		"/": "&#x2F;",
-		"`": "&#x60;",
-		"=": "&#x3D;"
-	}
-	Sqrl.F = { //F stands for filters
-		d: function (str) {
-			return str
-		},
-		e: function (str) {
-			//To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
-			function replaceChar(s) {
-				return Sqrl.escMap[s]
-			}
-			var newStr = String(str)
-			if (/[&<>"'`=\/]/.test(newStr)) {
-				return newStr.replace(/[&<>"'`=\/]/g, replaceChar)
-			} else {
-				return newStr
-			}
-		}
-		//Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
-	}
-
-	Sqrl.F.escape = Sqrl.F.e
-	Sqrl.Filters = Sqrl.F
-
-	Sqrl.defineFilter = function (name, callback) {
-		Sqrl.F[name] = callback
-		Sqrl.Filters = Sqrl.F
-	}
 
 	Sqrl.nativeHelpers = {
 		if: {
@@ -128,14 +123,23 @@
 				return ") {" + varName + "+=("
 			},
 			helperEnd: function (varName, id) {
-				return ")()}"
+				var elseVarName = Sqrl.nativeHelpers.if.namespace.mostRecentVarName
+				if (elseVarName === "blockRes") {
+					return ")(hvals)}"
+				} else {
+					return ")()}"
+				}
+				return ")(hvals)}"
 			},
 			namespace: {},
 			blocks: {
 				else: function (varName, id) {
 					var elseVarName = Sqrl.nativeHelpers.if.namespace.mostRecentVarName
-
-					return ")()} else {" + elseVarName + "+=("
+					if (elseVarName === "blockRes") {
+						return ")(hvals)} else {" + elseVarName + "+=("
+					} else {
+						return ")()} else {" + elseVarName + "+=("
+					}
 				}
 			}
 		},
