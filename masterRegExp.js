@@ -10,7 +10,7 @@
 	|
 	(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 	)
-	(?: *?(\| *?[^\n]+ *?)*)* //filter
+	(?: *?(\| *?[^\n]+? *?)*?)? //filter
 	) //end if a global or helper ref
 	| //now if a helper oTag
 	(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([A-Za-z$_]*[\w]*))

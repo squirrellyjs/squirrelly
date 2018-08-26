@@ -12,19 +12,9 @@
 
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hi
-{{if(4===3)}}
-AAAAAHHH!
-{{#else}}
-Math works
-{{/if}} Nooooo
-{{ben()}}
-Hi
-{{#pineapple}}
-This is a pineapple
-{{#gubler}}
-Gublers
-{{/ben}}
-Hey h
+{{each(options.arr)}}
+Value: {{@this|u}}, Index: {{@index}}
+{{/each}}
 </textarea>
     <div id="output"></div>
     <script>

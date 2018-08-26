@@ -114,39 +114,37 @@
 
 	Sqrl.nativeHelpers = {
 		if: {
-			helperStart: function (varName, id) {
-				Sqrl.nativeHelpers.if.namespace.mostRecentVarName = varName
-				console.log("most recent varname: " + varName)
-				return "if("
+			helperStart: function (params, varName) { //helperStart is called with (params, varName, id) but id isn't needed
+				Sqrl.nativeHelpers.if.lastVar = varName
+				return "if(" + params + "){" + varName + "+=("
 			},
-			afterParams: function (varName, id) {
-				return ") {" + varName + "+=("
-			},
-			helperEnd: function (varName, id) {
-				var elseVarName = Sqrl.nativeHelpers.if.namespace.mostRecentVarName
-				if (elseVarName === "blockRes") {
+			helperEnd: function () {
+				var lastVarName = Sqrl.nativeHelpers.if.lastVar
+				if (lastVarName === "blockRes") {
 					return ")(hvals)}"
 				} else {
 					return ")()}"
 				}
-				return ")(hvals)}"
 			},
-			namespace: {},
 			blocks: {
-				else: function (varName, id) {
-					var elseVarName = Sqrl.nativeHelpers.if.namespace.mostRecentVarName
-					if (elseVarName === "blockRes") {
-						return ")(hvals)} else {" + elseVarName + "+=("
+				else: function () { //called with (varName, id) but neither param is needed
+					var lastVarName = Sqrl.nativeHelpers.if.lastVar
+					if (lastVarName === "blockRes") {
+						return ")(hvals)} else {" + lastVarName + "+=("
 					} else {
-						return ")()} else {" + elseVarName + "+=("
+						return ")()} else {" + lastVarName + "+=("
 					}
 				}
 			}
 		},
-		each: function (param, blocks, varName, regexps, ofilters, cfilters) {
-			var returnFunc = 'for (var i = 0; i < ' + param + '.length ;i++) {' +
-				varName + '+=' + blocks.default+'({this: ' + param + '[i], index: i})}'
-			return returnFunc
+		each: {
+			helperStart: function (params, varName) { //helperStart is called with (params, varName, id) but id isn't needed
+				Sqrl.nativeHelpers.each.params = params
+				return "for(var i=0;i<" + params + ".length; i++){" + varName + "+=("
+			},
+			helperEnd: function () {
+				return ")({this:" + Sqrl.nativeHelpers.each.params + "[i],index:i})}"
+			}
 		},
 		foreach: function (param, blocks, varName, regexps, ofilters, cfilters) {
 			var returnFunc = 'for (var key in ' + param + ') {if (!' + param + '.hasOwnProperty(key)) continue;' +
@@ -160,7 +158,7 @@
 	}
 
 	Sqrl.Precompile = function (str) {
-		var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$]+[\w]* *?(?:[^\s\w\($]+[^\n]*)*))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[^\n]+ *?)*)*)|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([A-Za-z$_]*[\w]*))|(?:\/ *?([a-zA-Z_$]+[\w]*))|(?:# *?([a-zA-Z_$]+[\w]*))|(?:([^]+?))) *?}}/g;
+		var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$]+[\w]* *?(?:[^\s\w\($]+[^\n]*)*))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[^\n]+? *?)*?)?)|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([A-Za-z$_]*[\w]*))|(?:\/ *?([a-zA-Z_$]+[\w]*))|(?:# *?([a-zA-Z_$]+[\w]*))|(?:([^]+?))) *?}}/g;
 		var parameterHelperRefRegEx = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
 		var lastIndex = 0
 		var funcStr = ""
@@ -228,7 +226,7 @@
 				helperArray[helperNumber] = helperTag;
 				if (native) {
 					var nativeObj = Sqrl.nativeHelpers[m[5]]
-					funcStr += nativeObj.helperStart(varName, id) + params + nativeObj.afterParams(varName, id) + 'function(hvals){var hvals' + id + '=hvals;var blockRes="";'
+					funcStr += nativeObj.helperStart(params, varName, id) + 'function(hvals){var hvals' + id + '=hvals;var blockRes="";'
 				} else {
 					funcStr += varName + '+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
 				}
@@ -286,14 +284,16 @@
 					} else {
 						prefix = id.slice(0, -1)
 					}
-				}
-				return "'" + name + "'"
+					return parseFiltered("hvals" + prefix + "." + name, filters)
+				} //Implied 'else'
+				return parseFiltered("hvals." + name, filters)
 			}
 
 			function parseFiltered(initialString, filterString) {
 				var filtersArray;
 				if (typeof filterString !== 'undefined' && filterString !== null) {
 					filtersArray = filterString.split('|')
+					console.log("filtersArray: " + filtersArray)
 					for (var i = 0; i < filtersArray.length; i++) {
 						filtersArray[i] = filtersArray[i].trim()
 						if (filtersArray[i] === "") continue
@@ -304,11 +304,11 @@
 				}
 				for (key in Sqrl.defaultFilters) {
 					if (Sqrl.defaultFilters[key] === true) {
-						//There's gotta be a more efficient way to do this
 						if (typeof filtersArray !== 'undefined' && (filtersArray.includes("u") || filtersArray.includes("unescape")) && (key === "e" || key === "escape")) continue;
 						initialString = 'Sqrl.F.' + key + '(' + initialString + ')'
 					}
 				}
+				console.log("initialString: " + initialString)
 				return initialString
 			}
 
