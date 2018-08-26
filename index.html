@@ -12,9 +12,9 @@
 
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hi
-{{each(options.arr)}}
-Value: {{@this|u}}, Index: {{@index}}
-{{/each}}
+{{foreach(options.obj)}}
+Value: {{@this}}, Key: {{@key}}
+{{/foreach}}
 </textarea>
     <div id="output"></div>
     <script>
@@ -30,7 +30,7 @@ Value: {{@this|u}}, Index: {{@index}}
             return "The content of gubler: " + blocks.gubler() + ", the content of pineapple: " + blocks.pineapple()
         })
 
-        Sqrl.defaultFilters.reverse = true
+        Sqrl.defaultFilters.reverse = false
         Sqrl.autoEscape(true)
 
 
