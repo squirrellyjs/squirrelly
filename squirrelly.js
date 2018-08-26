@@ -114,8 +114,8 @@
 
 	Sqrl.nativeHelpers = {
 		if: {
-			helperStart: function (params) { //helperStart is called with (params, id) but id isn't needed
-				return "if(" + params + "){"
+			helperStart: function (param) { //helperStart is called with (params, id) but id isn't needed
+				return "if(" + param + "){"
 			},
 			helperEnd: function () {
 				return "}"
@@ -128,25 +128,27 @@
 		},
 		each: {
 			helperStart: function (param) { //helperStart is called with (params, id) but id isn't needed
-				Sqrl.nativeHelpers.each.params = param
 				return "for(var i=0;i<" + param + ".length; i++){tmpltRes+=(function(hvals){var tmpltRes='';"
 			},
-			helperEnd: function () {
-				return "return tmpltRes})({this:" + Sqrl.nativeHelpers.each.param + "[i],index:i})};"
+			helperEnd: function (param) {
+				return "return tmpltRes})({this:" + param + "[i],index:i})};"
 			}
 		},
 		foreach: {
 			helperStart: function (param) {
-				Sqrl.nativeHelpers.foreach.param = param
-					return "for(var key in " + param + "){if(!" + param + ".hasOwnProperty(key)) continue;tmpltRes+=(function(hvals){var tmpltRes='';"
+				return "for(var key in " + param + "){if(!" + param + ".hasOwnProperty(key)) continue;tmpltRes+=(function(hvals){var tmpltRes='';"
 			},
-			helperEnd: function() {
-				return "return tmpltRes})({this:" + Sqrl.nativeHelpers.foreach.param + "[key], key: key})};"
+			helperEnd: function (param) {
+				return "return tmpltRes})({this:" + param + "[key], key: key})};"
 			}
 		},
-		log: function (param, blocks, regexps, ofilters, cfilters) {
-			var returnFunc = 'console.log(' + param + ');'
-			return returnFunc
+		log: {
+			helperStart: function (param) {
+				return "console.log(" + param + ");"
+			},
+			helperEnd: function () {
+				return ""
+			}
 		}
 	}
 
@@ -190,11 +192,6 @@
 					native = true
 				}
 				helperNumber += 1;
-				var helperTag = {
-					name: m[5],
-					id: id,
-					native: native
-				}
 				var params = m[6] || ""
 				params = params.replace(parameterHelperRefRegEx, function (m, p1, p2) { // p1 scope, p2 string
 					if (typeof p2 === 'undefined') {
@@ -206,13 +203,20 @@
 						return 'hvals' + p1 + '.' + p2
 					}
 				})
-
+				if (!native) {
+					params = '[' + params + ']'
+				}
+				var helperTag = {
+					name: m[5],
+					id: id,
+					params: params,
+					native: native
+				}
 				helperArray[helperNumber] = helperTag;
 				if (native) {
 					var nativeObj = Sqrl.nativeHelpers[m[5]]
 					funcStr += nativeObj.helperStart(params, id)
 				} else {
-					params = '[' + params + ']'
 					funcStr += 'tmpltRes+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
 				}
 			} else if (m[8]) {
@@ -221,7 +225,7 @@
 				if (mostRecentHelper && mostRecentHelper.name === m[8]) {
 					helperNumber -= 1;
 					if (mostRecentHelper.native === true) {
-						funcStr += Sqrl.nativeHelpers[mostRecentHelper.name].helperEnd(mostRecentHelper.id)
+						funcStr += Sqrl.nativeHelpers[mostRecentHelper.name].helperEnd(mostRecentHelper.params, mostRecentHelper.id)
 					} else {
 						if (helperContainsBlocks[mostRecentHelper.id]) {
 							funcStr += "return blockRes}});"

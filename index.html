@@ -14,7 +14,13 @@
 Hi
 {{foreach(options.obj)}}
 Value: {{@this}}, Key: {{@key}}
+{{if(@key==="thirdchild")}}
+{{each(options.obj[@key])}}
+Salutations. Index: {{@index}}
+{{/each}}
+{{/if}}
 {{/foreach}}
+
 </textarea>
     <div id="output"></div>
     <script>
@@ -47,7 +53,8 @@ Value: {{@this}}, Key: {{@key}}
                 arr: ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 3*4],
                 obj: {
                     firstchild: "HI",
-                    secondchild: "HEY"
+                    secondchild: "HEY",
+                    thirdchild: [3, 6, 3, 2, 5, 4]
                 }
             }, Sqrl)
             document.getElementById("result1").innerHTML = result
@@ -57,27 +64,6 @@ Value: {{@this}}, Key: {{@key}}
         }
         comp()
     </script>
-    <p>Helper is called with (args, content, blocks, options)</p>
-    <pre>Native helper: 		if: {
-        helperStart: function (varName, id) {
-            return "if("
-        },
-        afterParams: function (varName, id) {
-            return ") {"
-        },
-        contentStart: function (varName, id) {
-            return varName + "+=("
-        },
-        helperEnd: function (varName, id) {
-            return ")()}"
-        },
-        namespace: {},
-        blocks: {
-            else: function (varName, id) {
-                return ")()} else {" + varName + "+=("
-            }
-        }
-    },</pre>
 </body>
 
 </html>
