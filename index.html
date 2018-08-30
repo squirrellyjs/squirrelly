@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script src="squirrelly.js"></script>
+    <script src="dist/squirrelly.min.js"></script>
 </head>
 
 <body>
@@ -20,6 +20,13 @@ Salutations. Index: {{@index}}
 {{/each}}
 {{/if}}
 {{/foreach}}
+
+{{ben()}}
+{{#gubler}}
+Hey
+{{#pineapple}}
+HI
+{{/ben}}
 
 </textarea>
     <div id="output"></div>
@@ -57,6 +64,7 @@ Salutations. Index: {{@index}}
                     thirdchild: [3, 6, 3, 2, 5, 4]
                 }
             }, Sqrl)
+            console.log("result: " + result)
             document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")
             document.getElementById("functionResult").innerHTML = newtemplatefunction
