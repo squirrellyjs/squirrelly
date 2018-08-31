@@ -26,7 +26,7 @@
     "swig"
   ],
   "author": "Ben Gubler <nebrelbug@gmail.com> (https://bengubler.com)",
-  "license": "ISC",
+  "license": "MIT",
   "bin": {
     "squirrelly": "cli.js"
   },
@@ -37,7 +37,6 @@
   "bugs": {
     "url": "https://github.com/nebrelbug/squirrelly/issues"
   },
-  "homepage": "https://squirrelly.js.org",
   "dependencies": {},
   "devDependencies": {
     "mocha": "^5.1.1",
