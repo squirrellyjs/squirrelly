@@ -7,7 +7,7 @@
 		exports["Sqrl"] = factory();
 	else
 		root["Sqrl"] = factory();
-})(window, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};

@@ -28,7 +28,8 @@ module.exports = env => {
             path: path.resolve(__dirname, 'dist'),
             filename: fileName,
             library: 'Sqrl',
-            libraryTarget: 'umd'
+            libraryTarget: 'umd',
+            globalObject: "typeof self !== 'undefined' ? self : this",
         },
         optimization: {
             minimizer: [
