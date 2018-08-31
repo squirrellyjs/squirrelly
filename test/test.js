@@ -1,5 +1,5 @@
 var assert = require('assert')
-var Sqrl = require('../squirrelly.js')
+var Sqrl = require('../dist/squirrelly.min.js')
 
 describe('Precompilation', function () {
   it('Should return correct parsed value', function () {
