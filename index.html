@@ -17,6 +17,7 @@ Value: {{@this}}, Key: {{@key}}
 {{if(@key==="thirdchild")}}
 {{each(options.obj[@key])}}
 Salutations. Index: {{@index}}
+Old key: {{@../key}}
 {{/each}}
 {{/if}}
 {{/foreach}}

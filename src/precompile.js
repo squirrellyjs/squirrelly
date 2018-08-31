@@ -1,6 +1,6 @@
 import regEx, {paramHelperRefRegExp as parameterHelperRefRegEx} from './regexps.js'
 import nativeHelpers from './nativeHelpers.js'
-
+import {defaultFilters} from './utils.js'
 
 function Precompile(str) {
     var lastIndex = 0
@@ -114,7 +114,7 @@ function Precompile(str) {
             var prefix;
             if (typeof id !== 'undefined') {
                 if (/(?:\.\.\/)+/g.test(id)) {
-                    prefix = helperArray[helperNumber - (id.length / 3)].id
+                    prefix = helperArray[helperNumber - (id.length / 3) -1].id
                 } else {
                     prefix = id.slice(0, -1)
                 }
@@ -131,12 +131,12 @@ function Precompile(str) {
                     filtersArray[i] = filtersArray[i].trim()
                     if (filtersArray[i] === "") continue
                     if (filtersArray[i] === "unescape" || filtersArray[i] === "u") continue
-                    if (Sqrl.defaultFilters.e && (filtersArray[i] === "e" || filtersArray[i] === "escape")) continue
+                    if (defaultFilters.e && (filtersArray[i] === "e" || filtersArray[i] === "escape")) continue
                     initialString = 'Sqrl.F.' + filtersArray[i] + '(' + initialString + ')'
                 }
             }
-            for (var key in Sqrl.defaultFilters) {
-                if (Sqrl.defaultFilters[key] === true) {
+            for (var key in defaultFilters) {
+                if (defaultFilters[key] === true) {
                     if (typeof filtersArray !== 'undefined' && (filtersArray.includes("u") || filtersArray.includes("unescape")) && (key === "e" || key === "escape")) continue;
                     initialString = 'Sqrl.F.' + key + '(' + initialString + ')'
                 }
