@@ -23,7 +23,9 @@
     "sqrl",
     "pug",
     "handlebars",
-    "swig"
+    "swig",
+    "filters",
+    "helpers"
   ],
   "author": "Ben Gubler <nebrelbug@gmail.com> (https://bengubler.com)",
   "license": "MIT",
