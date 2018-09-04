@@ -31,6 +31,10 @@ module.exports = env => {
             libraryTarget: 'umd',
             globalObject: "typeof self !== 'undefined' ? self : this",
         },
+        devServer: {
+            contentBase: path.join(__dirname, ''),
+            port: 9000
+        },
         optimization: {
             minimizer: [
                 new UglifyJsPlugin({

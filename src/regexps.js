@@ -1,6 +1,5 @@
-export default /{{ *?(?:(?:(?:(?:([a-zA-Z_$]+[\w]* *?(?:[^\s\w\($]+[^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[^\n]+? *?)*?)?)|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([A-Za-z$_]*[\w]*))|(?:\/ *?([a-zA-Z_$]+[\w]*))|(?:# *?([a-zA-Z_$]+[\w]*))|(?:([^]+?))) *?}}/g
+export default /{{ *?(?:(?:(?:(?:([a-zA-Z_$]+[\w]* *?(?:[^\s\w\($]+[^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)*?)?)|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([A-Za-z$_]*[\w]*))|(?:\/ *?([a-zA-Z_$]+[\w]*))|(?:# *?([a-zA-Z_$]+[\w]*))|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
 export var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
-
 
 
 //The default RegExp broken down:
@@ -15,7 +14,7 @@ export var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[
 |
 (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 )
-(?: *?(\| *?[^\n]+? *?)*?)? //filter
+(?: *?(\| *?[\w$]+? *?)*?)? //filter
 ) //end if a global or helper ref
 | //now if a helper oTag
 (?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([A-Za-z$_]*[\w]*))
@@ -24,9 +23,10 @@ export var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[
 | //now if a helper block
 (?:# *?([a-zA-Z_$]+[\w]*))
 | //now if a possible macro
-(?:([^]+?))
+(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?\/)
 ) //end or for each possible tag
  *?}}		
+
 
 END REGEXP*/
 /*
@@ -39,7 +39,8 @@ p6: helper parameters
 p7: helper id
 p8: helper cTag name
 p9: helper block name
-p10: possible macro
-Which equals: /{{ *?(?:(?:(?:(?:([a-zA-Z_$]+[\w]* *?(?:[^\s\w\($]+[^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[^\n]+? *?)*?)?)|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([A-Za-z$_]*[\w]*))|(?:\/ *?([a-zA-Z_$]+[\w]*))|(?:# *?([a-zA-Z_$]+[\w]*))|(?:([^]+?))) *?}}/g
+p10: self closing helper name
+p11: self closing helper params
+Which equals: /{{ *?(?:(?:(?:(?:([a-zA-Z_$]+[\w]* *?(?:[^\s\w\($]+[^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)*?)?)|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?([A-Za-z$_]*[\w]*))|(?:\/ *?([a-zA-Z_$]+[\w]*))|(?:# *?([a-zA-Z_$]+[\w]*))|(?:([a-zA-Z_$]+[\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
 Here's the RegExp I use to turn the expanded version between START REGEXP and END REGEXP to a working one: I replace [\f\n\r\t\v\u00a0\u1680\u2000\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]| \/\/[\w ']+\n with nothing.
 */

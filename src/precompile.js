@@ -7,7 +7,7 @@ function Precompile(str) {
     var funcStr = ""
     var helperArray = [];
     var helperNumber = -1;
-    var helperAutoId = 0;
+    var helperAutoId = 0
     var helperContainsBlocks = {};
     var m;
     while ((m = regEx.exec(str)) !== null) {

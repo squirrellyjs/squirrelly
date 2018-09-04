@@ -2,9 +2,8 @@
 const express = require('express')
 const app = express()
 
-app.set('views', 'test/views') // specify the views directory
-app.engine('sqrl', require('../squirrelly.js').__express)
-app.set('view engine', 'sqrl')
+app.set('views', './test/views') // specify the views directory
+app.set('view engine', 'squirelly')
 
 app.get('/', function (req, res) {
   res.render('index', {
