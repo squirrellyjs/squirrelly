@@ -1,6 +1,10 @@
-import regEx, {paramHelperRefRegExp as parameterHelperRefRegEx} from './regexps.js'
+import regEx, {
+    paramHelperRefRegExp as parameterHelperRefRegEx
+} from './regexps.js'
 import nativeHelpers from './nativeHelpers.js'
-import {defaultFilters} from './utils.js'
+import {
+    defaultFilters
+} from './utils.js'
 
 function Precompile(str) {
     var lastIndex = 0
@@ -101,7 +105,25 @@ function Precompile(str) {
                 }
             }
         } else if (m[10]) {
-            //It's a possible macro.
+            //It's a self-closing helper
+            var params = m[11] || ""
+
+            params = params.replace(parameterHelperRefRegEx, function (m, p1, p2) { // p1 scope, p2 string
+                if (typeof p2 === 'undefined') {
+                    return m
+                } else {
+                    if (typeof p1 === 'undefined') {
+                        p1 = ''
+                    }
+                    return 'hvals' + p1 + '.' + p2
+                }
+            })
+            if (nativeHelpers.hasOwnProperty(m[5]) && nativeHelpers[m[5]].hasOwnProperty('selfClosing')) {
+                console.log("worked")
+                funcStr += nativeHelpers[m[5]].selfClosing(params)
+            } else {
+                console.log("didn't work")
+            }
         } else {
             console.error("Err: Code 000")
         }
@@ -114,7 +136,7 @@ function Precompile(str) {
             var prefix;
             if (typeof id !== 'undefined') {
                 if (/(?:\.\.\/)+/g.test(id)) {
-                    prefix = helperArray[helperNumber - (id.length / 3) -1].id
+                    prefix = helperArray[helperNumber - (id.length / 3) - 1].id
                 } else {
                     prefix = id.slice(0, -1)
                 }

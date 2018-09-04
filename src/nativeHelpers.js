@@ -29,11 +29,8 @@ var nativeHelpers = {
         }
     },
     log: {
-        helperStart: function (param) {
+        selfClosing: function (param) {
             return "console.log(" + param + ");"
-        },
-        helperEnd: function () {
-            return ""
         }
     }
 }

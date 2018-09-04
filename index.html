@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script src="dist/squirrelly.min.js"></script>
+    <script src="dist/squirrelly.dev.js"></script>
 </head>
 
 <body>
@@ -12,6 +12,7 @@
 
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hi
+{{log("hey fellas")}}
 {{foreach(options.obj)}}
 Value: {{@this}}, Key: {{@key}}
 {{if(@key==="thirdchild")}}
