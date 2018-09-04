@@ -3,6 +3,7 @@ import Precompile from './precompile.js'
 import * as Sqrl from './index.js'
 import H from './helpers.js'
 import nativeHelpers from './nativeHelpers.js'
+import parameterHelperRefRegEx from './regexps.js'
 
 export function defineFilter(name, callback) {
     F[name] = callback
@@ -29,12 +30,17 @@ export function Render(template, options) {
     }
 }
 
-export var defaultFilters = {
-    /* All strings are automatically passed through the "d" filter (stands for default, but is shortened to save space)
-and then each of the default filters the user
-Has set to true. This opens up a realm of possibilities like autoEscape, etc.
-List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names*/
-    e: false // Escape is turned off by default for performance
-}
-
 export var autoEscape = true;
+
+export function replaceParamHelpers(params) {
+    return params.replace(parameterHelperRefRegEx, function (m, p1, p2) { // p1 scope, p2 string
+        if (typeof p2 === 'undefined') {
+            return m
+        } else {
+            if (typeof p1 === 'undefined') {
+                p1 = ''
+            }
+            return 'hvals' + p1 + '.' + p2
+        }
+    })
+}
