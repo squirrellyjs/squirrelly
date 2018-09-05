@@ -14,7 +14,7 @@
 Hi
 {{log("hey fellas")/}}
 {{foreach(options.obj)}}
-Value: {{@this}}, Key: {{@key}}
+Reversed value: {{@this|reverse}}, Key: {{@key}}
 {{if(@key==="thirdchild")}}
 {{each(options.obj[@key])}}
 Salutations. Index: {{@index}}

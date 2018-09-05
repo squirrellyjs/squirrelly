@@ -105,10 +105,7 @@ function Precompile(str) {
             params = replaceParamHelpers(params)
 
             if (nativeHelpers.hasOwnProperty(m[10]) && nativeHelpers[m[10]].hasOwnProperty('selfClosing')) {
-                console.log("worked")
                 funcStr += nativeHelpers[m[10]].selfClosing(params)
-            } else {
-                console.log("didn't work")
             }
         } else {
             console.error("Err: Code 000")

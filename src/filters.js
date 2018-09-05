@@ -41,6 +41,7 @@ export function parseFiltered(initialString, filterString) {
     var filtersArray;
     if (typeof filterString !== 'undefined' && filterString !== null) {
         filtersArray = filterString.split('|')
+        console.log("filtersArray: " + filtersArray)
         for (var i = 0; i < filtersArray.length; i++) {
             filtersArray[i] = filtersArray[i].trim()
             if (filtersArray[i] === "unescape" || filtersArray[i] === "u" || filtersArray[i] === "safe") continue

@@ -32,8 +32,7 @@ module.exports = env => {
             globalObject: "typeof self !== 'undefined' ? self : this",
         },
         devServer: {
-            contentBase: path.join(__dirname, ''),
-            port: 9000
+            contentBase: path.join(__dirname, '')
         },
         optimization: {
             minimizer: [
