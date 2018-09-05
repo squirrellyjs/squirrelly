@@ -45,6 +45,29 @@ HI
             return "The content of gubler: " + blocks.gubler() + ", the content of pineapple: " + blocks.pineapple()
         })
 
+        function escape (str) {
+            var escMap = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+            "/": "&#x2F;",
+            "`": "&#x60;",
+            "=": "&#x3D;"
+            }
+            //To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
+            function replaceChar(s) {
+                return escMap[s]
+            }
+            var newStr = String(str)
+            if (/[&<>"'`=\/]/.test(newStr)) {
+                return newStr.replace(/[&<>"'`=\/]/g, replaceChar)
+            } else {
+                return newStr
+            }
+       }
+
         Sqrl.defaultFilters.reverse = false
         Sqrl.autoEscape = true
 
@@ -69,7 +92,7 @@ HI
             console.log("result: " + result)
             document.getElementById("result1").innerHTML = result
             console.timeEnd("comp")
-            document.getElementById("functionResult").innerHTML = newtemplatefunction
+            document.getElementById("functionResult").innerHTML = escape(newtemplatefunction)
 
         }
         comp()

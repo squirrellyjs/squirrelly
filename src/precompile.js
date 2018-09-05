@@ -3,8 +3,12 @@ import regEx, {
 } from './regexps.js'
 import nativeHelpers from './nativeHelpers.js'
 import {
-    defaultFilters
+    defaultFilters,
+    parseFiltered
 } from './filters.js'
+import {
+    replaceParamHelpers
+} from './utils.js'
 
 function Precompile(str) {
     var lastIndex = 0
@@ -98,17 +102,8 @@ function Precompile(str) {
         } else if (m[10]) {
             //It's a self-closing helper
             var params = m[11] || ""
+            params = replaceParamHelpers(params)
 
-            params = params.replace(parameterHelperRefRegEx, function (m, p1, p2) { // p1 scope, p2 string
-                if (typeof p2 === 'undefined') {
-                    return m
-                } else {
-                    if (typeof p1 === 'undefined') {
-                        p1 = ''
-                    }
-                    return 'hvals' + p1 + '.' + p2
-                }
-            })
             if (nativeHelpers.hasOwnProperty(m[10]) && nativeHelpers[m[10]].hasOwnProperty('selfClosing')) {
                 console.log("worked")
                 funcStr += nativeHelpers[m[10]].selfClosing(params)
