@@ -3,6 +3,7 @@ import Precompile from './precompile.js'
 import * as Sqrl from './index.js'
 import H from './helpers.js'
 import nativeHelpers from './nativeHelpers.js'
+import parameterHelperRefRegEx from './regexps.js'
 
 export function defineFilter(name, callback) {
     F[name] = callback
