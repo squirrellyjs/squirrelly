@@ -8,7 +8,7 @@ module.exports = env => {
 
     var fileName;
     if (env && env.target && env.target === 'browser') {
-        console.log("hey guys, this is ben")
+        console.log("Compiling")
         if (env.production) {
             fileName = 'squirrelly.runtime.js'
         } else {

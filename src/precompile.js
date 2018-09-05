@@ -4,7 +4,8 @@ import regEx, {
 import nativeHelpers from './nativeHelpers.js'
 import {
     defaultFilters,
-    parseFiltered
+    parseFiltered,
+    cacheDefaultFilters
 } from './filters.js'
 import {
     replaceParamHelpers
@@ -18,6 +19,7 @@ function Precompile(str) {
     var helperAutoId = 0
     var helperContainsBlocks = {};
     var m;
+    cacheDefaultFilters()
     while ((m = regEx.exec(str)) !== null) {
         // This is necessary to avoid infinite loops with zero-width matches
         if (m.index === regEx.lastIndex) {

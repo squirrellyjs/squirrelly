@@ -32,28 +32,47 @@ export var defaultFilters = {
 and then each of the default filters the user
 Has set to true. This opens up a realm of possibilities like autoEscape, etc.
 List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names*/
-    e: false // Escape is turned off by default for performance
+    //e: false, // Escape is turned off by default for performance
+}
+
+export var defaultFilterCache = {
+    start: "",
+    end: ""
 }
 
 export var autoEscape = true;
 
+export function cacheDefaultFilters() {
+    for (var key in defaultFilters) {
+        if (!defaultFilters.hasOwnProperty(key) || !defaultFilters[key]) continue
+        defaultFilterCache.start += "Sqrl.F." + key + "("
+        defaultFilterCache.end += ")"
+    }
+}
 export function parseFiltered(initialString, filterString) {
     var filtersArray;
-    if (typeof filterString !== 'undefined' && filterString !== null) {
+    var safe;
+    var filterStart = ""
+    var filterEnd = ""
+    if (filterString) {
         filtersArray = filterString.split('|')
-        console.log("filtersArray: " + filtersArray)
         for (var i = 0; i < filtersArray.length; i++) {
             filtersArray[i] = filtersArray[i].trim()
-            if (filtersArray[i] === "unescape" || filtersArray[i] === "u" || filtersArray[i] === "safe") continue
-            if (defaultFilters.e && (filtersArray[i] === "e" || filtersArray[i] === "escape")) continue
-            initialString = 'Sqrl.F.' + filtersArray[i] + '(' + initialString + ')'
+            if (filtersArray[i] === "") continue
+            if (filtersArray[i] === "safe") {
+                safe = true
+                continue
+            }
+            filterStart = 'Sqrl.F.' + filtersArray[i] + '(' + filterStart
+            filterEnd += ")"
         }
     }
-    for (var key in defaultFilters) {
-        if (defaultFilters[key] === true) {
-            if (typeof filtersArray !== 'undefined' && (filtersArray.includes("u") || filtersArray.includes("unescape")) && (key === "e" || key === "escape")) continue;
-            initialString = 'Sqrl.F.' + key + '(' + initialString + ')'
-        }
+    filterStart += defaultFilterCache.start
+    filterEnd += defaultFilterCache.end
+    if (!safe && autoEscape) {
+        filterStart += "Sqrl.F.e("
+        filterEnd += ")"
     }
-    return initialString
+
+    return filterStart + initialString + filterEnd;
 }

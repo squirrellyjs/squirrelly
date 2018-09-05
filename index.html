@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script src="dist/squirrelly.dev.js"></script>
+    <script src="./dist/squirrelly.dev.js"></script>
 </head>
 
 <body>
@@ -13,6 +13,7 @@
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hi
 {{log("hey fellas")/}}
+{{htmlstuff}}
 {{foreach(options.obj)}}
 Reversed value: {{@this|reverse}}, Key: {{@key}}
 {{if(@key==="thirdchild")}}
