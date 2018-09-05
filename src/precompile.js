@@ -4,7 +4,7 @@ import regEx, {
 import nativeHelpers from './nativeHelpers.js'
 import {
     defaultFilters
-} from './utils.js'
+} from './filters.js'
 
 function Precompile(str) {
     var lastIndex = 0
@@ -118,9 +118,9 @@ function Precompile(str) {
                     return 'hvals' + p1 + '.' + p2
                 }
             })
-            if (nativeHelpers.hasOwnProperty(m[5]) && nativeHelpers[m[5]].hasOwnProperty('selfClosing')) {
+            if (nativeHelpers.hasOwnProperty(m[10]) && nativeHelpers[m[10]].hasOwnProperty('selfClosing')) {
                 console.log("worked")
-                funcStr += nativeHelpers[m[5]].selfClosing(params)
+                funcStr += nativeHelpers[m[10]].selfClosing(params)
             } else {
                 console.log("didn't work")
             }
