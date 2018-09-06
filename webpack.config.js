@@ -1,5 +1,4 @@
 var path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 var webpack = require('webpack')
 
 module.exports = env => {
@@ -34,13 +33,7 @@ module.exports = env => {
         devServer: {
             contentBase: path.join(__dirname, '')
         },
-        optimization: {
-            minimizer: [
-                new UglifyJsPlugin({
-                    sourceMap: true
-                })
-            ]
-        },
+        devtool: 'sourcemap',
         mode: (env && env.production) ? 'production' : 'development',
         plugins: [
             new webpack.DefinePlugin({

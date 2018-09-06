@@ -40,11 +40,23 @@ export var defaultFilterCache = {
     end: ""
 }
 
+export function autoEscaping (bool) {
+    if (bool) {
+        autoEscape = true
+    } else {
+        autoEscape = false
+    }
+}
+
 export var autoEscape = true;
 
 export function cacheDefaultFilters() {
     for (var key in defaultFilters) {
         if (!defaultFilters.hasOwnProperty(key) || !defaultFilters[key]) continue
+        defaultFilterCache = {
+            start: "",
+            end: ""
+        }
         defaultFilterCache.start += "Sqrl.F." + key + "("
         defaultFilterCache.end += ")"
     }
@@ -54,7 +66,7 @@ export function parseFiltered(initialString, filterString) {
     var safe;
     var filterStart = ""
     var filterEnd = ""
-    if (filterString) {
+    if (filterString && filterString !== "") {
         filtersArray = filterString.split('|')
         for (var i = 0; i < filtersArray.length; i++) {
             filtersArray[i] = filtersArray[i].trim()
