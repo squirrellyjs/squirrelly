@@ -26,8 +26,8 @@ export default {
 //Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
 
 export var defaultFilters = {
-    /* All strings are automatically passed through the "d" filter (stands for default, but is shortened to save space)
-and then each of the default filters the user
+    /* All strings are automatically passed through 
+each of the default filters the user
 Has set to true. This opens up a realm of possibilities like autoEscape, etc.
 List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names*/
     //e: false, // Escape is turned off by default for performance
@@ -36,6 +36,19 @@ List of shortened letters: d: default, e: escape, u: unescape. Escape and Unesca
 export var defaultFilterCache = {
     start: "",
     end: ""
+}
+
+export function setDefaultFilters(obj) {
+    if (obj === "clear") {
+        defaultFilters = {}
+    } else {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                defaultFilters[key] = obj[key]
+            }
+        }
+    }
+    cacheDefaultFilters()
 }
 
 export function autoEscaping (bool) {
@@ -49,12 +62,12 @@ export function autoEscaping (bool) {
 export var autoEscape = true;
 
 export function cacheDefaultFilters() {
+    defaultFilterCache = {
+        start: "",
+        end: ""
+    }
     for (var key in defaultFilters) {
         if (!defaultFilters.hasOwnProperty(key) || !defaultFilters[key]) continue
-        defaultFilterCache = {
-            start: "",
-            end: ""
-        }
         defaultFilterCache.start += "Sqrl.F." + key + "("
         defaultFilterCache.end += ")"
     }
