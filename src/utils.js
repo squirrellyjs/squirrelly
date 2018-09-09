@@ -1,5 +1,5 @@
 import F from './filters.js'
-import Precompile from './precompile.js'
+import Compile from './compile.js'
 import * as Sqrl from './index.js'
 import H from './helpers.js'
 import nativeHelpers from './nativeHelpers.js'
@@ -13,7 +13,7 @@ export function defineHelper(name, callback) {
     H[name] = callback
 }
 
-export function defineNativeHelpers(name, obj) {
+export function defineNativeHelper(name, obj) {
     nativeHelpers[name] = obj
 }
 /*export function defineLayout(name, callback) {
@@ -25,7 +25,7 @@ export function Render(template, options) {
     if (typeof template === "function") {
         return template(options, Sqrl)
     } else if (typeof template === "string") {
-        var templateFunc = Precompile(template)
+        var templateFunc = Compile(template)
         return templateFunc(options, Sqrl)
     }
 }

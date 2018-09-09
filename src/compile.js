@@ -1,17 +1,17 @@
 import regEx, {
     paramHelperRefRegExp as parameterHelperRefRegEx
-} from './regexps.js'
-import nativeHelpers from './nativeHelpers.js'
+} from './regexps'
+import nativeHelpers from './nativeHelpers'
 import {
     defaultFilters,
     parseFiltered,
     cacheDefaultFilters
-} from './filters.js'
+} from './filters'
 import {
     replaceParamHelpers
-} from './utils.js'
+} from './utils'
 
-function Precompile(str) {
+function Compile(str) {
     var lastIndex = 0
     var funcStr = ""
     var helperArray = [];
@@ -108,6 +108,8 @@ function Precompile(str) {
 
             if (nativeHelpers.hasOwnProperty(m[10]) && nativeHelpers[m[10]].hasOwnProperty('selfClosing')) {
                 funcStr += nativeHelpers[m[10]].selfClosing(params)
+            } else {
+                funcStr += 'tmpltRes+=Sqrl.H.' + m[10] + '(' + params + ');'
             }
         } else {
             console.error("Err: Code 000")
@@ -146,7 +148,7 @@ function Precompile(str) {
 }
 
 if (RUNTIME) {
-    Precompile = {}
+    Compile = {}
 }
 
-export default Precompile
+export default Compile

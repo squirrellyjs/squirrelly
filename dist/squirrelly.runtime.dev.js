@@ -96,6 +96,168 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/compile.js":
+/*!************************!*\
+  !*** ./src/compile.js ***!
+  \************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
+/* harmony import */ var _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nativeHelpers */ "./src/nativeHelpers.js");
+/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+
+
+
+
+
+function Compile(str) {
+    var lastIndex = 0
+    var funcStr = ""
+    var helperArray = [];
+    var helperNumber = -1;
+    var helperAutoId = 0
+    var helperContainsBlocks = {};
+    var m;
+    Object(_filters__WEBPACK_IMPORTED_MODULE_2__["cacheDefaultFilters"])()
+    while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["default"].exec(str)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === _regexps__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex) {
+            _regexps__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex++;
+        }
+        if (funcStr === "") {
+            funcStr += "var tmpltRes=\'" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
+        } else {
+            if (lastIndex !== m.index) {
+                funcStr += 'tmpltRes+=\'' + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
+            }
+        }
+        lastIndex = m[0].length + m.index
+        if (m[1]) {
+            //It's a global ref. p4 = filters
+            funcStr += 'tmpltRes+=' + globalRef(m[1], m[4]) + ';'
+        } else if (m[3]) {
+            //It's a helper ref. p2 = id (with ':' after it) or path, p4 = filters
+            funcStr += 'tmpltRes+=' + helperRef(m[3], m[2], m[4]) + ';'
+        } else if (m[5]) {
+            //It's a helper oTag. p6 parameters, p7 id
+            var id = m[7]
+            if (id === "" || id === null) {
+                id = helperAutoId;
+                helperAutoId++;
+            }
+            var native = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[5]) //true or false
+            helperNumber += 1;
+            var params = m[6] || ""
+            params = Object(_utils__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(params)
+            if (!native) {
+                params = '[' + params + ']'
+            }
+            var helperTag = {
+                name: m[5],
+                id: id,
+                params: params,
+                native: native
+            }
+            helperArray[helperNumber] = helperTag;
+            if (native) {
+                var nativeObj = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[5]]
+                funcStr += nativeObj.helperStart(params, id)
+            } else {
+                funcStr += 'tmpltRes+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
+            }
+        } else if (m[8]) {
+            //It's a helper cTag.
+            var mostRecentHelper = helperArray[helperNumber];
+            if (mostRecentHelper && mostRecentHelper.name === m[8]) {
+                helperNumber -= 1;
+                if (mostRecentHelper.native === true) {
+                    funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][mostRecentHelper.name].helperEnd(mostRecentHelper.params, mostRecentHelper.id)
+                } else {
+                    if (helperContainsBlocks[mostRecentHelper.id]) {
+                        funcStr += "return tmpltRes}});"
+                    } else {
+                        funcStr += "return tmpltRes});"
+                    }
+                }
+            } else {
+                console.error("Sorry, looks like your opening and closing tags don't match")
+            }
+        } else if (m[9]) {
+            //It's a helper block.
+            var parent = helperArray[helperNumber]
+            if (parent.native) {
+                var nativeH = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][parent.name]
+                if (nativeH.blocks && nativeH.blocks[m[9]]) {
+                    funcStr += nativeH.blocks[m[9]](parent.id)
+                } else {
+                    console.warn("Native helper '%s' doesn't accept that block.", parent.name)
+                }
+            } else {
+                if (!helperContainsBlocks[parent.id]) {
+                    funcStr += "return tmpltRes}, {" + m[9] + ":function(hvals){var hvals" + parent.id + "=hvals;var tmpltRes=\'\';"
+                    helperContainsBlocks[parent.id] = true
+                } else {
+                    funcStr += "return tmpltRes}," + m[9] + ":function(hvals){var hvals" + parent.id + "=hvals;var tmpltRes=\'\';"
+                }
+            }
+        } else if (m[10]) {
+            //It's a self-closing helper
+            var params = m[11] || ""
+            params = Object(_utils__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(params)
+
+            if (_nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[10]) && _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].hasOwnProperty('selfClosing')) {
+                funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(params)
+            } else {
+                funcStr += 'tmpltRes+=Sqrl.H.' + m[10] + '(' + params + ');'
+            }
+        } else {
+            console.error("Err: Code 000")
+        }
+
+        function globalRef(refName, filters) {
+            return Object(_filters__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])('options.' + refName, filters)
+        }
+
+        function helperRef(name, id, filters) {
+            var prefix;
+            if (typeof id !== 'undefined') {
+                if (/(?:\.\.\/)+/g.test(id)) {
+                    prefix = helperArray[helperNumber - (id.length / 3) - 1].id
+                } else {
+                    prefix = id.slice(0, -1)
+                }
+                return Object(_filters__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])("hvals" + prefix + "." + name, filters)
+            } //Implied 'else'
+            return Object(_filters__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])("hvals." + name, filters)
+        }
+
+
+
+    }
+    if (str.length > _regexps__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex) {
+        if (funcStr === "") {
+            funcStr += "var tmpltRes=\'" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
+        } else if (lastIndex !== str.length) {
+            funcStr += "tmpltRes+=\'" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
+        }
+    }
+    funcStr += 'return tmpltRes'
+    var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r'))
+    return func
+}
+
+if (true) {
+    Compile = {}
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Compile);
+
+/***/ }),
+
 /***/ "./src/express.js":
 /*!************************!*\
   !*** ./src/express.js ***!
@@ -263,35 +425,35 @@ if (false) {}
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: __express, H, Precompile, defineFilter, defineHelper, Render, F, defaultFilters, autoEscape, autoEscaping */
+/*! exports provided: __express, H, Compile, defineFilter, defineHelper, Render, F, defaultFilters, autoEscape, autoEscaping */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _express_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./express.js */ "./src/express.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _express_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+/* harmony import */ var _express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./express */ "./src/express.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _express__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers.js */ "./src/helpers.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "H", function() { return _helpers_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers */ "./src/helpers.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "H", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _precompile_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./precompile.js */ "./src/precompile.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Precompile", function() { return _precompile_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Compile", function() { return _compile__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _utils_js__WEBPACK_IMPORTED_MODULE_3__["defineFilter"]; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineFilter"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return _utils_js__WEBPACK_IMPORTED_MODULE_3__["defineHelper"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineHelper"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils_js__WEBPACK_IMPORTED_MODULE_3__["Render"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["Render"]; });
 
-/* harmony import */ var _filters_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./filters.js */ "./src/filters.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "F", function() { return _filters_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "F", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultFilters", function() { return _filters_js__WEBPACK_IMPORTED_MODULE_4__["defaultFilters"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultFilters", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["defaultFilters"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscape", function() { return _filters_js__WEBPACK_IMPORTED_MODULE_4__["autoEscape"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscape", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["autoEscape"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return _filters_js__WEBPACK_IMPORTED_MODULE_4__["autoEscaping"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["autoEscaping"]; });
 
 
 
@@ -352,166 +514,6 @@ if (true) {
     nativeHelpers = {}
 }
 /* harmony default export */ __webpack_exports__["default"] = (nativeHelpers);
-
-/***/ }),
-
-/***/ "./src/precompile.js":
-/*!***************************!*\
-  !*** ./src/precompile.js ***!
-  \***************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _regexps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regexps.js */ "./src/regexps.js");
-/* harmony import */ var _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nativeHelpers.js */ "./src/nativeHelpers.js");
-/* harmony import */ var _filters_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filters.js */ "./src/filters.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
-
-
-
-
-
-function Precompile(str) {
-    var lastIndex = 0
-    var funcStr = ""
-    var helperArray = [];
-    var helperNumber = -1;
-    var helperAutoId = 0
-    var helperContainsBlocks = {};
-    var m;
-    Object(_filters_js__WEBPACK_IMPORTED_MODULE_2__["cacheDefaultFilters"])()
-    while ((m = _regexps_js__WEBPACK_IMPORTED_MODULE_0__["default"].exec(str)) !== null) {
-        // This is necessary to avoid infinite loops with zero-width matches
-        if (m.index === _regexps_js__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex) {
-            _regexps_js__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex++;
-        }
-        if (funcStr === "") {
-            funcStr += "var tmpltRes=\'" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
-        } else {
-            if (lastIndex !== m.index) {
-                funcStr += 'tmpltRes+=\'' + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
-            }
-        }
-        lastIndex = m[0].length + m.index
-        if (m[1]) {
-            //It's a global ref. p4 = filters
-            funcStr += 'tmpltRes+=' + globalRef(m[1], m[4]) + ';'
-        } else if (m[3]) {
-            //It's a helper ref. p2 = id (with ':' after it) or path, p4 = filters
-            funcStr += 'tmpltRes+=' + helperRef(m[3], m[2], m[4]) + ';'
-        } else if (m[5]) {
-            //It's a helper oTag. p6 parameters, p7 id
-            var id = m[7]
-            if (id === "" || id === null) {
-                id = helperAutoId;
-                helperAutoId++;
-            }
-            var native = _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[5]) //true or false
-            helperNumber += 1;
-            var params = m[6] || ""
-            params = Object(_utils_js__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(params)
-            if (!native) {
-                params = '[' + params + ']'
-            }
-            var helperTag = {
-                name: m[5],
-                id: id,
-                params: params,
-                native: native
-            }
-            helperArray[helperNumber] = helperTag;
-            if (native) {
-                var nativeObj = _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_1__["default"][m[5]]
-                funcStr += nativeObj.helperStart(params, id)
-            } else {
-                funcStr += 'tmpltRes+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
-            }
-        } else if (m[8]) {
-            //It's a helper cTag.
-            var mostRecentHelper = helperArray[helperNumber];
-            if (mostRecentHelper && mostRecentHelper.name === m[8]) {
-                helperNumber -= 1;
-                if (mostRecentHelper.native === true) {
-                    funcStr += _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_1__["default"][mostRecentHelper.name].helperEnd(mostRecentHelper.params, mostRecentHelper.id)
-                } else {
-                    if (helperContainsBlocks[mostRecentHelper.id]) {
-                        funcStr += "return tmpltRes}});"
-                    } else {
-                        funcStr += "return tmpltRes});"
-                    }
-                }
-            } else {
-                console.error("Sorry, looks like your opening and closing tags don't match")
-            }
-        } else if (m[9]) {
-            //It's a helper block.
-            var parent = helperArray[helperNumber]
-            if (parent.native) {
-                var nativeH = _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_1__["default"][parent.name]
-                if (nativeH.blocks && nativeH.blocks[m[9]]) {
-                    funcStr += nativeH.blocks[m[9]](parent.id)
-                } else {
-                    console.warn("Native helper '%s' doesn't accept that block.", parent.name)
-                }
-            } else {
-                if (!helperContainsBlocks[parent.id]) {
-                    funcStr += "return tmpltRes}, {" + m[9] + ":function(hvals){var hvals" + parent.id + "=hvals;var tmpltRes=\'\';"
-                    helperContainsBlocks[parent.id] = true
-                } else {
-                    funcStr += "return tmpltRes}," + m[9] + ":function(hvals){var hvals" + parent.id + "=hvals;var tmpltRes=\'\';"
-                }
-            }
-        } else if (m[10]) {
-            //It's a self-closing helper
-            var params = m[11] || ""
-            params = Object(_utils_js__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(params)
-
-            if (_nativeHelpers_js__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[10]) && _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].hasOwnProperty('selfClosing')) {
-                funcStr += _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(params)
-            }
-        } else {
-            console.error("Err: Code 000")
-        }
-
-        function globalRef(refName, filters) {
-            return Object(_filters_js__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])('options.' + refName, filters)
-        }
-
-        function helperRef(name, id, filters) {
-            var prefix;
-            if (typeof id !== 'undefined') {
-                if (/(?:\.\.\/)+/g.test(id)) {
-                    prefix = helperArray[helperNumber - (id.length / 3) - 1].id
-                } else {
-                    prefix = id.slice(0, -1)
-                }
-                return Object(_filters_js__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])("hvals" + prefix + "." + name, filters)
-            } //Implied 'else'
-            return Object(_filters_js__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])("hvals." + name, filters)
-        }
-
-
-
-    }
-    if (str.length > _regexps_js__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex) {
-        if (funcStr === "") {
-            funcStr += "var tmpltRes=\'" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
-        } else if (lastIndex !== str.length) {
-            funcStr += "tmpltRes+=\'" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
-        }
-    }
-    funcStr += 'return tmpltRes'
-    var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r'))
-    return func
-}
-
-if (true) {
-    Precompile = {}
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (Precompile);
 
 /***/ }),
 
@@ -577,18 +579,18 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelpers, Render, replaceParamHelpers */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, replaceParamHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return defineFilter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return defineHelper; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelpers", function() { return defineNativeHelpers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return defineNativeHelper; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
 /* harmony import */ var _filters_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters.js */ "./src/filters.js");
-/* harmony import */ var _precompile_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./precompile.js */ "./src/precompile.js");
+/* harmony import */ var _compile_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile.js */ "./src/compile.js");
 /* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.js */ "./src/index.js");
 /* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helpers.js */ "./src/helpers.js");
 /* harmony import */ var _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./nativeHelpers.js */ "./src/nativeHelpers.js");
@@ -608,7 +610,7 @@ function defineHelper(name, callback) {
     _helpers_js__WEBPACK_IMPORTED_MODULE_3__["default"][name] = callback
 }
 
-function defineNativeHelpers(name, obj) {
+function defineNativeHelper(name, obj) {
     _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_4__["default"][name] = obj
 }
 /*export function defineLayout(name, callback) {
@@ -620,7 +622,7 @@ function Render(template, options) {
     if (typeof template === "function") {
         return template(options, _index_js__WEBPACK_IMPORTED_MODULE_2__)
     } else if (typeof template === "string") {
-        var templateFunc = Object(_precompile_js__WEBPACK_IMPORTED_MODULE_1__["default"])(template)
+        var templateFunc = Object(_compile_js__WEBPACK_IMPORTED_MODULE_1__["default"])(template)
         return templateFunc(options, _index_js__WEBPACK_IMPORTED_MODULE_2__)
     }
 }

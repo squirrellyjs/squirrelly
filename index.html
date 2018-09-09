@@ -71,9 +71,8 @@ HI
 
 
         function comp() {
-            console.clear()
-            console.time("comp")
-            let newtemplatefunction = Sqrl.Precompile(document.getElementById("input").value)
+            console.clear() //For development
+            let newtemplatefunction = Sqrl.Compile(document.getElementById("input").value)
 
             console.log("Function returned by comp: ")
             console.log(newtemplatefunction.toString())
@@ -89,7 +88,6 @@ HI
             }, Sqrl)
             console.log("result: " + result)
             document.getElementById("result1").innerHTML = result
-            console.timeEnd("comp")
             document.getElementById("functionResult").innerHTML = escape(newtemplatefunction)
 
         }
