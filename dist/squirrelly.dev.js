@@ -145,9 +145,7 @@ __webpack_require__.r(__webpack_exports__);
             ">": "&gt;",
             '"': "&quot;",
             "'": "&#39;",
-            "/": "&#x2F;",
-            "`": "&#x60;",
-            "=": "&#x3D;"
+            "/": "&#x2F;"
         }
         //To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
         function replaceChar(s) {

@@ -37,7 +37,7 @@ HI
         Sqrl.defineFilter("reverse", function (str) {
             var out = ''
             for (var i = str.length - 1; i >= 0; i--) {
-                out += str.charAt(i)
+                out += String(str).charAt(i)
             }
             return out || str
         })
@@ -53,9 +53,7 @@ HI
             ">": "&gt;",
             '"': "&quot;",
             "'": "&#39;",
-            "/": "&#x2F;",
-            "`": "&#x60;",
-            "=": "&#x3D;"
+            "/": "&#x2F;"
             }
             //To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
             function replaceChar(s) {
@@ -69,7 +67,6 @@ HI
             }
        }
 
-        Sqrl.defaultFilters.reverse = true
         Sqrl.autoEscaping(true)
 
 
