@@ -314,8 +314,8 @@ __webpack_require__.r(__webpack_exports__);
             return escMap[s]
         }
         var newStr = String(str)
-        if (/[&<>"'`=\/]/.test(newStr)) {
-            return newStr.replace(/[&<>"'`=\/]/g, replaceChar)
+        if (/[&<>"'\/]/.test(newStr)) {
+            return newStr.replace(/[&<>"'\/]/g, replaceChar)
         } else {
             return newStr
         }

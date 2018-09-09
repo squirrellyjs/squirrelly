@@ -16,8 +16,8 @@ export default {
             return escMap[s]
         }
         var newStr = String(str)
-        if (/[&<>"'`=\/]/.test(newStr)) {
-            return newStr.replace(/[&<>"'`=\/]/g, replaceChar)
+        if (/[&<>"'\/]/.test(newStr)) {
+            return newStr.replace(/[&<>"'\/]/g, replaceChar)
         } else {
             return newStr
         }
