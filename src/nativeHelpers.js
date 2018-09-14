@@ -32,6 +32,11 @@ var nativeHelpers = {
         selfClosing: function (param) {
             return "console.log(" + param + ");"
         }
+    },
+    tags: {
+        selfClosing: function (param) {
+            return ""
+        }
     }
 }
 //We don't need to export nativeHelpers for the runtime script

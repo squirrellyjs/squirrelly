@@ -1,5 +1,5 @@
-import regEx, {
-    paramHelperRefRegExp as parameterHelperRefRegEx
+import {
+    tags, regEx
 } from './regexps'
 import nativeHelpers from './nativeHelpers'
 import {
@@ -7,7 +7,10 @@ import {
     parseFiltered
 } from './filters'
 import {
-    replaceParamHelpers
+    replaceParamHelpers,
+    setup,
+    takedown,
+    initialSetup
 } from './utils'
 
 function Compile(str) {
@@ -18,6 +21,7 @@ function Compile(str) {
     var helperAutoId = 0
     var helperContainsBlocks = {};
     var m;
+    setup();
     while ((m = regEx.exec(str)) !== null) {
         // This is necessary to avoid infinite loops with zero-width matches
         if (m.index === regEx.lastIndex) {
@@ -59,8 +63,9 @@ function Compile(str) {
             }
             helperArray[helperNumber] = helperTag;
             if (native) {
-                var nativeObj = nativeHelpers[m[5]]
-                funcStr += nativeObj.helperStart(params, id)
+                var initialLastIndex = regEx.lastIndex
+                funcStr += nativeHelpers[m[5]].helperStart(params, id)
+                regEx.lastIndex = lastIndex = initialLastIndex
             } else {
                 funcStr += 'tmpltRes+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
             }
@@ -87,7 +92,9 @@ function Compile(str) {
             if (parent.native) {
                 var nativeH = nativeHelpers[parent.name]
                 if (nativeH.blocks && nativeH.blocks[m[9]]) {
+                    var initialLastIndex = regEx.lastIndex
                     funcStr += nativeH.blocks[m[9]](parent.id)
+                    regEx.lastIndex = lastIndex = initialLastIndex
                 } else {
                     console.warn("Native helper '%s' doesn't accept that block.", parent.name)
                 }
@@ -105,7 +112,9 @@ function Compile(str) {
             params = replaceParamHelpers(params)
 
             if (nativeHelpers.hasOwnProperty(m[10]) && nativeHelpers[m[10]].hasOwnProperty('selfClosing')) {
+                var initialLastIndex = regEx.lastIndex
                 funcStr += nativeHelpers[m[10]].selfClosing(params)
+                regEx.lastIndex = lastIndex = initialLastIndex
             } else {
                 funcStr += 'tmpltRes+=Sqrl.H.' + m[10] + '(' + params + ');'
             }
@@ -141,6 +150,7 @@ function Compile(str) {
         }
     }
     funcStr += 'return tmpltRes'
+    takedown()
     var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r'))
     return func
 }

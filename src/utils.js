@@ -3,7 +3,13 @@ import Compile from './compile.js'
 import * as Sqrl from './index.js'
 import H from './helpers.js'
 import nativeHelpers from './nativeHelpers.js'
-import {paramHelperRefRegExp} from './regexps.js'
+import {
+    paramHelperRefRegExp,
+    tags,
+    regEx,
+    setRegEx,
+    setTags
+} from './regexps.js'
 
 export function defineFilter(name, callback) {
     F[name] = callback
@@ -16,10 +22,22 @@ export function defineHelper(name, callback) {
 export function defineNativeHelper(name, obj) {
     nativeHelpers[name] = obj
 }
-/*export function defineLayout(name, callback) {
-    Sqrl.Helpers[name] = callback
-    Sqrl.H = Sqrl.Helpers
-}*/
+
+export var initialSetup = {
+    tags: tags,
+    regEx: regEx
+}
+export function setup() {
+    initialSetup = {
+        tags: tags,
+        regEx: regEx
+    }
+}
+
+export function takedown() {
+    setTags(initialSetup.tags)
+    setRegEx(initialSetup.regEx)
+}
 
 export function Render(template, options) {
     if (typeof template === "function") {
@@ -42,4 +60,4 @@ export function replaceParamHelpers(params) {
         }
     })
     return params
-} 
+}

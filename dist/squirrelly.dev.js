@@ -122,10 +122,11 @@ function Compile(str) {
     var helperAutoId = 0
     var helperContainsBlocks = {};
     var m;
-    while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["default"].exec(str)) !== null) {
+    Object(_utils__WEBPACK_IMPORTED_MODULE_3__["setup"])();
+    while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].exec(str)) !== null) {
         // This is necessary to avoid infinite loops with zero-width matches
-        if (m.index === _regexps__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex) {
-            _regexps__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex++;
+        if (m.index === _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex) {
+            _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex++;
         }
         if (funcStr === "") {
             funcStr += "var tmpltRes=\'" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
@@ -163,8 +164,9 @@ function Compile(str) {
             }
             helperArray[helperNumber] = helperTag;
             if (native) {
-                var nativeObj = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[5]]
-                funcStr += nativeObj.helperStart(params, id)
+                var initialLastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex
+                funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[5]].helperStart(params, id)
+                _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex = lastIndex = initialLastIndex
             } else {
                 funcStr += 'tmpltRes+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
             }
@@ -191,7 +193,9 @@ function Compile(str) {
             if (parent.native) {
                 var nativeH = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][parent.name]
                 if (nativeH.blocks && nativeH.blocks[m[9]]) {
+                    var initialLastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex
                     funcStr += nativeH.blocks[m[9]](parent.id)
+                    _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex = lastIndex = initialLastIndex
                 } else {
                     console.warn("Native helper '%s' doesn't accept that block.", parent.name)
                 }
@@ -209,7 +213,9 @@ function Compile(str) {
             params = Object(_utils__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(params)
 
             if (_nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[10]) && _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].hasOwnProperty('selfClosing')) {
+                var initialLastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex
                 funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(params)
+                _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex = lastIndex = initialLastIndex
             } else {
                 funcStr += 'tmpltRes+=Sqrl.H.' + m[10] + '(' + params + ');'
             }
@@ -237,7 +243,7 @@ function Compile(str) {
 
 
     }
-    if (str.length > _regexps__WEBPACK_IMPORTED_MODULE_0__["default"].lastIndex) {
+    if (str.length > _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex) {
         if (funcStr === "") {
             funcStr += "var tmpltRes=\'" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + '\';'
         } else if (lastIndex !== str.length) {
@@ -245,6 +251,7 @@ function Compile(str) {
         }
     }
     funcStr += 'return tmpltRes'
+    Object(_utils__WEBPACK_IMPORTED_MODULE_3__["takedown"])()
     var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r'))
     return func
 }
@@ -518,6 +525,11 @@ var nativeHelpers = {
         selfClosing: function (param) {
             return "console.log(" + param + ");"
         }
+    },
+    tags: {
+        selfClosing: function (param) {
+            return ""
+        }
     }
 }
 //We don't need to export nativeHelpers for the runtime script
@@ -530,15 +542,30 @@ if (false) {}
 /*!************************!*\
   !*** ./src/regexps.js ***!
   \************************/
-/*! exports provided: default, paramHelperRefRegExp */
+/*! exports provided: regEx, paramHelperRefRegExp, tags, setTags, setRegEx */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "regEx", function() { return regEx; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paramHelperRefRegExp", function() { return paramHelperRefRegExp; });
-/* harmony default export */ __webpack_exports__["default"] = (/{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w\($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tags", function() { return tags; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return setTags; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRegEx", function() { return setRegEx; });
+var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w\($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
 var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
+var tags = {
+    start: "{{",
+    end: "}}"
+}
 
+function setTags (obj) {
+    tags = obj
+}
+
+function setRegEx (newRegExp) {
+    regEx = newRegExp
+}
 
 //The default RegExp broken down:
 
@@ -588,7 +615,7 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, replaceParamHelpers */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, initialSetup, setup, takedown, Render, replaceParamHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -596,6 +623,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return defineFilter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return defineHelper; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return defineNativeHelper; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initialSetup", function() { return initialSetup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setup", function() { return setup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "takedown", function() { return takedown; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
 /* harmony import */ var _filters_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters.js */ "./src/filters.js");
@@ -622,10 +652,22 @@ function defineHelper(name, callback) {
 function defineNativeHelper(name, obj) {
     _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_4__["default"][name] = obj
 }
-/*export function defineLayout(name, callback) {
-    Sqrl.Helpers[name] = callback
-    Sqrl.H = Sqrl.Helpers
-}*/
+
+var initialSetup = {
+    tags: _regexps_js__WEBPACK_IMPORTED_MODULE_5__["tags"],
+    regEx: _regexps_js__WEBPACK_IMPORTED_MODULE_5__["regEx"]
+}
+function setup() {
+    initialSetup = {
+        tags: _regexps_js__WEBPACK_IMPORTED_MODULE_5__["tags"],
+        regEx: _regexps_js__WEBPACK_IMPORTED_MODULE_5__["regEx"]
+    }
+}
+
+function takedown() {
+    Object(_regexps_js__WEBPACK_IMPORTED_MODULE_5__["setTags"])(initialSetup.tags)
+    Object(_regexps_js__WEBPACK_IMPORTED_MODULE_5__["setRegEx"])(initialSetup.regEx)
+}
 
 function Render(template, options) {
     if (typeof template === "function") {
@@ -648,7 +690,7 @@ function replaceParamHelpers(params) {
         }
     })
     return params
-} 
+}
 
 /***/ })
 
