@@ -1,5 +1,5 @@
 import {
-    tags, regEx
+    regEx
 } from './regexps'
 import nativeHelpers from './nativeHelpers'
 import {
@@ -9,8 +9,7 @@ import {
 import {
     replaceParamHelpers,
     setup,
-    takedown,
-    initialSetup
+    takedown
 } from './utils'
 
 function Compile(str) {

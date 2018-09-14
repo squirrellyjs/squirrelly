@@ -271,14 +271,16 @@ if (false) {}
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/index.js");
+
 /* harmony default export */ __webpack_exports__["default"] = (function (filePath, options, callback) {
     fs.readFile(filePath, function (err, content) {
         if (err) {
             return callback(err)
         }
         var sqrlString = content.toString()
-        var template = Sqrl.Precompile(sqrlString)
-        var renderedFile = Sqrl.Render(template, options)
+        var template = _index__WEBPACK_IMPORTED_MODULE_0__["Compile"](sqrlString)
+        var renderedFile = _index__WEBPACK_IMPORTED_MODULE_0__["Render"](template, options)
         return callback(null, renderedFile)
     })
 });
