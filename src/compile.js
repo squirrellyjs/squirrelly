@@ -83,7 +83,7 @@ function Compile(str) {
                     }
                 }
             } else {
-                console.error("Sorry, looks like your opening and closing tags don't match")
+                console.error("Helper beginning & end don't match.")
             }
         } else if (m[9]) {
             //It's a helper block.

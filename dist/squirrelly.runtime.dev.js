@@ -185,7 +185,7 @@ function Compile(str) {
                     }
                 }
             } else {
-                console.error("Sorry, looks like your opening and closing tags don't match")
+                console.error("Helper beginning & end don't match.")
             }
         } else if (m[9]) {
             //It's a helper block.
@@ -273,7 +273,9 @@ if (true) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/index.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
+
 
 /* harmony default export */ __webpack_exports__["default"] = (function (filePath, options, callback) {
     fs.readFile(filePath, function (err, content) {
@@ -281,8 +283,8 @@ __webpack_require__.r(__webpack_exports__);
             return callback(err)
         }
         var sqrlString = content.toString()
-        var template = _index__WEBPACK_IMPORTED_MODULE_0__["Compile"](sqrlString)
-        var renderedFile = _index__WEBPACK_IMPORTED_MODULE_0__["Render"](template, options)
+        var template = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(sqrlString)
+        var renderedFile = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["Render"])(template, options)
         return callback(null, renderedFile)
     })
 });
@@ -495,6 +497,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
+
 var nativeHelpers = {
     if: {
         helperStart: function (param) { //helperStart is called with (params, id) but id isn't needed
@@ -532,6 +536,7 @@ var nativeHelpers = {
     },
     tags: {
         selfClosing: function (param) {
+            Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["changeTags"])(param)
             return ""
         }
     }
@@ -548,7 +553,7 @@ if (true) {
 /*!************************!*\
   !*** ./src/regexps.js ***!
   \************************/
-/*! exports provided: regEx, paramHelperRefRegExp, tags, setTags, setRegEx */
+/*! exports provided: regEx, paramHelperRefRegExp, tags, setTags, setRegEx, changeTags */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -558,6 +563,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tags", function() { return tags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return setTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRegEx", function() { return setRegEx; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
 var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w\($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
 var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
 var tags = {
@@ -565,14 +571,25 @@ var tags = {
     end: "}}"
 }
 
-function setTags (obj) {
+function setTags(obj) {
     tags = obj
 }
 
-function setRegEx (newRegExp) {
+function setRegEx(newRegExp) {
+    var lastIndex = regEx.lastIndex
     regEx = newRegExp
+    regEx.lastIndex = lastIndex
 }
 
+function changeTags(tagString) {
+    var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
+    var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
+    var lastIndex = regEx.lastIndex
+    var newRegEx = firstTag + regEx.source.slice(tags.start.length, 0 - tags.end.length) + secondTag
+
+    regEx = RegExp(newRegEx, "g")
+    regEx.lastIndex = lastIndex
+}
 //The default RegExp broken down:
 
 //Total RegEx:

@@ -5,14 +5,25 @@ export var tags = {
     end: "}}"
 }
 
-export function setTags (obj) {
+export function setTags(obj) {
     tags = obj
 }
 
-export function setRegEx (newRegExp) {
+export function setRegEx(newRegExp) {
+    var lastIndex = regEx.lastIndex
     regEx = newRegExp
+    regEx.lastIndex = lastIndex
 }
 
+export function changeTags(tagString) {
+    var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
+    var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
+    var lastIndex = regEx.lastIndex
+    var newRegEx = firstTag + regEx.source.slice(tags.start.length, 0 - tags.end.length) + secondTag
+
+    regEx = RegExp(newRegEx, "g")
+    regEx.lastIndex = lastIndex
+}
 //The default RegExp broken down:
 
 //Total RegEx:

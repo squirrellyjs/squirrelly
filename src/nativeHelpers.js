@@ -1,3 +1,4 @@
+import {changeTags} from './regexps'
 var nativeHelpers = {
     if: {
         helperStart: function (param) { //helperStart is called with (params, id) but id isn't needed
@@ -35,6 +36,7 @@ var nativeHelpers = {
     },
     tags: {
         selfClosing: function (param) {
+            changeTags(param)
             return ""
         }
     }
