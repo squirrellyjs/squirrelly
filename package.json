@@ -1,6 +1,10 @@
 {
   "name": "squirrelly",
+<<<<<<< HEAD
   "version": "5.0.1-beta.0",
+=======
+  "version": "4.1.0",
+>>>>>>> master
   "description": "A simple yet powerful modern template engine that works in the browser, in Node.js, and with ExpressJS.",
   "main": "./dist/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
