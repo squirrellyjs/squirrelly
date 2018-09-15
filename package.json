@@ -6,7 +6,7 @@
   "homepage": "https://squirrelly.js.org",
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report --reporter=text-lcov | codacy-coverage",
     "build:runtime:dev": "webpack --env.target=browser",
     "build:runtime:prod": "webpack --env.target=browser --env.production",
     "build:runtime": "npm run build:runtime:dev && npm run build:runtime:prod",
@@ -43,7 +43,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "coveralls": "^3.0.2",
     "mocha": "^5.1.1",
     "nyc": "^13.0.1",
     "standard": "^12.0.1",
