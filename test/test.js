@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 var assert = require('assert')
 var Sqrl = require('../dist/squirrelly.min.js')
 
