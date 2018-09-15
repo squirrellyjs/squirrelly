@@ -8,7 +8,7 @@ var simpleTemplate = `
 
 var bigTemplate = `
 Hi
-{{log("hey fellas")/}}
+{{log("hi")/}}
 {{htmlstuff}}
 {{foreach(options.obj)}}
 Reversed value: {{@this|reverse}}, Key: {{@key}}
