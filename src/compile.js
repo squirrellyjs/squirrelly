@@ -21,10 +21,8 @@ function Compile (str) {
   while ((m = regEx.exec(str)) !== null) {
     if (funcStr === '') {
       funcStr += "var tmpltRes='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
-    } else {
-      if (lastIndex !== m.index) {
-        funcStr += "tmpltRes+='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
-      }
+    } else if (lastIndex !== m.index) {
+      funcStr += "tmpltRes+='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
     }
     lastIndex = m[0].length + m.index
     if (m[1]) {
@@ -84,7 +82,7 @@ function Compile (str) {
         var nativeH = nativeHelpers[parent.name]
         if (nativeH.blocks && nativeH.blocks[m[9]]) {
           funcStr += nativeH.blocks[m[9]](parent.id)
-          lastIndex = regEx.lastIndex // Shouldn't be needed...
+          lastIndex = regEx.lastIndex
         } else {
           console.warn("Native helper '%s' doesn't accept that block.", parent.name)
         }
