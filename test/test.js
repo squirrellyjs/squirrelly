@@ -2,13 +2,6 @@
 var assert = require('assert')
 var Sqrl = require('../dist/squirrelly.min.js')
 
-<<<<<<< HEAD
-describe('Compilation', function () {
-  it('Should return correct parsed value', function () {
-    assert.strictEqual(Sqrl.Render(Sqrl.Compile('{{title}}'), {
-      title: 'squirrelly is awesome'
-    }), 'squirrelly is awesome')
-=======
 var simpleTemplate = `
 {{title}}
 `
@@ -33,7 +26,7 @@ Custom delimeters!
 var bigTemplateResult = `
 Hi
 
-&lt;script&gt;alert(&#39;hey&#39;)&lt;/script&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;/p&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;/p&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;/p&gt;
+&lt;script&gt;alert(&#39;hey&#39;)&lt;&#x2F;script&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;&#x2F;p&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;&#x2F;p&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;&#x2F;p&gt;
 
 Reversed value: IH, Key: firstchild
 
@@ -60,7 +53,7 @@ Salutations. Index:5 Old key: thirdchild
 The content of gubler: Hey, the content of pineapple: HI
 
 Custom delimeters!
-Hey,&lt;p&gt;Malicious XSS&lt;/p&gt;,Hey,3,12
+Hey,&lt;p&gt;Malicious XSS&lt;&#x2F;p&gt;,Hey,3,12
 `
 
 var simpleTemplateResult = `
@@ -99,6 +92,5 @@ describe('Simple Compilation', function () {
 describe('Complex Compilation', function () {
   it('Comprehensive template returns correct value', function () {
     assert.strictEqual(Sqrl.Render(bigTemplate, data), bigTemplateResult)
->>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
   })
 })
