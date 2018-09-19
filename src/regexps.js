@@ -12,15 +12,11 @@ export function setTags (obj) {
   tags = obj
 }
 
-export function setRegEx (newRegExp) {
-  var lastIndex = regEx.lastIndex
-  regEx = newRegExp
-  regEx.lastIndex = lastIndex
-}
-
 export function setup () {
+  console.log('setup')
   tags = initialTags
   regEx = initialRegEx
+  console.log('tags: %s, regEx: %s', tags, regEx)
 }
 
 export function changeTags (tagString) {

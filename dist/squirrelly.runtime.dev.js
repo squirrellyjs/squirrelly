@@ -239,7 +239,7 @@ function Compile (str) {
     }
     /* eslint-enable no-inner-declarations */
   }
-  if (str.length > lastIndex) {
+  if (str.length > lastIndex) { // Should probably just take out this conditional, it's useless
     if (funcStr === '') {
       funcStr += "var tmpltRes='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
     } else if (lastIndex !== str.length) {
@@ -622,8 +622,10 @@ function setRegEx (newRegExp) {
 }
 
 function setup () {
+  console.log('setup')
   tags = initialTags
   regEx = initialRegEx
+  console.log('tags: %s, regEx: %s', tags, regEx)
 }
 
 function changeTags (tagString) {
