@@ -13,7 +13,8 @@
     "build:lib:prod": "webpack --env.production",
     "build:lib": "npm run build:lib:dev && npm run build:lib:prod",
     "build": "npm run build:lib && npm run build:runtime",
-    "serve": "node_modules/.bin/webpack-dev-server"
+    "serve": "node_modules/.bin/webpack-dev-server",
+    "format": "standard --fix 'src/*.js'"
   },
   "keywords": [
     "template",
@@ -43,7 +44,14 @@
   "dependencies": {},
   "devDependencies": {
     "mocha": "^5.1.1",
+    "standard": "^12.0.1",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0"
+  },
+  "standard": {
+    "ignore": [
+      "test/*.js",
+      "dist/*.js"
+    ]
   }
 }

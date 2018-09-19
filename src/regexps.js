@@ -1,32 +1,32 @@
-export var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w\($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
+export var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
 export var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
 export var tags = {
-    start: "{{",
-    end: "}}"
+  start: '{{',
+  end: '}}'
 }
 
-export function setTags(obj) {
-    tags = obj
+export function setTags (obj) {
+  tags = obj
 }
 
-export function setRegEx(newRegExp) {
-    var lastIndex = regEx.lastIndex
-    regEx = newRegExp
-    regEx.lastIndex = lastIndex
+export function setRegEx (newRegExp) {
+  var lastIndex = regEx.lastIndex
+  regEx = newRegExp
+  regEx.lastIndex = lastIndex
 }
 
-export function changeTags(tagString) {
-    var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
-    var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
-    var lastIndex = regEx.lastIndex
-    var newRegEx = firstTag + regEx.source.slice(tags.start.length, 0 - tags.end.length) + secondTag
+export function changeTags (tagString) {
+  var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
+  var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
+  var lastIndex = regEx.lastIndex
+  var newRegEx = firstTag + regEx.source.slice(tags.start.length, 0 - tags.end.length) + secondTag
 
-    regEx = RegExp(newRegEx, "g")
-    regEx.lastIndex = lastIndex
+  regEx = RegExp(newRegEx, 'g')
+  regEx.lastIndex = lastIndex
 }
-//The default RegExp broken down:
+// The default RegExp broken down:
 
-//Total RegEx:
+// Total RegEx:
 /* START REGEXP
 {{ *? //the beginning
 (?: //or for each possible tag
@@ -47,10 +47,9 @@ export function changeTags(tagString) {
 | //now for a self closing tag
 (?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)
 ) //end or for each possible tag
- *?}}		
+ *?}}
 
-
-END REGEXP*/
+END REGEXP */
 /*
 p1: global ref main
 p2: helper ref id (with ':' after it) or path
