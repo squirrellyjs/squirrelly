@@ -1,4 +1,3 @@
-import F from './filters.js'
 import Compile from './compile.js'
 import * as Sqrl from './index.js'
 import H from './helpers.js'
@@ -10,10 +9,6 @@ import {
   setRegEx,
   setTags
 } from './regexps.js'
-
-export function defineFilter (name, callback) {
-  F[name] = callback
-}
 
 export function defineHelper (name, callback) {
   H[name] = callback

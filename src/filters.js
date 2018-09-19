@@ -1,4 +1,4 @@
-export default {
+export var filters = {
   d: function (str) {
     return str
   },
@@ -99,3 +99,9 @@ export function parseFiltered (initialString, filterString) {
 
   return filterStart + initialString + filterEnd
 }
+
+function defineFilter (name, callback) {
+  filters[name] = callback
+}
+
+export { filters as default, defineFilter }
