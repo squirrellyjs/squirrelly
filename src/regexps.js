@@ -27,7 +27,7 @@ export function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
   var lastIndex = regEx.lastIndex
-  var newRegEx = firstTag + regEx.source.slice(tags.start.length, 0 - tags.end.length) + secondTag
+  var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
 
   regEx = RegExp(newRegEx, 'g')
   regEx.lastIndex = lastIndex

@@ -123,10 +123,11 @@ function Compile (str) {
   var m
   Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["setup"])()
   while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].exec(str)) !== null) {
-    // This is necessary to avoid infinite loops with zero-width matches
-    if (m.index === _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex) {
-      _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex++
+    /* Don't think this is necessary to avoid infinite loops with zero-width matches ...
+    if (m.index === regEx.lastIndex) {
+      regEx.lastIndex++
     }
+    */
     if (funcStr === '') {
       funcStr += "var tmpltRes='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
     } else {
@@ -193,7 +194,7 @@ function Compile (str) {
         if (nativeH.blocks && nativeH.blocks[m[9]]) {
           var initialLastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex
           funcStr += nativeH.blocks[m[9]](parent.id)
-          _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex = lastIndex = initialLastIndex
+          _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex = lastIndex = initialLastIndex // Shouldn't be needed...
         } else {
           console.warn("Native helper '%s' doesn't accept that block.", parent.name)
         }
@@ -238,7 +239,7 @@ function Compile (str) {
     }
     /* eslint-enable no-inner-declarations */
   }
-  if (str.length > _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex) {
+  if (str.length > lastIndex) {
     if (funcStr === '') {
       funcStr += "var tmpltRes='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
     } else if (lastIndex !== str.length) {
@@ -629,7 +630,7 @@ function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
   var lastIndex = regEx.lastIndex
-  var newRegEx = firstTag + regEx.source.slice(tags.start.length, 0 - tags.end.length) + secondTag
+  var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
 
   regEx = RegExp(newRegEx, 'g')
   regEx.lastIndex = lastIndex
