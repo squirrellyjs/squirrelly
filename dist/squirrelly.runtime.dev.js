@@ -123,7 +123,7 @@ function Compile (str) {
   var helperAutoId = 0
   var helperContainsBlocks = {}
   var m
-  Object(_utils__WEBPACK_IMPORTED_MODULE_3__["setup"])()
+  Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["setup"])()
   while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].exec(str)) !== null) {
     // This is necessary to avoid infinite loops with zero-width matches
     if (m.index === _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex) {
@@ -248,7 +248,6 @@ function Compile (str) {
     }
   }
   funcStr += 'return tmpltRes'
-  Object(_utils__WEBPACK_IMPORTED_MODULE_3__["takedown"])()
   var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r')) //eslint-disable-line
   return func
 }
@@ -460,7 +459,7 @@ if (false) {}
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: __express, H, Compile, defineHelper, Render, F, defineFilter, setDefaultFilters, autoEscape, autoEscaping */
+/*! exports provided: __express, H, Compile, defineFilter, defineHelper, Render, F, setDefaultFilters, autoEscape, autoEscaping */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -475,14 +474,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Compile", function() { return _compile__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineFilter"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineHelper"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["Render"]; });
 
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "F", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["default"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["defineFilter"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setDefaultFilters", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["setDefaultFilters"]; });
 
@@ -566,23 +565,30 @@ if (true) {
 /*!************************!*\
   !*** ./src/regexps.js ***!
   \************************/
-/*! exports provided: regEx, paramHelperRefRegExp, tags, setTags, setRegEx, changeTags */
+/*! exports provided: initialRegEx, paramHelperRefRegExp, initialTags, regEx, tags, setTags, setRegEx, setup, changeTags, replaceParamHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "regEx", function() { return regEx; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initialRegEx", function() { return initialRegEx; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paramHelperRefRegExp", function() { return paramHelperRefRegExp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initialTags", function() { return initialTags; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "regEx", function() { return regEx; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tags", function() { return tags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return setTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRegEx", function() { return setRegEx; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setup", function() { return setup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
-var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
+var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
 var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
-var tags = {
-  start: '{{',
-  end: '}}'
+var initialTags = {
+  s: '{{',
+  e: '}}'
 }
+
+var regEx = initialRegEx
+var tags = initialTags
 
 function setTags (obj) {
   tags = obj
@@ -594,6 +600,11 @@ function setRegEx (newRegExp) {
   regEx.lastIndex = lastIndex
 }
 
+function setup () {
+  tags = initialTags
+  regEx = initialRegEx
+}
+
 function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
@@ -602,6 +613,20 @@ function changeTags (tagString) {
 
   regEx = RegExp(newRegEx, 'g')
   regEx.lastIndex = lastIndex
+}
+
+function replaceParamHelpers (params) {
+  params = params.replace(paramHelperRefRegExp, function (m, p1, p2) { // p1 scope, p2 string
+    if (typeof p2 === 'undefined') {
+      return m
+    } else {
+      if (typeof p1 === 'undefined') {
+        p1 = ''
+      }
+      return 'hvals' + p1 + '.' + p2
+    }
+  })
+  return params
 }
 // The default RegExp broken down:
 
@@ -651,64 +676,52 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineHelper, defineNativeHelper, initialSetup, setup, takedown, Render, replaceParamHelpers */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, replaceParamHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return defineFilter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return defineHelper; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return defineNativeHelper; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initialSetup", function() { return initialSetup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setup", function() { return setup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "takedown", function() { return takedown; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
-/* harmony import */ var _compile_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./compile.js */ "./src/compile.js");
-/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.js */ "./src/index.js");
-/* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./helpers.js */ "./src/helpers.js");
-/* harmony import */ var _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nativeHelpers.js */ "./src/nativeHelpers.js");
-/* harmony import */ var _regexps_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regexps.js */ "./src/regexps.js");
+/* harmony import */ var _filters_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters.js */ "./src/filters.js");
+/* harmony import */ var _compile_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile.js */ "./src/compile.js");
+/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.js */ "./src/index.js");
+/* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helpers.js */ "./src/helpers.js");
+/* harmony import */ var _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./nativeHelpers.js */ "./src/nativeHelpers.js");
+/* harmony import */ var _regexps_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regexps.js */ "./src/regexps.js");
 
 
 
 
 
+
+
+function defineFilter (name, callback) {
+  _filters_js__WEBPACK_IMPORTED_MODULE_0__["default"][name] = callback
+}
 
 function defineHelper (name, callback) {
-  _helpers_js__WEBPACK_IMPORTED_MODULE_2__["default"][name] = callback
+  _helpers_js__WEBPACK_IMPORTED_MODULE_3__["default"][name] = callback
 }
 
 function defineNativeHelper (name, obj) {
-  _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_3__["default"][name] = obj
-}
-
-var initialSetup = {
-  tags: _regexps_js__WEBPACK_IMPORTED_MODULE_4__["tags"],
-  regEx: _regexps_js__WEBPACK_IMPORTED_MODULE_4__["regEx"]
-}
-function setup () {
-  initialSetup = {
-    tags: _regexps_js__WEBPACK_IMPORTED_MODULE_4__["tags"],
-    regEx: _regexps_js__WEBPACK_IMPORTED_MODULE_4__["regEx"]
-  }
-}
-
-function takedown () {
-  Object(_regexps_js__WEBPACK_IMPORTED_MODULE_4__["setTags"])(initialSetup.tags)
-  Object(_regexps_js__WEBPACK_IMPORTED_MODULE_4__["setRegEx"])(initialSetup.regEx)
+  _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_4__["default"][name] = obj
 }
 
 function Render (template, options) {
   if (typeof template === 'function') {
-    return template(options, _index_js__WEBPACK_IMPORTED_MODULE_1__)
+    return template(options, _index_js__WEBPACK_IMPORTED_MODULE_2__)
   } else if (typeof template === 'string') {
-    var templateFunc = Object(_compile_js__WEBPACK_IMPORTED_MODULE_0__["default"])(template)
-    return templateFunc(options, _index_js__WEBPACK_IMPORTED_MODULE_1__)
+    var templateFunc = Object(_compile_js__WEBPACK_IMPORTED_MODULE_1__["default"])(template)
+    return templateFunc(options, _index_js__WEBPACK_IMPORTED_MODULE_2__)
   }
 }
 
 function replaceParamHelpers (params) {
-  params = params.replace(_regexps_js__WEBPACK_IMPORTED_MODULE_4__["paramHelperRefRegExp"], function (m, p1, p2) { // p1 scope, p2 string
+  params = params.replace(_regexps_js__WEBPACK_IMPORTED_MODULE_5__["paramHelperRefRegExp"], function (m, p1, p2) { // p1 scope, p2 string
     if (typeof p2 === 'undefined') {
       return m
     } else {

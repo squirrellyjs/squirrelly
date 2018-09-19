@@ -1,15 +1,14 @@
 /* global RUNTIME */
 import {
-  regEx
+  regEx,
+  setup
 } from './regexps'
 import nativeHelpers from './nativeHelpers'
 import {
   parseFiltered
 } from './filters'
 import {
-  replaceParamHelpers,
-  setup,
-  takedown
+  replaceParamHelpers
 } from './utils'
 
 function Compile (str) {
@@ -145,7 +144,6 @@ function Compile (str) {
     }
   }
   funcStr += 'return tmpltRes'
-  takedown()
   var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r')) //eslint-disable-line
   return func
 }

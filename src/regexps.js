@@ -1,9 +1,12 @@
-export var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
+export var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
 export var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
-export var tags = {
-  start: '{{',
-  end: '}}'
+export var initialTags = {
+  s: '{{',
+  e: '}}'
 }
+
+export var regEx = initialRegEx
+export var tags = initialTags
 
 export function setTags (obj) {
   tags = obj
@@ -15,6 +18,11 @@ export function setRegEx (newRegExp) {
   regEx.lastIndex = lastIndex
 }
 
+export function setup () {
+  tags = initialTags
+  regEx = initialRegEx
+}
+
 export function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
@@ -23,6 +31,20 @@ export function changeTags (tagString) {
 
   regEx = RegExp(newRegEx, 'g')
   regEx.lastIndex = lastIndex
+}
+
+export function replaceParamHelpers (params) {
+  params = params.replace(paramHelperRefRegExp, function (m, p1, p2) { // p1 scope, p2 string
+    if (typeof p2 === 'undefined') {
+      return m
+    } else {
+      if (typeof p1 === 'undefined') {
+        p1 = ''
+      }
+      return 'hvals' + p1 + '.' + p2
+    }
+  })
+  return params
 }
 // The default RegExp broken down:
 

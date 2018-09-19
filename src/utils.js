@@ -1,14 +1,15 @@
+import F from './filters.js'
 import Compile from './compile.js'
 import * as Sqrl from './index.js'
 import H from './helpers.js'
 import nativeHelpers from './nativeHelpers.js'
 import {
-  paramHelperRefRegExp,
-  tags,
-  regEx,
-  setRegEx,
-  setTags
+  paramHelperRefRegExp
 } from './regexps.js'
+
+export function defineFilter (name, callback) {
+  F[name] = callback
+}
 
 export function defineHelper (name, callback) {
   H[name] = callback
@@ -16,22 +17,6 @@ export function defineHelper (name, callback) {
 
 export function defineNativeHelper (name, obj) {
   nativeHelpers[name] = obj
-}
-
-export var initialSetup = {
-  tags: tags,
-  regEx: regEx
-}
-export function setup () {
-  initialSetup = {
-    tags: tags,
-    regEx: regEx
-  }
-}
-
-export function takedown () {
-  setTags(initialSetup.tags)
-  setRegEx(initialSetup.regEx)
 }
 
 export function Render (template, options) {

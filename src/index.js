@@ -1,5 +1,5 @@
 export { default as __express } from './express'
 export { default as H } from './helpers'
 export { default as Compile } from './compile'
-export { defineHelper, Render } from './utils'
-export { default as F, defineFilter, setDefaultFilters, autoEscape, autoEscaping } from './filters'
+export { defineFilter, defineHelper, Render } from './utils'
+export { default as F, setDefaultFilters, autoEscape, autoEscaping } from './filters'
