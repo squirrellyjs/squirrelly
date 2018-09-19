@@ -108,9 +108,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
 /* harmony import */ var _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nativeHelpers */ "./src/nativeHelpers.js");
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
 /* global RUNTIME */
-
 
 
 
@@ -153,7 +151,7 @@ function Compile (str) {
       var native = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[5]) // true or false
       helperNumber += 1
       var params = m[6] || ''
-      params = Object(_utils__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(params)
+      params = Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["replaceParamHelpers"])(params)
       if (!native) {
         params = '[' + params + ']'
       }
@@ -210,7 +208,7 @@ function Compile (str) {
     } else if (m[10]) {
       // It's a self-closing helper
       var innerParams = m[11] || ''
-      innerParams = Object(_utils__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(innerParams)
+      innerParams = Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["replaceParamHelpers"])(innerParams)
 
       if (_nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[10]) && _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].hasOwnProperty('selfClosing')) {
         funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(innerParams)
@@ -459,7 +457,7 @@ if (false) {}
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: __express, H, Compile, defineFilter, defineHelper, Render, F, setDefaultFilters, autoEscape, autoEscaping */
+/*! exports provided: __express, H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, F, setDefaultFilters, autoEscape, autoEscaping */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -477,6 +475,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineFilter"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineHelper"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineNativeHelper"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["definePartial"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["Render"]; });
 
@@ -557,6 +559,24 @@ if (true) {
   nativeHelpers = {}
 }
 /* harmony default export */ __webpack_exports__["default"] = (nativeHelpers);
+
+
+/***/ }),
+
+/***/ "./src/partials.js":
+/*!*************************!*\
+  !*** ./src/partials.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var Partials = {/*
+    partialName: "partialString"
+*/}
+
+/* harmony default export */ __webpack_exports__["default"] = (Partials);
 
 
 /***/ }),
@@ -676,7 +696,7 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, replaceParamHelpers */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -685,13 +705,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return defineHelper; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return defineNativeHelper; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
-/* harmony import */ var _filters_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters.js */ "./src/filters.js");
-/* harmony import */ var _compile_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile.js */ "./src/compile.js");
-/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.js */ "./src/index.js");
-/* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helpers.js */ "./src/helpers.js");
-/* harmony import */ var _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./nativeHelpers.js */ "./src/nativeHelpers.js");
-/* harmony import */ var _regexps_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regexps.js */ "./src/regexps.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return definePartial; });
+/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
+/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./src/index.js");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helpers */ "./src/helpers.js");
+/* harmony import */ var _nativeHelpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./nativeHelpers */ "./src/nativeHelpers.js");
+/* harmony import */ var _partials__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./partials */ "./src/partials.js");
 
 
 
@@ -700,38 +720,28 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function defineFilter (name, callback) {
-  _filters_js__WEBPACK_IMPORTED_MODULE_0__["default"][name] = callback
+  _filters__WEBPACK_IMPORTED_MODULE_0__["default"][name] = callback
 }
 
 function defineHelper (name, callback) {
-  _helpers_js__WEBPACK_IMPORTED_MODULE_3__["default"][name] = callback
+  _helpers__WEBPACK_IMPORTED_MODULE_3__["default"][name] = callback
 }
 
 function defineNativeHelper (name, obj) {
-  _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_4__["default"][name] = obj
+  _nativeHelpers__WEBPACK_IMPORTED_MODULE_4__["default"][name] = obj
 }
 
 function Render (template, options) {
   if (typeof template === 'function') {
-    return template(options, _index_js__WEBPACK_IMPORTED_MODULE_2__)
+    return template(options, _index__WEBPACK_IMPORTED_MODULE_2__)
   } else if (typeof template === 'string') {
-    var templateFunc = Object(_compile_js__WEBPACK_IMPORTED_MODULE_1__["default"])(template)
-    return templateFunc(options, _index_js__WEBPACK_IMPORTED_MODULE_2__)
+    var templateFunc = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(template)
+    return templateFunc(options, _index__WEBPACK_IMPORTED_MODULE_2__)
   }
 }
 
-function replaceParamHelpers (params) {
-  params = params.replace(_regexps_js__WEBPACK_IMPORTED_MODULE_5__["paramHelperRefRegExp"], function (m, p1, p2) { // p1 scope, p2 string
-    if (typeof p2 === 'undefined') {
-      return m
-    } else {
-      if (typeof p1 === 'undefined') {
-        p1 = ''
-      }
-      return 'hvals' + p1 + '.' + p2
-    }
-  })
-  return params
+function definePartial (name, str) {
+  _partials__WEBPACK_IMPORTED_MODULE_5__["default"][name] = str
 }
 
 

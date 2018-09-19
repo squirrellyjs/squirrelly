@@ -1,15 +1,13 @@
 /* global RUNTIME */
 import {
   regEx,
-  setup
+  setup,
+  replaceParamHelpers
 } from './regexps'
 import nativeHelpers from './nativeHelpers'
 import {
   parseFiltered
 } from './filters'
-import {
-  replaceParamHelpers
-} from './utils'
 
 function Compile (str) {
   var lastIndex = 0
