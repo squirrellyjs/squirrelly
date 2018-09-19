@@ -123,11 +123,7 @@ function Compile (str) {
   var m
   Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["setup"])()
   while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].exec(str)) !== null) {
-    /* Don't think this is necessary to avoid infinite loops with zero-width matches ...
-    if (m.index === regEx.lastIndex) {
-      regEx.lastIndex++
-    }
-    */
+    console.log('lastIndex: %s, regEx.lastIndex: %s', lastIndex, _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex)
     if (funcStr === '') {
       funcStr += "var tmpltRes='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
     } else {
@@ -192,9 +188,8 @@ function Compile (str) {
       if (parent.native) {
         var nativeH = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][parent.name]
         if (nativeH.blocks && nativeH.blocks[m[9]]) {
-          var initialLastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex
           funcStr += nativeH.blocks[m[9]](parent.id)
-          _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex = lastIndex = initialLastIndex // Shouldn't be needed...
+          lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // Shouldn't be needed...
         } else {
           console.warn("Native helper '%s' doesn't accept that block.", parent.name)
         }
@@ -239,12 +234,10 @@ function Compile (str) {
     }
     /* eslint-enable no-inner-declarations */
   }
-  if (str.length > lastIndex) { // Should probably just take out this conditional, it's useless
-    if (funcStr === '') {
-      funcStr += "var tmpltRes='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
-    } else if (lastIndex !== str.length) {
-      funcStr += "tmpltRes+='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
-    }
+  if (funcStr === '') {
+    funcStr += "var tmpltRes='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
+  } else if (lastIndex !== str.length) {
+    funcStr += "tmpltRes+='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
   }
   funcStr += 'return tmpltRes'
   var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r')) //eslint-disable-line
@@ -582,7 +575,7 @@ var Partials = {/*
 /*!************************!*\
   !*** ./src/regexps.js ***!
   \************************/
-/*! exports provided: initialRegEx, paramHelperRefRegExp, initialTags, regEx, tags, setTags, setRegEx, setup, changeTags, replaceParamHelpers */
+/*! exports provided: initialRegEx, paramHelperRefRegExp, initialTags, regEx, tags, setTags, setup, changeTags, replaceParamHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -593,7 +586,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "regEx", function() { return regEx; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tags", function() { return tags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return setTags; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRegEx", function() { return setRegEx; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setup", function() { return setup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
@@ -611,25 +603,17 @@ function setTags (obj) {
   tags = obj
 }
 
-function setRegEx (newRegExp) {
-  var lastIndex = regEx.lastIndex
-  regEx = newRegExp
-  regEx.lastIndex = lastIndex
-}
-
 function setup () {
-  console.log('setup')
   tags = initialTags
   regEx = initialRegEx
-  console.log('tags: %s, regEx: %s', tags, regEx)
+  regEx.lastIndex = 0
 }
 
 function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
-  var lastIndex = regEx.lastIndex
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
-
+  var lastIndex = regEx.lastIndex
   regEx = RegExp(newRegEx, 'g')
   regEx.lastIndex = lastIndex
 }

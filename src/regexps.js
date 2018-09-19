@@ -13,18 +13,16 @@ export function setTags (obj) {
 }
 
 export function setup () {
-  console.log('setup')
   tags = initialTags
   regEx = initialRegEx
-  console.log('tags: %s, regEx: %s', tags, regEx)
+  regEx.lastIndex = 0
 }
 
 export function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
-  var lastIndex = regEx.lastIndex
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
-
+  var lastIndex = regEx.lastIndex
   regEx = RegExp(newRegEx, 'g')
   regEx.lastIndex = lastIndex
 }

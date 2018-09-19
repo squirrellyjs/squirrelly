@@ -19,11 +19,7 @@ function Compile (str) {
   var m
   setup()
   while ((m = regEx.exec(str)) !== null) {
-    /* Don't think this is necessary to avoid infinite loops with zero-width matches ...
-    if (m.index === regEx.lastIndex) {
-      regEx.lastIndex++
-    }
-    */
+    console.log('lastIndex: %s, regEx.lastIndex: %s', lastIndex, regEx.lastIndex)
     if (funcStr === '') {
       funcStr += "var tmpltRes='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
     } else {
@@ -88,9 +84,8 @@ function Compile (str) {
       if (parent.native) {
         var nativeH = nativeHelpers[parent.name]
         if (nativeH.blocks && nativeH.blocks[m[9]]) {
-          var initialLastIndex = regEx.lastIndex
           funcStr += nativeH.blocks[m[9]](parent.id)
-          regEx.lastIndex = lastIndex = initialLastIndex // Shouldn't be needed...
+          lastIndex = regEx.lastIndex // Shouldn't be needed...
         } else {
           console.warn("Native helper '%s' doesn't accept that block.", parent.name)
         }
@@ -135,12 +130,10 @@ function Compile (str) {
     }
     /* eslint-enable no-inner-declarations */
   }
-  if (str.length > lastIndex) { // Should probably just take out this conditional, it's useless
-    if (funcStr === '') {
-      funcStr += "var tmpltRes='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
-    } else if (lastIndex !== str.length) {
-      funcStr += "tmpltRes+='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
-    }
+  if (funcStr === '') {
+    funcStr += "var tmpltRes='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
+  } else if (lastIndex !== str.length) {
+    funcStr += "tmpltRes+='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
   }
   funcStr += 'return tmpltRes'
   var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r')) //eslint-disable-line
