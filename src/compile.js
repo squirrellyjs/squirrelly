@@ -19,7 +19,6 @@ function Compile (str) {
   var m
   setup()
   while ((m = regEx.exec(str)) !== null) {
-    console.log('lastIndex: %s, regEx.lastIndex: %s', lastIndex, regEx.lastIndex)
     if (funcStr === '') {
       funcStr += "var tmpltRes='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
     } else {
@@ -91,7 +90,7 @@ function Compile (str) {
         }
       } else {
         if (!helperContainsBlocks[parent.id]) {
-          funcStr += 'return tmpltRes}, {' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tmpltRes='';"
+          funcStr += 'return tmpltRes},{' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tmpltRes='';"
           helperContainsBlocks[parent.id] = true
         } else {
           funcStr += 'return tmpltRes},' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tmpltRes='';"
