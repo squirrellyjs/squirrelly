@@ -5,7 +5,8 @@
   "main": "./dist/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
   "scripts": {
-    "test": "mocha --exit",
+    "test": "nyc --reporter=html --reporter=text mocha",
+    "coverage": "nyc report --reporter=text-lcov | codacy-coverage",
     "build:runtime:dev": "webpack --env.target=browser",
     "build:runtime:prod": "webpack --env.target=browser --env.production",
     "build:runtime": "npm run build:runtime:dev && npm run build:runtime:prod",
@@ -44,6 +45,10 @@
   "dependencies": {},
   "devDependencies": {
     "mocha": "^5.1.1",
+<<<<<<< HEAD
+=======
+    "nyc": "^13.0.1",
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
     "standard": "^12.0.1",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0"

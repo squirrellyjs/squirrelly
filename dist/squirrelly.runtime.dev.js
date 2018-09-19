@@ -108,7 +108,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
 /* harmony import */ var _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nativeHelpers */ "./src/nativeHelpers.js");
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
+<<<<<<< HEAD
 /* global RUNTIME */
+=======
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* global RUNTIME */
+
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 
 
 
@@ -121,9 +127,18 @@ function Compile (str) {
   var helperAutoId = 0
   var helperContainsBlocks = {}
   var m
+<<<<<<< HEAD
   Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["setup"])()
   while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].exec(str)) !== null) {
     console.log('lastIndex: %s, regEx.lastIndex: %s', lastIndex, _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex)
+=======
+  Object(_utils__WEBPACK_IMPORTED_MODULE_3__["setup"])()
+  while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].exec(str)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+    if (m.index === _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex) {
+      _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex++
+    }
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
     if (funcStr === '') {
       funcStr += "var tmpltRes='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
     } else {
@@ -133,6 +148,7 @@ function Compile (str) {
     }
     lastIndex = m[0].length + m.index
     if (m[1]) {
+<<<<<<< HEAD
       // It's a global ref. p4 = filters
       funcStr += 'tmpltRes+=' + globalRef(m[1], m[4]) + ';'
     } else if (m[3]) {
@@ -140,6 +156,15 @@ function Compile (str) {
       funcStr += 'tmpltRes+=' + helperRef(m[3], m[2], m[4]) + ';'
     } else if (m[5]) {
       // It's a helper oTag. p6 parameters, p7 id
+=======
+            // It's a global ref. p4 = filters
+      funcStr += 'tmpltRes+=' + globalRef(m[1], m[4]) + ';'
+    } else if (m[3]) {
+            // It's a helper ref. p2 = id (with ':' after it) or path, p4 = filters
+      funcStr += 'tmpltRes+=' + helperRef(m[3], m[2], m[4]) + ';'
+    } else if (m[5]) {
+            // It's a helper oTag. p6 parameters, p7 id
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
       var id = m[7]
       if (id === '' || id === null) {
         id = helperAutoId
@@ -148,7 +173,11 @@ function Compile (str) {
       var native = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[5]) // true or false
       helperNumber += 1
       var params = m[6] || ''
+<<<<<<< HEAD
       params = Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["replaceParamHelpers"])(params)
+=======
+      params = Object(_utils__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(params)
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
       if (!native) {
         params = '[' + params + ']'
       }
@@ -161,17 +190,25 @@ function Compile (str) {
       helperArray[helperNumber] = helperTag
       if (native) {
         funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[5]].helperStart(params, id)
+<<<<<<< HEAD
         lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // the changeTags function sets lastIndex already
+=======
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
       } else {
         funcStr += 'tmpltRes+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
       }
     } else if (m[8]) {
+<<<<<<< HEAD
       // It's a helper cTag.
+=======
+            // It's a helper cTag.
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
       var mostRecentHelper = helperArray[helperNumber]
       if (mostRecentHelper && mostRecentHelper.name === m[8]) {
         helperNumber -= 1
         if (mostRecentHelper.native === true) {
           funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][mostRecentHelper.name].helperEnd(mostRecentHelper.params, mostRecentHelper.id)
+<<<<<<< HEAD
         } else {
           if (helperContainsBlocks[mostRecentHelper.id]) {
             funcStr += 'return tmpltRes}});'
@@ -241,6 +278,79 @@ function Compile (str) {
   }
   funcStr += 'return tmpltRes'
   var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r')) //eslint-disable-line
+=======
+        } else {
+          if (helperContainsBlocks[mostRecentHelper.id]) {
+            funcStr += 'return tmpltRes}});'
+          } else {
+            funcStr += 'return tmpltRes});'
+          }
+        }
+      } else {
+        console.error("Helper beginning & end don't match.")
+      }
+    } else if (m[9]) {
+            // It's a helper block.
+      var parent = helperArray[helperNumber]
+      if (parent.native) {
+        var nativeH = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][parent.name]
+        if (nativeH.blocks && nativeH.blocks[m[9]]) {
+          funcStr += nativeH.blocks[m[9]](parent.id)
+        } else {
+          console.warn("Native helper '%s' doesn't accept that block.", parent.name)
+        }
+      } else {
+        if (!helperContainsBlocks[parent.id]) {
+          funcStr += 'return tmpltRes}, {' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tmpltRes='';"
+          helperContainsBlocks[parent.id] = true
+        } else {
+          funcStr += 'return tmpltRes},' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tmpltRes='';"
+        }
+      }
+    } else if (m[10]) {
+            // It's a self-closing helper
+      var selfClosingParams = m[11] || ''
+      selfClosingParams = Object(_utils__WEBPACK_IMPORTED_MODULE_3__["replaceParamHelpers"])(selfClosingParams)
+
+      if (_nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[10]) && _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].hasOwnProperty('selfClosing')) {
+        funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(selfClosingParams)
+      } else {
+        funcStr += 'tmpltRes+=Sqrl.H.' + m[10] + '(' + selfClosingParams + ');'
+      }
+    } else {
+      console.error('Err: Code 000')
+    }
+        /* eslint-disable no-inner-declarations */
+
+    function globalRef (refName, filters) {
+      return Object(_filters__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])('options.' + refName, filters)
+    }
+
+    function helperRef (name, id, filters) {
+      var prefix
+      if (typeof id !== 'undefined') {
+        if (/(?:\.\.\/)+/g.test(id)) {
+          prefix = helperArray[helperNumber - (id.length / 3) - 1].id
+        } else {
+          prefix = id.slice(0, -1)
+        }
+        return Object(_filters__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])('hvals' + prefix + '.' + name, filters)
+      } // Implied 'else'
+      return Object(_filters__WEBPACK_IMPORTED_MODULE_2__["parseFiltered"])('hvals.' + name, filters)
+    }
+        /* eslint-enable no-inner-declarations */
+  }
+  if (str.length > _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex) {
+    if (funcStr === '') {
+      funcStr += "var tmpltRes='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
+    } else if (lastIndex !== str.length) {
+      funcStr += "tmpltRes+='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
+    }
+  }
+  funcStr += 'return tmpltRes'
+  Object(_utils__WEBPACK_IMPORTED_MODULE_3__["takedown"])()
+  var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r')) // eslint-disable-line no-new-func
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
   return func
 }
 
@@ -264,10 +374,18 @@ if (true) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
 /* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
+<<<<<<< HEAD
 /* global fs */
 
 
 /* harmony default export */ __webpack_exports__["default"] = (function (filePath, options, callback) {
+=======
+/* global fs, RUNTIME */
+
+
+
+function __express (filePath, options, callback) {
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
   fs.readFile(filePath, function (err, content) {
     if (err) {
       return callback(err)
@@ -277,7 +395,18 @@ __webpack_require__.r(__webpack_exports__);
     var renderedFile = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["Render"])(template, options)
     return callback(null, renderedFile)
   })
+<<<<<<< HEAD
 });
+=======
+}
+
+if (true) {
+  __express = {} // eslint-disable-line no-func-assign
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (__express);
+
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 
 
 /***/ }),
@@ -299,9 +428,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "autoEscape", function() { return autoEscape; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cacheDefaultFilters", function() { return cacheDefaultFilters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseFiltered", function() { return parseFiltered; });
+<<<<<<< HEAD
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return filters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return defineFilter; });
 var filters = {
+=======
+/* harmony default export */ __webpack_exports__["default"] = ({
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
   d: function (str) {
     return str
   },
@@ -313,6 +446,7 @@ var filters = {
       '"': '&quot;',
       "'": '&#39;',
       '/': '&#x2F;'
+<<<<<<< HEAD
     }
     // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
     function replaceChar (s) {
@@ -321,10 +455,21 @@ var filters = {
     var newStr = String(str)
     if (/[&<>"'/]/.test(newStr)) {
       return newStr.replace(/[&<>"'/]/g, replaceChar)
+=======
+    }
+        // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
+    function replaceChar (s) {
+      return escMap[s]
+    }
+    var newStr = String(str)
+    if (/[&<>"'/]/.test(newStr)) {
+      return newStr.replace(/[&<>"']/g, replaceChar)
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
     } else {
       return newStr
     }
   }
+<<<<<<< HEAD
 }
 // Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
 
@@ -334,6 +479,17 @@ each of the default filters the user
 Has set to true. This opens up a realm of possibilities like autoEscape, etc.
 List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names */
   // e: false, // Escape is turned off by default for performance
+=======
+});
+// Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
+
+var defaultFilters = {
+    /* All strings are automatically passed through
+each of the default filters the user
+Has set to true. This opens up a realm of possibilities like autoEscape, etc.
+List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names */
+    // e: false, // Escape is turned off by default for performance
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 }
 
 var defaultFilterCache = {
@@ -401,6 +557,7 @@ function parseFiltered (initialString, filterString) {
   }
 
   return filterStart + initialString + filterEnd
+<<<<<<< HEAD
 }
 
 function defineFilter (name, callback) {
@@ -410,6 +567,11 @@ function defineFilter (name, callback) {
 
 
 
+=======
+}
+
+
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 /***/ }),
 
 /***/ "./src/helpers.js":
@@ -555,6 +717,7 @@ if (true) {
 /* harmony default export */ __webpack_exports__["default"] = (nativeHelpers);
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ "./src/partials.js":
@@ -573,6 +736,8 @@ var Partials = {/*
 /* harmony default export */ __webpack_exports__["default"] = (Partials);
 
 
+=======
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 /***/ }),
 
 /***/ "./src/regexps.js":
@@ -592,6 +757,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return setTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setup", function() { return setup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
+<<<<<<< HEAD
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
 var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
 var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
@@ -603,19 +769,36 @@ var initialTags = {
 var regEx = initialRegEx
 var tags = initialTags
 
+=======
+var regEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
+var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
+var tags = {
+  start: '{{',
+  end: '}}'
+}
+
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 function setTags (obj) {
   tags = obj
 }
 
+<<<<<<< HEAD
 function setup () {
   tags = initialTags
   regEx = initialRegEx
   regEx.lastIndex = 0
+=======
+function setRegEx (newRegExp) {
+  var lastIndex = regEx.lastIndex
+  regEx = newRegExp
+  regEx.lastIndex = lastIndex
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 }
 
 function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
+<<<<<<< HEAD
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
   var lastIndex = regEx.lastIndex
   regEx = RegExp(newRegEx, 'g')
@@ -634,6 +817,13 @@ function replaceParamHelpers (params) {
     }
   })
   return params
+=======
+  var lastIndex = regEx.lastIndex
+  var newRegEx = firstTag + regEx.source.slice(tags.start.length, 0 - tags.end.length) + secondTag
+
+  regEx = RegExp(newRegEx, 'g')
+  regEx.lastIndex = lastIndex
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 }
 // The default RegExp broken down:
 
@@ -707,6 +897,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function defineFilter (name, callback) {
+<<<<<<< HEAD
   _filters__WEBPACK_IMPORTED_MODULE_0__["default"][name] = callback
 }
 
@@ -731,6 +922,58 @@ function definePartial (name, str) {
   _partials__WEBPACK_IMPORTED_MODULE_5__["default"][name] = str
 }
 
+=======
+  _filters_js__WEBPACK_IMPORTED_MODULE_0__["default"][name] = callback
+}
+
+function defineHelper (name, callback) {
+  _helpers_js__WEBPACK_IMPORTED_MODULE_3__["default"][name] = callback
+}
+
+function defineNativeHelper (name, obj) {
+  _nativeHelpers_js__WEBPACK_IMPORTED_MODULE_4__["default"][name] = obj
+}
+
+var initialSetup = {
+  tags: _regexps_js__WEBPACK_IMPORTED_MODULE_5__["tags"],
+  regEx: _regexps_js__WEBPACK_IMPORTED_MODULE_5__["regEx"]
+}
+function setup () {
+  initialSetup = {
+    tags: _regexps_js__WEBPACK_IMPORTED_MODULE_5__["tags"],
+    regEx: _regexps_js__WEBPACK_IMPORTED_MODULE_5__["regEx"]
+  }
+}
+
+function takedown () {
+  Object(_regexps_js__WEBPACK_IMPORTED_MODULE_5__["setTags"])(initialSetup.tags)
+  Object(_regexps_js__WEBPACK_IMPORTED_MODULE_5__["setRegEx"])(initialSetup.regEx)
+}
+
+function Render (template, options) {
+  if (typeof template === 'function') {
+    return template(options, _index_js__WEBPACK_IMPORTED_MODULE_2__)
+  } else if (typeof template === 'string') {
+    var templateFunc = Object(_compile_js__WEBPACK_IMPORTED_MODULE_1__["default"])(template)
+    return templateFunc(options, _index_js__WEBPACK_IMPORTED_MODULE_2__)
+  }
+}
+
+function replaceParamHelpers (params) {
+  params = params.replace(_regexps_js__WEBPACK_IMPORTED_MODULE_5__["paramHelperRefRegExp"], function (m, p1, p2) { // p1 scope, p2 string
+    if (typeof p2 === 'undefined') {
+      return m
+    } else {
+      if (typeof p1 === 'undefined') {
+        p1 = ''
+      }
+      return 'hvals' + p1 + '.' + p2
+    }
+  })
+  return params
+}
+
+>>>>>>> 2bfebfb2eaa3411e7977bd7b375d3f3e84e99d9a
 
 /***/ })
 
