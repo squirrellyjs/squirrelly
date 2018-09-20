@@ -2,8 +2,8 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = env => {
-    // console.log('Production: ', (env.production||"undefined")); // true
-    // console.log('Target: ' + (env.target||"undefined"));
+  // console.log('Production: ', (env.production||"undefined")); // true
+  // console.log('Target: ' + (env.target||"undefined"));
 
   var fileName
   if (env && env.target && env.target === 'browser') {
