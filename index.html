@@ -9,7 +9,6 @@
     <pre id="result1"></pre>
     <p>--------------------</p>
     <div id="functionResult"></div>
-
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hi
 {{log("hey fellas")/}}
@@ -30,6 +29,8 @@ Hey
 {{#pineapple}}
 HI
 {{/ben}}
+
+This is a partial: {{include("mypartial")/}}
 {{tags(--,--)/}}
 Custom delimeters!
 --arr--
@@ -47,6 +48,8 @@ Custom delimeters!
         Sqrl.defineHelper("ben", function(args, content, blocks, options) {
             return "The content of gubler: " + blocks.gubler() + ", the content of pineapple: " + blocks.pineapple()
         })
+
+        Sqrl.definePartial("mypartial", "Partial content: the value of arr is {{arr}}")
 
         function escape (str) {
             var escMap = {

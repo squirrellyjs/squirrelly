@@ -108,7 +108,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
 /* harmony import */ var _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nativeHelpers */ "./src/nativeHelpers.js");
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
+/* harmony import */ var _partials__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./partials */ "./src/partials.js");
 /* global RUNTIME */
+
 
 
 
@@ -202,8 +204,14 @@ function Compile (str) {
       // It's a self-closing helper
       var innerParams = m[11] || ''
       innerParams = Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["replaceParamHelpers"])(innerParams)
-
-      if (_nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[10]) && _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].hasOwnProperty('selfClosing')) {
+      if (m[10] === 'include') {
+        var preContent = str.slice(0, m.index)
+        var endContent = str.slice(m.index + m[0].length)
+        var partialParams = innerParams.replace(/'|"/g, '')
+        var partialContent = _partials__WEBPACK_IMPORTED_MODULE_3__["default"][partialParams]
+        str = preContent + partialContent + endContent
+        lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex = m.index
+      } else if (_nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"].hasOwnProperty(m[10]) && _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].hasOwnProperty('selfClosing')) {
         funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(innerParams)
         lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // changeTags sets regEx.lastIndex
       } else {

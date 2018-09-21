@@ -8,6 +8,7 @@ import nativeHelpers from './nativeHelpers'
 import {
   parseFiltered
 } from './filters'
+import P from './partials'
 
 function Compile (str) {
   var lastIndex = 0
@@ -98,8 +99,14 @@ function Compile (str) {
       // It's a self-closing helper
       var innerParams = m[11] || ''
       innerParams = replaceParamHelpers(innerParams)
-
-      if (nativeHelpers.hasOwnProperty(m[10]) && nativeHelpers[m[10]].hasOwnProperty('selfClosing')) {
+      if (m[10] === 'include') {
+        var preContent = str.slice(0, m.index)
+        var endContent = str.slice(m.index + m[0].length)
+        var partialParams = innerParams.replace(/'|"/g, '')
+        var partialContent = P[partialParams]
+        str = preContent + partialContent + endContent
+        lastIndex = regEx.lastIndex = m.index
+      } else if (nativeHelpers.hasOwnProperty(m[10]) && nativeHelpers[m[10]].hasOwnProperty('selfClosing')) {
         funcStr += nativeHelpers[m[10]].selfClosing(innerParams)
         lastIndex = regEx.lastIndex // changeTags sets regEx.lastIndex
       } else {

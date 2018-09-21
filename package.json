@@ -14,7 +14,6 @@
     "build:lib:prod": "webpack --env.production",
     "build:lib": "npm run build:lib:dev && npm run build:lib:prod",
     "build": "npm run build:lib && npm run build:runtime",
-    "serve": "node_modules/.bin/webpack-dev-server",
     "format": "standard --fix 'src/*.js'"
   },
   "keywords": [
