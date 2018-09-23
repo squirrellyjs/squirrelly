@@ -113,7 +113,7 @@ function Compile (str) {
         funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');'
       }
     } else {
-      console.error('Err: Code 000')
+      console.error('Err 0')
     }
     /* eslint-disable no-inner-declarations */
     function globalRef (refName, filters) {
