@@ -126,17 +126,17 @@ function Compile (str) {
   Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["setup"])()
   while ((m = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].exec(str)) !== null) {
     if (funcStr === '') {
-      funcStr += "var tmpltRes='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
+      funcStr += "var tR='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
     } else if (lastIndex !== m.index) {
-      funcStr += "tmpltRes+='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
+      funcStr += "tR+='" + str.slice(lastIndex, m.index).replace(/'/g, "\\'") + '\';'
     }
     lastIndex = m[0].length + m.index
     if (m[1]) {
       // It's a global ref. p4 = filters
-      funcStr += 'tmpltRes+=' + globalRef(m[1], m[4]) + ';'
+      funcStr += 'tR+=' + globalRef(m[1], m[4]) + ';'
     } else if (m[3]) {
       // It's a helper ref. p2 = id (with ':' after it) or path, p4 = filters
-      funcStr += 'tmpltRes+=' + helperRef(m[3], m[2], m[4]) + ';'
+      funcStr += 'tR+=' + helperRef(m[3], m[2], m[4]) + ';'
     } else if (m[5]) {
       // It's a helper oTag. p6 parameters, p7 id
       var id = m[7]
@@ -162,7 +162,7 @@ function Compile (str) {
         funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[5]].helperStart(params, id)
         lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // the changeTags function sets lastIndex already
       } else {
-        funcStr += 'tmpltRes+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
+        funcStr += 'tR+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
       }
     } else if (m[8]) {
       // It's a helper cTag.
@@ -173,9 +173,9 @@ function Compile (str) {
           funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][mostRecentHelper.name].helperEnd(mostRecentHelper.params, mostRecentHelper.id)
         } else {
           if (helperContainsBlocks[mostRecentHelper.id]) {
-            funcStr += 'return tmpltRes}});'
+            funcStr += 'return tR}});'
           } else {
-            funcStr += 'return tmpltRes});'
+            funcStr += 'return tR});'
           }
         }
       } else {
@@ -194,10 +194,10 @@ function Compile (str) {
         }
       } else {
         if (!helperContainsBlocks[parent.id]) {
-          funcStr += 'return tmpltRes},{' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tmpltRes='';"
+          funcStr += 'return tR},{' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tR='';"
           helperContainsBlocks[parent.id] = true
         } else {
-          funcStr += 'return tmpltRes},' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tmpltRes='';"
+          funcStr += 'return tR},' + m[9] + ':function(hvals){var hvals' + parent.id + "=hvals;var tR='';"
         }
       }
     } else if (m[10]) {
@@ -215,7 +215,7 @@ function Compile (str) {
         funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(innerParams)
         lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // changeTags sets regEx.lastIndex
       } else {
-        funcStr += 'tmpltRes+=Sqrl.H.' + m[10] + '(' + innerParams + ');'
+        funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');'
       }
     } else {
       console.error('Err: Code 000')
@@ -240,11 +240,11 @@ function Compile (str) {
     /* eslint-enable no-inner-declarations */
   }
   if (funcStr === '') {
-    funcStr += "var tmpltRes='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
+    funcStr += "var tR='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
   } else if (lastIndex !== str.length) {
-    funcStr += "tmpltRes+='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
+    funcStr += "tR+='" + str.slice(lastIndex, str.length).replace(/'/g, "\\'") + "';"
   }
-  funcStr += 'return tmpltRes'
+  funcStr += 'return tR'
   var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r')) //eslint-disable-line
   return func
 }
@@ -426,7 +426,6 @@ function defineFilter (name, callback) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* global PRODUCTION */
 var helpers = { // For helpers. None included to make it more lightweight
 /*
   Date: function (args, content, blocks, options) {
@@ -525,18 +524,18 @@ var nativeHelpers = {
   },
   each: {
     helperStart: function (param, id) { // helperStart is called with (params, id) but id isn't needed
-      return 'for(var i=0;i<' + param + ".length; i++){tmpltRes+=(function(hvals){var tmpltRes='';var hvals" + id + '=hvals;'
+      return 'for(var i=0;i<' + param + ".length; i++){tR+=(function(hvals){var tR='';var hvals" + id + '=hvals;'
     },
     helperEnd: function (param) {
-      return 'return tmpltRes})({this:' + param + '[i],index:i})};'
+      return 'return tR})({this:' + param + '[i],index:i})};'
     }
   },
   foreach: {
     helperStart: function (param, id) {
-      return 'for(var key in ' + param + '){if(!' + param + ".hasOwnProperty(key)) continue;tmpltRes+=(function(hvals){var tmpltRes='';var hvals" + id + '=hvals;'
+      return 'for(var key in ' + param + '){if(!' + param + ".hasOwnProperty(key)) continue;tR+=(function(hvals){var tR='';var hvals" + id + '=hvals;'
     },
     helperEnd: function (param) {
-      return 'return tmpltRes})({this:' + param + '[key], key: key})};'
+      return 'return tR})({this:' + param + '[key], key: key})};'
     }
   },
   log: {

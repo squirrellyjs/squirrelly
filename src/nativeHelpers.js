@@ -16,18 +16,18 @@ var nativeHelpers = {
   },
   each: {
     helperStart: function (param, id) { // helperStart is called with (params, id) but id isn't needed
-      return 'for(var i=0;i<' + param + ".length; i++){tmpltRes+=(function(hvals){var tmpltRes='';var hvals" + id + '=hvals;'
+      return 'for(var i=0;i<' + param + ".length; i++){tR+=(function(hvals){var tR='';var hvals" + id + '=hvals;'
     },
     helperEnd: function (param) {
-      return 'return tmpltRes})({this:' + param + '[i],index:i})};'
+      return 'return tR})({this:' + param + '[i],index:i})};'
     }
   },
   foreach: {
     helperStart: function (param, id) {
-      return 'for(var key in ' + param + '){if(!' + param + ".hasOwnProperty(key)) continue;tmpltRes+=(function(hvals){var tmpltRes='';var hvals" + id + '=hvals;'
+      return 'for(var key in ' + param + '){if(!' + param + ".hasOwnProperty(key)) continue;tR+=(function(hvals){var tR='';var hvals" + id + '=hvals;'
     },
     helperEnd: function (param) {
-      return 'return tmpltRes})({this:' + param + '[key], key: key})};'
+      return 'return tR})({this:' + param + '[key], key: key})};'
     }
   },
   log: {
