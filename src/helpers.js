@@ -1,4 +1,3 @@
-/* global PRODUCTION */
 var helpers = { // For helpers. None included to make it more lightweight
 /*
   Date: function (args, content, blocks, options) {

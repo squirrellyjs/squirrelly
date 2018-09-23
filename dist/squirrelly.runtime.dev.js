@@ -428,7 +428,7 @@ function defineFilter (name, callback) {
 __webpack_require__.r(__webpack_exports__);
 /* global PRODUCTION */
 var helpers = { // For helpers. None included to make it more lightweight
-
+/*
   Date: function (args, content, blocks, options) {
     var today = new Date()
     var dd = today.getDate()
@@ -442,10 +442,8 @@ var helpers = { // For helpers. None included to make it more lightweight
     }
     today = mm + '/' + dd + '/' + yyyy
     return today
-  }
+  }*/
 }
-
-if (false) {}
 
 /* harmony default export */ __webpack_exports__["default"] = (helpers);
 
