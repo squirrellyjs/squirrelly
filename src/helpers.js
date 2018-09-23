@@ -1,6 +1,6 @@
 /* global PRODUCTION */
 var helpers = { // For helpers. None included to make it more lightweight
-
+/*
   Date: function (args, content, blocks, options) {
     var today = new Date()
     var dd = today.getDate()
@@ -14,11 +14,7 @@ var helpers = { // For helpers. None included to make it more lightweight
     }
     today = mm + '/' + dd + '/' + yyyy
     return today
-  }
-}
-
-if (PRODUCTION) {
-  helpers = {}
+  }*/
 }
 
 export default helpers
