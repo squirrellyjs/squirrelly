@@ -577,33 +577,28 @@ var Partials = {/*
 /*!************************!*\
   !*** ./src/regexps.js ***!
   \************************/
-/*! exports provided: initialRegEx, paramHelperRefRegExp, initialTags, regEx, tags, setTags, setup, changeTags, replaceParamHelpers */
+/*! exports provided: initialRegEx, initialTags, regEx, tags, setup, changeTags, replaceParamHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initialRegEx", function() { return initialRegEx; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paramHelperRefRegExp", function() { return paramHelperRefRegExp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initialTags", function() { return initialTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "regEx", function() { return regEx; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tags", function() { return tags; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return setTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setup", function() { return setup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
 var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
-var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
 var initialTags = {
   s: '{{',
   e: '}}'
 }
 
+var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
+
 var regEx = initialRegEx
 var tags = initialTags
-
-function setTags (obj) {
-  tags = obj
-}
 
 function setup () {
   tags = initialTags
