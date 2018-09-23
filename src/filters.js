@@ -1,7 +1,4 @@
 export var filters = {
-  d: function (str) {
-    return str
-  },
   e: function (str) {
     var escMap = {
       '&': '&amp;',
@@ -29,7 +26,7 @@ export var defaultFilters = {
   /* All strings are automatically passed through
 each of the default filters the user
 Has set to true. This opens up a realm of possibilities like autoEscape, etc.
-List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names */
+*/
   // e: false, // Escape is turned off by default for performance
 }
 
@@ -57,6 +54,7 @@ export function autoEscaping (bool) {
   } else {
     autoEscape = false
   }
+  return autoEscape
 }
 
 export var autoEscape = true

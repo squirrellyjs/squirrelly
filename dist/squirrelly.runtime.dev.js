@@ -307,9 +307,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return filters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return defineFilter; });
 var filters = {
-  d: function (str) {
-    return str
-  },
   e: function (str) {
     var escMap = {
       '&': '&amp;',
@@ -337,7 +334,7 @@ var defaultFilters = {
   /* All strings are automatically passed through
 each of the default filters the user
 Has set to true. This opens up a realm of possibilities like autoEscape, etc.
-List of shortened letters: d: default, e: escape, u: unescape. Escape and Unescape are also valid filter names */
+*/
   // e: false, // Escape is turned off by default for performance
 }
 
@@ -365,6 +362,7 @@ function autoEscaping (bool) {
   } else {
     autoEscape = false
   }
+  return autoEscape
 }
 
 var autoEscape = true
@@ -453,7 +451,7 @@ var helpers = { // For helpers. None included to make it more lightweight
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: __express, H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, F, setDefaultFilters, autoEscape, autoEscaping */
+/*! exports provided: __express, H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, F, setDefaultFilters, autoEscaping */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -482,8 +480,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "F", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setDefaultFilters", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["setDefaultFilters"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscape", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["autoEscape"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["autoEscaping"]; });
 
