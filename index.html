@@ -60,7 +60,6 @@ Custom delimeters!
             "'": "&#39;",
             "/": "&#x2F;"
             }
-            //To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
             function replaceChar(s) {
                 return escMap[s]
             }
@@ -81,7 +80,6 @@ Custom delimeters!
 
             console.log("Function returned by comp: ")
             console.log(newtemplatefunction.toString())
-            console.log("typeof newtemplatefunction: " + typeof newtemplatefunction)
             let result = newtemplatefunction({
                 htmlstuff: "<script>alert('hey')<\/script><p>alert('hey')</p><p>alert('hey')</p><p>alert('hey')</p>",
                 arr: ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 3*4],
