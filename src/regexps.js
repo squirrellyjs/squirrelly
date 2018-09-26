@@ -15,11 +15,12 @@ export function setup () {
   regEx.lastIndex = 0
 }
 
-export function defaultTags (tagString) {
+export default function defaultTags (tagString) {
   changeTags (tagString)
   initialRegEx = regEx
   initialTags = tags
 }
+
 export function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
@@ -46,7 +47,7 @@ export function replaceParamHelpers (params) {
   })
   return params
 }
-// The default RegExp broken down:
+// The initial RegExp broken down:
 
 // Total RegEx:
 /* START REGEXP
