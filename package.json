@@ -5,7 +5,7 @@
   "main": "./dist/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
   "scripts": {
-    "test": "mocha",
+    "test": "standard 'src/*.js' && mocha",
     "coverage": "nyc report --reporter=text-lcov | codacy-coverage",
     "build:runtime:dev": "webpack --env.target=browser",
     "build:runtime:prod": "webpack --env.target=browser --env.production",

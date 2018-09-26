@@ -11,7 +11,7 @@
     <div id="functionResult"></div>
 <textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
 Hi
-{{log("hey fellas")/}}
+{{log("Hope you like Squirrelly!")/}}
 {{htmlstuff}}
 {{foreach(options.obj)}}
 Reversed value: {{@this|reverse}}, Key: {{@key}}
@@ -23,12 +23,12 @@ Old key: {{@../key}}
 {{/if}}
 {{/foreach}}
 
-{{ben()}}
-{{#gubler}}
-Hey
+{{customhelper()}}
+{{#cabbage}}
+Cabbages taste good
 {{#pineapple}}
-HI
-{{/ben}}
+As do pineapples
+{{/customhelper}}
 
 This is a partial: {{include("mypartial")/}}
 {{tags(--,--)/}}
@@ -45,8 +45,14 @@ Custom delimeters!
             return out || str
         })
 
-        Sqrl.defineHelper("ben", function(args, content, blocks, options) {
-            return "The content of gubler: " + blocks.gubler() + ", the content of pineapple: " + blocks.pineapple()
+        Sqrl.defineHelper("customhelper", function(args, content, blocks, options) {
+            var returnStr = ''
+            for (var key in blocks) {
+                if (typeof blocks[key] === 'function') {
+                    returnStr += "Block found named " + key + ", with value: " + blocks[key]()
+                }
+            }
+            return returnStr
         })
 
         Sqrl.definePartial("mypartial", "Partial content: the value of arr is {{arr}}")

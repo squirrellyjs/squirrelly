@@ -20,7 +20,7 @@ Squirrelly is a modern, configurable, and blazing fast template engine implement
 - Writing JavaScript inside the template
 
 ## Docs
-We know nobody reads through the long and boring documentation in the Readme anyway, so just head over to the documentation website.
+We know nobody reads through the long and boring documentation in the ReadMe anyway, so head over to the documentation website:
 
 [https://squirrelly.js.org](https://squirrelly.js.org)
 ## Tests
