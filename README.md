@@ -15,6 +15,9 @@ Squirrelly is a modern, configurable, and blazing fast template engine implement
 - Loops
 - Custom delimeters
 - Precompilation
+- Partials
+- Native code
+- Writing JavaScript inside the template
 
 ## Docs
 We know nobody reads through the long and boring documentation in the Readme anyway, so just head over to the documentation website.
