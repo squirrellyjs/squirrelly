@@ -40,6 +40,11 @@ var nativeHelpers = {
       changeTags(param)
       return ''
     }
+  },
+  js: {
+    selfClosing: function (param) {
+      return param + ';'
+    }
   }
 }
 // We don't need to export nativeHelpers for the runtime script

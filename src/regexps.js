@@ -15,11 +15,20 @@ export function setup () {
   regEx.lastIndex = 0
 }
 
+export function defaultTags (tagString) {
+  changeTags (tagString)
+  initialRegEx = regEx
+  initialTags = tags
+}
 export function changeTags (tagString) {
   var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
   var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
   var lastIndex = regEx.lastIndex
+  tags = {
+    s: firstTag,
+    e: secondTag
+  }
   regEx = RegExp(newRegEx, 'g')
   regEx.lastIndex = lastIndex
 }
