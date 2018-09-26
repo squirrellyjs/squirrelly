@@ -15,15 +15,13 @@ export function setup () {
   regEx.lastIndex = 0
 }
 
-export default function defaultTags (tagString) {
-  changeTags (tagString)
+export function defaultTags (tagArray) {
+  changeTags (tagArray[0], tagArray[1])
   initialRegEx = regEx
   initialTags = tags
 }
 
-export function changeTags (tagString) {
-  var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
-  var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
+export function changeTags (firstTag, secondTag) {
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
   var lastIndex = regEx.lastIndex
   tags = {

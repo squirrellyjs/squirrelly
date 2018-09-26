@@ -482,7 +482,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["autoEscaping"]; });
 
 /* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return _regexps__WEBPACK_IMPORTED_MODULE_5__["default"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return _regexps__WEBPACK_IMPORTED_MODULE_5__["defaultTags"]; });
 
 
 
@@ -543,7 +543,9 @@ var nativeHelpers = {
   },
   tags: {
     selfClosing: function (param) {
-      Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["changeTags"])(param)
+      var firstTag = param.slice(0, param.indexOf(',')).trim()
+      var secondTag = param.slice(param.indexOf(',') + 1).trim()
+      Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["changeTags"])(firstTag, secondTag)
       return ''
     }
   },
@@ -582,7 +584,7 @@ var Partials = {/*
 /*!************************!*\
   !*** ./src/regexps.js ***!
   \************************/
-/*! exports provided: initialRegEx, initialTags, regEx, tags, setup, default, changeTags, replaceParamHelpers */
+/*! exports provided: initialRegEx, initialTags, regEx, tags, setup, defaultTags, changeTags, replaceParamHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -592,7 +594,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "regEx", function() { return regEx; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tags", function() { return tags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setup", function() { return setup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return defaultTags; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return defaultTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
 var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
@@ -612,15 +614,13 @@ function setup () {
   regEx.lastIndex = 0
 }
 
-function defaultTags (tagString) {
-  changeTags (tagString)
+function defaultTags (tagArray) {
+  changeTags (tagArray[0], tagArray[1])
   initialRegEx = regEx
   initialTags = tags
 }
 
-function changeTags (tagString) {
-  var firstTag = tagString.slice(0, tagString.indexOf(',')).trim()
-  var secondTag = tagString.slice(tagString.indexOf(',') + 1).trim()
+function changeTags (firstTag, secondTag) {
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
   var lastIndex = regEx.lastIndex
   tags = {

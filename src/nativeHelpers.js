@@ -37,7 +37,9 @@ var nativeHelpers = {
   },
   tags: {
     selfClosing: function (param) {
-      changeTags(param)
+      var firstTag = param.slice(0, param.indexOf(',')).trim()
+      var secondTag = param.slice(param.indexOf(',') + 1).trim()
+      changeTags(firstTag, secondTag)
       return ''
     }
   },
