@@ -16,7 +16,7 @@ export function setup () {
 }
 
 export function defaultTags (tagArray) {
-  changeTags (tagArray[0], tagArray[1])
+  changeTags(tagArray[0], tagArray[1])
   initialRegEx = regEx
   initialTags = tags
 }

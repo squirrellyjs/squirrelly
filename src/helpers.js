@@ -13,7 +13,7 @@ var helpers = { // For helpers. None included to make it more lightweight
     }
     today = mm + '/' + dd + '/' + yyyy
     return today
-  }*/
+  } */
 }
 
 export default helpers
