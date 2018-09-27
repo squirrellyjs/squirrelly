@@ -57,7 +57,7 @@ function Compile (str) {
         funcStr += nativeHelpers[m[5]].helperStart(params, id)
         lastIndex = regEx.lastIndex // the changeTags function sets lastIndex already
       } else {
-        funcStr += 'tR+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
+        funcStr += 'tR+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + "=hvals;var tR='';"
       }
     } else if (m[8]) {
       // It's a helper cTag.

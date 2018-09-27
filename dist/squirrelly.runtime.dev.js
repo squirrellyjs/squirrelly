@@ -162,7 +162,7 @@ function Compile (str) {
         funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[5]].helperStart(params, id)
         lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // the changeTags function sets lastIndex already
       } else {
-        funcStr += 'tR+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + '=hvals;'
+        funcStr += 'tR+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + "=hvals;var tR='';"
       }
     } else if (m[8]) {
       // It's a helper cTag.
@@ -439,7 +439,7 @@ var helpers = { // For helpers. None included to make it more lightweight
     }
     today = mm + '/' + dd + '/' + yyyy
     return today
-  }*/
+  } */
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (helpers);
@@ -619,7 +619,7 @@ function setup () {
 }
 
 function defaultTags (tagArray) {
-  changeTags (tagArray[0], tagArray[1])
+  changeTags(tagArray[0], tagArray[1])
   initialRegEx = regEx
   initialTags = tags
 }
