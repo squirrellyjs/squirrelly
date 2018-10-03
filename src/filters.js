@@ -31,6 +31,7 @@ Has set to true. This opens up a realm of possibilities like autoEscape, etc.
 }
 
 export var defaultFilterCache = {
+  //This is to prevent having to re-calculate default filters every time you return a filtered string
   start: '',
   end: ''
 }
