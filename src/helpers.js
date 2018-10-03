@@ -1,4 +1,6 @@
-var helpers = { // For helpers. None included to make it more lightweight
+var helpers = {
+// No helpers are included by default for the sake of size,
+// But there's an example of a helper below
 /*
   Date: function (args, content, blocks, options) {
     var today = new Date()
