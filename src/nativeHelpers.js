@@ -54,4 +54,3 @@ if (RUNTIME) {
   nativeHelpers = {}
 }
 export default nativeHelpers
-
