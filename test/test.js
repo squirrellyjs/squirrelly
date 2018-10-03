@@ -1,6 +1,10 @@
 /* eslint-env mocha */
+@@ -2,6 +2,10 @@
 var assert = require('assert')
 var Sqrl = require('../dist/squirrelly.min.js')
+// This is a mocha test file containing a couple of tests to make sure Squirrelly isn't broken.
+// The code at the bottom tests that when you render simpleTemplate with options, it equals simpleTemplateResult.
+// It also tests that bigTemplate, rendered, equals bigTemplateResult.
 
 var simpleTemplate = `
 {{title}}
@@ -88,9 +92,10 @@ describe('Simple Compilation', function () {
     assert.strictEqual(Sqrl.Render(simpleTemplate, data), simpleTemplateResult)
   })
 })
-
+@@ -93,4 +97,4 @@
 describe('Complex Compilation', function () {
   it('Comprehensive template returns correct value', function () {
     assert.strictEqual(Sqrl.Render(bigTemplate, data), bigTemplateResult)
   })
+  \ No newline at end of file
 })
