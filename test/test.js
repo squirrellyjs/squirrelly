@@ -2,6 +2,10 @@
 var assert = require('assert')
 var Sqrl = require('../dist/squirrelly.min.js')
 
+// this is a mocha text file containing a couple of tests to make 
+// sure that squirrelly isn't broken.
+// the code at the bottom tests that when you render  //simpletemplate with options,it equals simple template result.
+//it also tests that bigTemplate, rendered,equals  //bigtemplateresult.
 var simpleTemplate = `
 {{title}}
 `
@@ -94,3 +98,4 @@ describe('Complex Compilation', function () {
     assert.strictEqual(Sqrl.Render(bigTemplate, data), bigTemplateResult)
   })
 })
+\ no newline at the end of file.
