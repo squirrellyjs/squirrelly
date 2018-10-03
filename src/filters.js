@@ -1,4 +1,7 @@
-export var filters = {
+@@ -31,6 +31,7 @@ has set to be true. this opens up a realms of   possibility like autoescape,etc. 
+}
+//this is to prevent having to  recalculate default filters everytime you entered a filtered string 
+export var filters = {start:"
   e: function (str) {
     var escMap = {
       '&': '&amp;',
@@ -102,4 +105,4 @@ function defineFilter (name, callback) {
   filters[name] = callback
 }
 
-export { filters as default, defineFilter }
+export { filters as default, defineFilter end:}
