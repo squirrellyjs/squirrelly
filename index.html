@@ -2,15 +2,16 @@
 <html>
 
 <head>
-  <title>Squirrelly</title>
-    <script src="./dist/squirrelly.dev.js"></script>
+    <title>Squirrelly</title>
+    <script src='./dist/squirrelly.min.js'></script>
 </head>
 
 <body>
-    <pre id="result1"></pre>
-    <p>--------------------</p>
-    <div id="functionResult"></div>
-<textarea oninput="comp()" id="input" style="width: 200px; height: 200px;">
+
+    <div class="leftTitle label" style="white-space:pre-line;">Template</div>
+    <div class="rightTitle label">Result</div>
+
+    <textarea id="template" oninput='render'>
 Hi
 {{log("Hope you like Squirrelly!")/}}
 {{htmlstuff}}
@@ -36,7 +37,20 @@ This is a partial: {{include("mypartial")/}}
 Custom delimeters!
 --arr--
 </textarea>
-    <div id="output"></div>
+    <div id="renderResult" style="white-space:pre-line;"></div>
+    <div class="leftTitle label">Options</div>
+    <div class="rightBottomTitle label">Returned Function</div>
+
+    <textarea id="options">
+"htmlstuff": "<script>alert('hey')</script><p>alert('hey')</p><p>alert('hey')</p><p>alert('hey')</p>",
+"arr": ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 12],
+"obj": {
+    "firstchild": "HI",
+    "secondchild": "HEY",
+    "thirdchild": [3, 6, 3, 2, 5, 4]
+}
+</textarea>
+    <div id="functionResult"></div>
     <script>
         Sqrl.defineFilter("reverse", function (str) {
             var out = ''
@@ -46,7 +60,7 @@ Custom delimeters!
             return out || str
         })
 
-        Sqrl.defineHelper("customhelper", function(args, content, blocks, options) {
+        Sqrl.defineHelper("customhelper", function (args, content, blocks, options) {
             var returnStr = ''
             for (var key in blocks) {
                 if (typeof blocks[key] === 'function') {
@@ -58,15 +72,16 @@ Custom delimeters!
 
         Sqrl.definePartial("mypartial", "Partial content: the value of arr is {{arr}}")
 
-        function escape (str) {
+        function escape(str) { //To handle escaping for the function result
             var escMap = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;",
-            "/": "&#x2F;"
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+                "/": "&#x2F;"
             }
+
             function replaceChar(s) {
                 return escMap[s]
             }
@@ -76,33 +91,71 @@ Custom delimeters!
             } else {
                 return newStr
             }
-       }
-
-        Sqrl.autoEscaping(true)
-
-
-        function comp() {
-            console.clear() //For development
-            let newtemplatefunction = Sqrl.Compile(document.getElementById("input").value)
-
-            console.log("Function returned by comp: ")
-            console.log(newtemplatefunction.toString())
-            let result = newtemplatefunction({
-                htmlstuff: "<script>alert('hey')<\/script><p>alert('hey')</p><p>alert('hey')</p><p>alert('hey')</p>",
-                arr: ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 3*4],
-                obj: {
-                    firstchild: "HI",
-                    secondchild: "HEY",
-                    thirdchild: [3, 6, 3, 2, 5, 4]
-                }
-            }, Sqrl)
-            console.log("result: " + result)
-            document.getElementById("result1").innerHTML = result
-            document.getElementById("functionResult").innerHTML = escape(newtemplatefunction)
-
         }
-        comp()
+
+        function render() {
+            var options = JSON.parse("{" + document.getElementById('options').value + "}")
+            var template = document.getElementById('template').value
+            var functionResult = Sqrl.Compile(template).toString()
+            document.getElementById('functionResult').innerHTML = escape(functionResult)
+            document.getElementById('renderResult').innerHTML = Sqrl.Render(template, options)
+        }
+        render()
+        document.getElementById("template").addEventListener("input", render)
+        document.getElementById("options").addEventListener("input", render)
     </script>
+    <style>
+        #template {
+            width: 48vw;
+            height: 42vh;
+            overflow-y: scroll;
+        }
+
+        #options {
+            width: 48vw;
+            height: 42vh;
+            overflow-y: scroll;
+        }
+
+        #renderResult {
+            width: 47vw;
+            float: right;
+            border: 1px solid black;
+            height: 42vh;
+            overflow-y: scroll;
+        }
+
+        #functionResult {
+            width: 47vw;
+            height: 42vh;
+            border: 1px solid black;
+            float: right;
+            margin: 0;
+            overflow-y: scroll;
+        }
+
+        .rightTitle {
+            right: 1em;
+            top: 1vh;
+            position: fixed;
+            display: inline-block;
+        }
+
+        .rightBottomTitle {
+            right: 1em;
+            top: 47.5vh;
+            position: fixed;
+            display: inline-block;
+        }
+
+        .leftTitle {
+            width: 10vw;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+    </style>
 </body>
 
 </html>
