@@ -43,7 +43,7 @@ var nativeHelpers = {
       return ''
     }
   },
-  js: {
+  js: { // The js self-closing helper allows you to inject JavaScript straight into your template function
     selfClosing: function (param) {
       return param + ';'
     }
@@ -54,3 +54,4 @@ if (RUNTIME) {
   nativeHelpers = {}
 }
 export default nativeHelpers
+
