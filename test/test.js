@@ -1,6 +1,9 @@
 /* eslint-env mocha */
 var assert = require('assert')
 var Sqrl = require('../dist/squirrelly.min.js')
+// This is a mocha test file containing a couple of tests to make sure Squirrelly isn't broken.
+// The code at the bottom tests that when you render simpleTemplate with options, it equals simpleTemplateResult.
+// It also tests that bigTemplate, rendered, equals bigTemplateResult.
 
 var simpleTemplate = `
 {{title}}
@@ -82,6 +85,7 @@ Sqrl.defineFilter('reverse', function (str) {
 Sqrl.defineHelper('ben', function (args, content, blocks, options) {
   return 'The content of gubler: ' + blocks.gubler() + ', the content of pineapple: ' + blocks.pineapple()
 })
+\ no newline at the end of file
 
 describe('Simple Compilation', function () {
   it('Basic template returns correct value', function () {
