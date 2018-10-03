@@ -96,5 +96,5 @@ describe('Complex Compilation', function () {
   it('Comprehensive template returns correct value', function () {
     assert.strictEqual(Sqrl.Render(bigTemplate, data), bigTemplateResult)
   })
-  \ No newline at end of file
+  
 })
