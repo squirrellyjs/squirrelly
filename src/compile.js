@@ -112,7 +112,7 @@ function Compile (str) {
         funcStr += nativeHelpers[m[10]].selfClosing(innerParams)
         lastIndex = regEx.lastIndex // changeTags sets regEx.lastIndex
       } else {
-        funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');'
+        funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');' // If it's not native, passing args to a non-native helper
       }
     } else {
       console.error('Err 0')
