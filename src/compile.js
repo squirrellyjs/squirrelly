@@ -15,7 +15,7 @@ function Compile (str) {
   var funcStr = ''
   var helperArray = []
   var helperNumber = -1
-  var helperAutoId = 0
+  var helperAutoId = 0 // Squirrelly automatically generates an ID for helpers that don't have a custom ID
   var helperContainsBlocks = {}
   var m
   setup()
