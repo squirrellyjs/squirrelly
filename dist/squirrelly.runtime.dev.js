@@ -188,7 +188,7 @@ function Compile (str) {
         var nativeH = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][parent.name]
         if (nativeH.blocks && nativeH.blocks[m[9]]) {
           funcStr += nativeH.blocks[m[9]](parent.id)
-          lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex
+          lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // Some native helpers set regEx.lastIndex
         } else {
           console.warn("Native helper '%s' doesn't accept that block.", parent.name)
         }
@@ -217,7 +217,7 @@ function Compile (str) {
         funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(innerParams)
         lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // changeTags sets regEx.lastIndex
       } else {
-        funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');'
+        funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');' // If it's not native, passing args to a non-native helper
       }
     } else {
       console.error('Err 0')
@@ -230,7 +230,7 @@ function Compile (str) {
     function helperRef (name, id, filters) {
       var prefix
       if (typeof id !== 'undefined') {
-        if (/(?:\.\.\/)+/g.test(id)) {
+        if (/(?:\.\.\/)+/g.test(id)) { // Test if the helper reference is prefixed with ../
           prefix = helperArray[helperNumber - (id.length / 3) - 1].id
         } else {
           prefix = id.slice(0, -1)
@@ -341,6 +341,7 @@ Has set to true. This opens up a realm of possibilities like autoEscape, etc.
 }
 
 var defaultFilterCache = {
+  // This is to prevent having to re-calculate default filters every time you return a filtered string
   start: '',
   end: ''
 }
@@ -720,7 +721,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _partials__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./partials */ "./src/partials.js");
 
 
-
+ // So we can pass Sqrl as a parameter to Render()
 
 
 
@@ -738,6 +739,8 @@ function defineNativeHelper (name, obj) {
 }
 
 function Render (template, options) {
+  // If the template parameter is a function, call that function with (options, Sqrl)
+  // If it's a string, first compile the string and then call the function
   if (typeof template === 'function') {
     return template(options, _index__WEBPACK_IMPORTED_MODULE_2__)
   } else if (typeof template === 'string') {
