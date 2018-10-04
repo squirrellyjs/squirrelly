@@ -1,6 +1,6 @@
 import F from './filters'
 import C from './compile'
-import * as Sqrl from './index'
+import * as Sqrl from './index' // So we can pass Sqrl as a parameter to Render()
 import H from './helpers'
 import n from './nativeHelpers'
 import P from './partials'
