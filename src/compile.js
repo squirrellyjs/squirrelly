@@ -114,8 +114,6 @@ function Compile (str) {
       } else {
         funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');' // If it's not native, passing args to a non-native helper
       }
-    } else {
-      console.error('Err 0')
     }
     /* eslint-disable no-inner-declarations */
     function globalRef (refName, filters) {

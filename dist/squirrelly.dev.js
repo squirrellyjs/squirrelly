@@ -219,8 +219,6 @@ function Compile (str) {
       } else {
         funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');' // If it's not native, passing args to a non-native helper
       }
-    } else {
-      console.error('Err 0')
     }
     /* eslint-disable no-inner-declarations */
     function globalRef (refName, filters) {
@@ -604,7 +602,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return defaultTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
-var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
+var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)|(?:!--[^]+?--)) *?}}/g
 var initialTags = {
   s: '{{',
   e: '}}'
@@ -659,7 +657,7 @@ function replaceParamHelpers (params) {
 (?: //or for each possible tag
 (?: //if a global or helper ref
 (?: //choosing global or helper ref
-(?:([a-zA-Z_$][\w]* *?(?:[^\s\w\($][^\n]*)*?)) //global reference
+(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?)) //global reference
 |
 (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 )
@@ -673,6 +671,8 @@ function replaceParamHelpers (params) {
 (?:# *?([a-zA-Z_$][\w]*))
 | //now for a self closing tag
 (?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)
+| //now for comments
+(?:!--[^]+?--)
 ) //end or for each possible tag
  *?}}
 

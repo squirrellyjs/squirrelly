@@ -1,4 +1,4 @@
-export var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
+export var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)|(?:!--[^]+?--)) *?}}/g
 export var initialTags = {
   s: '{{',
   e: '}}'
@@ -53,7 +53,7 @@ export function replaceParamHelpers (params) {
 (?: //or for each possible tag
 (?: //if a global or helper ref
 (?: //choosing global or helper ref
-(?:([a-zA-Z_$][\w]* *?(?:[^\s\w\($][^\n]*)*?)) //global reference
+(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?)) //global reference
 |
 (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 )
@@ -67,6 +67,8 @@ export function replaceParamHelpers (params) {
 (?:# *?([a-zA-Z_$][\w]*))
 | //now for a self closing tag
 (?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)
+| //now for comments
+(?:!--[^]+?--)
 ) //end or for each possible tag
  *?}}
 
