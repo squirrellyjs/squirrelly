@@ -100,9 +100,11 @@ function Compile (str) {
       var innerParams = m[11] || ''
       innerParams = replaceParamHelpers(innerParams)
       if (m[10] === 'include') {
+      // This code literally gets the template string up to the include self-closing helper,
+      // adds the content of the partial, and adds the template string after the include self-closing helper
         var preContent = str.slice(0, m.index)
         var endContent = str.slice(m.index + m[0].length)
-        var partialParams = innerParams.replace(/'|"/g, '')
+        var partialParams = innerParams.replace(/'|"/g, '') // So people can write {{include(mypartial)/}} or {{include('mypartial')/}}
         var partialContent = P[partialParams]
         str = preContent + partialContent + endContent
         lastIndex = regEx.lastIndex = m.index
