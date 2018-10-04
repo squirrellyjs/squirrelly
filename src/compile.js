@@ -83,7 +83,7 @@ function Compile (str) {
         var nativeH = nativeHelpers[parent.name]
         if (nativeH.blocks && nativeH.blocks[m[9]]) {
           funcStr += nativeH.blocks[m[9]](parent.id)
-          lastIndex = regEx.lastIndex
+          lastIndex = regEx.lastIndex // Some native helpers set regEx.lastIndex
         } else {
           console.warn("Native helper '%s' doesn't accept that block.", parent.name)
         }
