@@ -81,6 +81,8 @@ export function parseFiltered (initialString, filterString) {
       filtersArray[i] = filtersArray[i].trim()
       if (filtersArray[i] === '') continue
       if (filtersArray[i] === 'safe') {
+        // If 'safe' is one of the filters, set safe to true but don't add Sqrl.F.safe
+        // Essentially, 'safe' is a flag telling Squirrelly not to autoEscape
         safe = true
         continue
       }
