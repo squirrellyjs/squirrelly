@@ -118,7 +118,7 @@ __webpack_require__.r(__webpack_exports__);
 function Compile (str) {
   var lastIndex = 0
   var funcStr = ''
-  var helperArray = []
+  var helperArray = [] // A list of all 'outstanding' helpers, or unclosed helpers
   var helperNumber = -1
   var helperAutoId = 0 // Squirrelly automatically generates an ID for helpers that don't have a custom ID
   var helperContainsBlocks = {} // If a helper contains any blocks, helperContainsBlocks[helperID] will be set to true
@@ -205,9 +205,11 @@ function Compile (str) {
       var innerParams = m[11] || ''
       innerParams = Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["replaceParamHelpers"])(innerParams)
       if (m[10] === 'include') {
+      // This code literally gets the template string up to the include self-closing helper,
+      // adds the content of the partial, and adds the template string after the include self-closing helper
         var preContent = str.slice(0, m.index)
         var endContent = str.slice(m.index + m[0].length)
-        var partialParams = innerParams.replace(/'|"/g, '')
+        var partialParams = innerParams.replace(/'|"/g, '') // So people can write {{include(mypartial)/}} or {{include('mypartial')/}}
         var partialContent = _partials__WEBPACK_IMPORTED_MODULE_3__["default"][partialParams]
         str = preContent + partialContent + endContent
         lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex = m.index
