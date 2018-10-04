@@ -125,7 +125,7 @@ function Compile (str) {
     function helperRef (name, id, filters) {
       var prefix
       if (typeof id !== 'undefined') {
-        if (/(?:\.\.\/)+/g.test(id)) {
+        if (/(?:\.\.\/)+/g.test(id)) { // Test if the helper reference is prefixed with ../
           prefix = helperArray[helperNumber - (id.length / 3) - 1].id
         } else {
           prefix = id.slice(0, -1)
