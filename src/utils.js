@@ -18,6 +18,8 @@ export function defineNativeHelper (name, obj) {
 }
 
 export function Render (template, options) {
+  // If the template parameter is a function, call that function with (options, Sqrl)
+  // If it's a string, first compile the string and then call the function
   if (typeof template === 'function') {
     return template(options, Sqrl)
   } else if (typeof template === 'string') {
