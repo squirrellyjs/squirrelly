@@ -16,7 +16,7 @@ function Compile (str) {
   var helperArray = []
   var helperNumber = -1
   var helperAutoId = 0 // Squirrelly automatically generates an ID for helpers that don't have a custom ID
-  var helperContainsBlocks = {}
+  var helperContainsBlocks = {} // If a helper contains any blocks, helperContainsBlocks[helperID] will be set to true
   var m
   setup()
   while ((m = regEx.exec(str)) !== null) {
