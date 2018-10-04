@@ -120,7 +120,7 @@ function Compile (str) {
   var funcStr = ''
   var helperArray = []
   var helperNumber = -1
-  var helperAutoId = 0
+  var helperAutoId = 0 // Squirrelly automatically generates an ID for helpers that don't have a custom ID
   var helperContainsBlocks = {}
   var m
   Object(_regexps__WEBPACK_IMPORTED_MODULE_0__["setup"])()
@@ -387,6 +387,8 @@ function parseFiltered (initialString, filterString) {
       filtersArray[i] = filtersArray[i].trim()
       if (filtersArray[i] === '') continue
       if (filtersArray[i] === 'safe') {
+        // If 'safe' is one of the filters, set safe to true but don't add Sqrl.F.safe
+        // Essentially, 'safe' is a flag telling Squirrelly not to autoEscape
         safe = true
         continue
       }
@@ -422,7 +424,9 @@ function defineFilter (name, callback) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var helpers = { // For helpers. None included to make it more lightweight
+var helpers = {
+// No helpers are included by default for the sake of size,
+// But there's an example of a helper below
 /*
   Date: function (args, content, blocks, options) {
     var today = new Date()
@@ -549,7 +553,7 @@ var nativeHelpers = {
       return ''
     }
   },
-  js: {
+  js: { // The js self-closing helper allows you to inject JavaScript straight into your template function
     selfClosing: function (param) {
       return param + ';'
     }
