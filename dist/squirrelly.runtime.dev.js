@@ -387,7 +387,7 @@ function parseFiltered (initialString, filterString) {
   if (filterString && filterString !== '') {
     filtersArray = filterString.split('|')
     for (var i = 0; i < filtersArray.length; i++) {
-      filtersArray[i] = filtersArray[i].trim()
+      filtersArray[i] = filtersArray[i].trim() // Removing the spaces just in case someone put | filter| or | filter | or something similar
       if (filtersArray[i] === '') continue
       if (filtersArray[i] === 'safe') {
         // If 'safe' is one of the filters, set safe to true but don't add Sqrl.F.safe
