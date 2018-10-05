@@ -12,3 +12,9 @@ They don't equal
 The current array item is {{@this}}, the current index is {{@index}}
 {{/each}}
 ```
+
+## Looping over Object
+
+{{#each someObject}}
+    Key: {{@key}} Value = {{this}}
+{{/each}}
