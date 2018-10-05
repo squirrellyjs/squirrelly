@@ -9,7 +9,7 @@ var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)
 export var regEx = initialRegEx
 export var tags = initialTags
 
-export function setup () { // Define the brackets compiled by the template engine 
+export function setup () { // Resets the current tags to the default tags 
   tags = initialTags
   regEx = initialRegEx
   regEx.lastIndex = 0
@@ -21,7 +21,7 @@ export function defaultTags (tagArray) { // Redefine the default tags of the reg
   initialTags = tags
 }
 
-export function changeTags (firstTag, secondTag) { // Update default tags
+export function changeTags (firstTag, secondTag) { // Update current tags
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
   var lastIndex = regEx.lastIndex
   tags = {
