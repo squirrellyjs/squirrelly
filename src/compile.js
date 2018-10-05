@@ -144,7 +144,7 @@ function Compile (str) {
   return func
 }
 
-if (RUNTIME) {
+if (RUNTIME) { // Don't include Sqrl.Compile() in the runtime library, to make it more lightweight
   Compile = {} // eslint-disable-line no-func-assign
 }
 
