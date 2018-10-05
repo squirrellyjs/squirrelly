@@ -7,4 +7,4 @@ labels:
   - good first issue
   - beginner friendly
 
-template: .github/first-timers-issue-template.md
+template: .github/FIRST_TIMERS_ISSUE_TEMPLATE.md
