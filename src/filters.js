@@ -37,7 +37,7 @@ export var defaultFilterCache = {
 }
 
 export function setDefaultFilters (obj) {
-  if (obj === 'clear') {
+  if (obj === 'clear') { // If someone calls Sqrl.setDefaultFilters('clear') it clears all default filters
     defaultFilters = {}
   } else {
     for (var key in obj) {
