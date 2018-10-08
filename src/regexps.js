@@ -4,6 +4,7 @@ export var initialTags = {
   e: '}}'
 }
 
+// The regExp below matches all helper references inside helper parameters
 var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
 
 export var regEx = initialRegEx
