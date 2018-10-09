@@ -9,7 +9,7 @@ var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)
 export var regEx = initialRegEx
 export var tags = initialTags
 
-export function setup () { // Resets the current tags to the default tags 
+export function setup () { // Resets the current tags to the default tags
   tags = initialTags
   regEx = initialRegEx
   regEx.lastIndex = 0
