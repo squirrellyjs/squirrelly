@@ -5,11 +5,10 @@ module.exports = env => {
   // console.log('Production: ', (env.production||"undefined")); // true
   // console.log('Target: ' + (env.target||"undefined"));
 
+  console.log('Compiling...')
+
   var fileName
-  var target = 'node'
   if (env && env.target && env.target === 'browser') {
-    target = 'web'
-    console.log('Compiling')
     if (env.production) {
       fileName = 'squirrelly.runtime.js'
     } else {
@@ -35,13 +34,9 @@ module.exports = env => {
     devServer: {
       contentBase: path.join(__dirname, '')
     },
-    node: {
-      fs: 'empty'
-    },
-    target: target,
     devtool: 'sourcemap',
     externals: {
-      fs: 'commonjs fs'
+      fs: 'commonjs fs' // So we can use fs without errors
     },
     mode: (env && env.production) ? 'production' : 'development',
     plugins: [

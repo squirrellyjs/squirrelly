@@ -35,12 +35,18 @@ export function definePartial (name, str) {
 
 export var cache = {}
 
+export var softCache = false
+
+export function softCaching (bool) {
+  softCache = bool
+}
+
 function handleTemplateCache (options, str) {
   var filePath = options.filePath
   var name = options.templateName
   if (filePath) {
     if (cache[filePath]) {
-      // console.log('returning cached 43')
+      // console.log('returning cached file')
       return cache[filePath]
     } else {
       var fs = require('fs')
@@ -50,21 +56,30 @@ function handleTemplateCache (options, str) {
     }
   } else if (name) {
     if (cache[name]) {
-      // console.log('returning cached 53')
+      // console.log('returning cached template with name')
       return cache[name]
     } else if (str) {
       cache[name] = C(str)
       return cache[name]
     }
   } else if (str) {
-    // console.log('no cache')
+    if (options.softCache || (softCache && (options.softCache !== false))) {
+      console.log('softCaching')
+      cache[str] = C(str)
+      return cache[str]
+    }
+    console.log('softCaching disabled')
     return C(str)
   }
+  // Implied else
+  return 'Error'
+}
+
+export function renderFile (filePath, options) {
+  options.filePath = filePath
+  return handleTemplateCache(options)(options, Sqrl)
 }
 
 export function __express (filePath, options, callback) {
-  options.filePath = filePath
-  var renderedFile = handleTemplateCache(options)(options, Sqrl)
-  // console.log('Cache at __express: ' + JSON.stringify(cache))
-  return callback(null, renderedFile)
+  return callback(null, renderFile(filePath, options))
 }

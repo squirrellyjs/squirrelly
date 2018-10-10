@@ -427,7 +427,7 @@ var helpers = {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, __express, F, setDefaultFilters, autoEscaping, defaultTags */
+/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, __express, F, setDefaultFilters, autoEscaping, defaultTags */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -448,6 +448,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["definePartial"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["Render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "softCaching", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["softCaching"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["__express"]; });
 
@@ -672,7 +674,7 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, __express */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, softCache, softCaching, renderFile, __express */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -683,6 +685,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return definePartial; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cache", function() { return cache; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "softCache", function() { return softCache; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "softCaching", function() { return softCaching; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return renderFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return __express; });
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
 /* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
@@ -727,12 +732,18 @@ function definePartial (name, str) {
 
 var cache = {}
 
+var softCache = false
+
+function softCaching (bool) {
+  softCache = bool
+}
+
 function handleTemplateCache (options, str) {
   var filePath = options.filePath
   var name = options.templateName
   if (filePath) {
     if (cache[filePath]) {
-      // console.log('returning cached 43')
+      // console.log('returning cached file')
       return cache[filePath]
     } else {
       var fs = __webpack_require__(/*! fs */ "fs")
@@ -742,23 +753,32 @@ function handleTemplateCache (options, str) {
     }
   } else if (name) {
     if (cache[name]) {
-      // console.log('returning cached 53')
+      // console.log('returning cached template with name')
       return cache[name]
     } else if (str) {
       cache[name] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
       return cache[name]
     }
   } else if (str) {
-    // console.log('no cache')
+    if (options.softCache || (softCache && (options.softCache !== false))) {
+      console.log('softCaching')
+      cache[str] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
+      return cache[str]
+    }
+    console.log('softCaching disabled')
     return Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
   }
+  // Implied else
+  return 'Error'
+}
+
+function renderFile (filePath, options) {
+  options.filePath = filePath
+  return handleTemplateCache(options)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
 }
 
 function __express (filePath, options, callback) {
-  options.filePath = filePath
-  var renderedFile = handleTemplateCache(options)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
-  // console.log('Cache at __express: ' + JSON.stringify(cache))
-  return callback(null, renderedFile)
+  return callback(null, renderFile(filePath, options))
 }
 
 
