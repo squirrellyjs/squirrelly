@@ -24,7 +24,6 @@ export function Render (template, options) {
     return template(options, Sqrl)
   } else if (typeof template === 'string') {
     var res = handleTemplateCache(options, template)(options, Sqrl)
-    // console.log('Cache at Render: ' + JSON.stringify(cache))
     return res
   }
 }
@@ -46,7 +45,7 @@ function handleTemplateCache (options, str) {
   var name = options.templateName
   if (filePath) {
     if (cache[filePath]) {
-      // console.log('returning cached file')
+      // returning template cached by filename
       return cache[filePath]
     } else {
       var fs = require('fs')
@@ -56,7 +55,7 @@ function handleTemplateCache (options, str) {
     }
   } else if (name) {
     if (cache[name]) {
-      // console.log('returning cached template with name')
+      // returning template cached by name
       return cache[name]
     } else if (str) {
       cache[name] = C(str)
@@ -64,11 +63,13 @@ function handleTemplateCache (options, str) {
     }
   } else if (str) {
     if (options.softCache || (softCache && (options.softCache !== false))) {
-      console.log('softCaching')
-      cache[str] = C(str)
-      return cache[str]
+      if (cache[str]) {
+        return cache[str]
+      } else {
+        cache[str] = C(str)
+        return cache[str]
+      }
     }
-    console.log('softCaching disabled')
     return C(str)
   }
   // Implied else

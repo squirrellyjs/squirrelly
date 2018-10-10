@@ -721,7 +721,6 @@ function Render (template, options) {
     return template(options, _index__WEBPACK_IMPORTED_MODULE_2__)
   } else if (typeof template === 'string') {
     var res = handleTemplateCache(options, template)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
-    // console.log('Cache at Render: ' + JSON.stringify(cache))
     return res
   }
 }
@@ -743,7 +742,7 @@ function handleTemplateCache (options, str) {
   var name = options.templateName
   if (filePath) {
     if (cache[filePath]) {
-      // console.log('returning cached file')
+      // returning template cached by filename
       return cache[filePath]
     } else {
       var fs = __webpack_require__(/*! fs */ "fs")
@@ -753,7 +752,7 @@ function handleTemplateCache (options, str) {
     }
   } else if (name) {
     if (cache[name]) {
-      // console.log('returning cached template with name')
+      // returning template cached by name
       return cache[name]
     } else if (str) {
       cache[name] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
@@ -761,11 +760,13 @@ function handleTemplateCache (options, str) {
     }
   } else if (str) {
     if (options.softCache || (softCache && (options.softCache !== false))) {
-      console.log('softCaching')
-      cache[str] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
-      return cache[str]
+      if (cache[str]) {
+        return cache[str]
+      } else {
+        cache[str] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
+        return cache[str]
+      }
     }
-    console.log('softCaching disabled')
     return Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
   }
   // Implied else
