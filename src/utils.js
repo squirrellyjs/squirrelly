@@ -23,7 +23,7 @@ export function Render (template, options) {
   if (typeof template === 'function') {
     return template(options, Sqrl)
   } else if (typeof template === 'string') {
-    var res = handleTemplateCache(options, template)(options, Sqrl)
+    var res = loadTemplate(options, template)(options, Sqrl)
     return res
   }
 }
@@ -40,7 +40,7 @@ export function softCaching (bool) {
   softCache = bool
 }
 
-function handleTemplateCache (options, str) {
+export function loadTemplate (options, str) {
   var filePath = options.filePath
   var name = options.templateName
   if (filePath) {
@@ -78,7 +78,7 @@ function handleTemplateCache (options, str) {
 
 export function renderFile (filePath, options) {
   options.filePath = filePath
-  return handleTemplateCache(options)(options, Sqrl)
+  return loadTemplate(options)(options, Sqrl)
 }
 
 export function __express (filePath, options, callback) {

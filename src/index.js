@@ -1,5 +1,18 @@
 export { default as H } from './helpers'
 export { default as Compile } from './compile'
-export { defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, renderFile, __express } from './utils'
-export { default as F, setDefaultFilters, autoEscaping } from './filters'
+export {
+  defineFilter,
+  defineHelper,
+  defineNativeHelper,
+  definePartial,
+  Render,
+  softCaching,
+  renderFile,
+  loadTemplate,
+  __express } from './utils'
+export {
+  default as F,
+  setDefaultFilters,
+  autoEscaping
+} from './filters'
 export { defaultTags } from './regexps'

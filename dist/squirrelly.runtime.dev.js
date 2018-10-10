@@ -427,7 +427,7 @@ var helpers = {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, renderFile, __express, F, setDefaultFilters, autoEscaping, defaultTags */
+/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, renderFile, loadTemplate, __express, F, setDefaultFilters, autoEscaping, defaultTags */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -452,6 +452,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "softCaching", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["softCaching"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["renderFile"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "loadTemplate", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["loadTemplate"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["__express"]; });
 
@@ -676,7 +678,7 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, softCache, softCaching, renderFile, __express */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, softCache, softCaching, loadTemplate, renderFile, __express */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -689,6 +691,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cache", function() { return cache; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "softCache", function() { return softCache; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "softCaching", function() { return softCaching; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadTemplate", function() { return loadTemplate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return renderFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return __express; });
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
@@ -722,7 +725,7 @@ function Render (template, options) {
   if (typeof template === 'function') {
     return template(options, _index__WEBPACK_IMPORTED_MODULE_2__)
   } else if (typeof template === 'string') {
-    var res = handleTemplateCache(options, template)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+    var res = loadTemplate(options, template)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
     return res
   }
 }
@@ -739,7 +742,7 @@ function softCaching (bool) {
   softCache = bool
 }
 
-function handleTemplateCache (options, str) {
+function loadTemplate (options, str) {
   var filePath = options.filePath
   var name = options.templateName
   if (filePath) {
@@ -777,7 +780,7 @@ function handleTemplateCache (options, str) {
 
 function renderFile (filePath, options) {
   options.filePath = filePath
-  return handleTemplateCache(options)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+  return loadTemplate(options)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
 }
 
 function __express (filePath, options, callback) {
