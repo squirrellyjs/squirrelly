@@ -425,7 +425,7 @@ var helpers = {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, __express, F, setDefaultFilters, autoEscaping, defaultTags */
+/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, renderFile, __express, F, setDefaultFilters, autoEscaping, defaultTags */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -448,6 +448,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["Render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "softCaching", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["softCaching"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["renderFile"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["__express"]; });
 
