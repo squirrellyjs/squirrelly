@@ -23,11 +23,48 @@ export function Render (template, options) {
   if (typeof template === 'function') {
     return template(options, Sqrl)
   } else if (typeof template === 'string') {
-    var templateFunc = C(template)
-    return templateFunc(options, Sqrl)
+    var res = handleTemplateCache(options, template)(options, Sqrl)
+    // console.log('Cache at Render: ' + JSON.stringify(cache))
+    return res
   }
 }
 
 export function definePartial (name, str) {
   P[name] = str
+}
+
+export var cache = {}
+
+function handleTemplateCache (options, str) {
+  var filePath = options.filePath
+  var name = options.templateName
+  if (filePath) {
+    if (cache[filePath]) {
+      // console.log('returning cached 43')
+      return cache[filePath]
+    } else {
+      var fs = require('fs')
+      var fileContent = fs.readFileSync(filePath, 'utf8')
+      cache[filePath] = C(fileContent)
+      return cache[filePath]
+    }
+  } else if (name) {
+    if (cache[name]) {
+      // console.log('returning cached 53')
+      return cache[name]
+    } else if (str) {
+      cache[name] = C(str)
+      return cache[name]
+    }
+  } else if (str) {
+    // console.log('no cache')
+    return C(str)
+  }
+}
+
+export function __express (filePath, options, callback) {
+  options.filePath = filePath
+  var renderedFile = handleTemplateCache(options)(options, Sqrl)
+  // console.log('Cache at __express: ' + JSON.stringify(cache))
+  return callback(null, renderedFile)
 }

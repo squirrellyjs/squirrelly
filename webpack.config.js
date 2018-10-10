@@ -6,7 +6,9 @@ module.exports = env => {
   // console.log('Target: ' + (env.target||"undefined"));
 
   var fileName
+  var target = 'node'
   if (env && env.target && env.target === 'browser') {
+    target = 'web'
     console.log('Compiling')
     if (env.production) {
       fileName = 'squirrelly.runtime.js'
@@ -33,7 +35,14 @@ module.exports = env => {
     devServer: {
       contentBase: path.join(__dirname, '')
     },
+    node: {
+      fs: 'empty'
+    },
+    target: target,
     devtool: 'sourcemap',
+    externals: {
+      fs: 'commonjs fs'
+    },
     mode: (env && env.production) ? 'production' : 'development',
     plugins: [
       new webpack.DefinePlugin({

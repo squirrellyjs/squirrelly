@@ -258,35 +258,6 @@ if (true) {
 
 /***/ }),
 
-/***/ "./src/express.js":
-/*!************************!*\
-  !*** ./src/express.js ***!
-  \************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
-/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
-/* global fs */
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function (filePath, options, callback) {
-  fs.readFile(filePath, function (err, content) {
-    if (err) {
-      return callback(err)
-    }
-    var sqrlString = content.toString()
-    var template = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(sqrlString)
-    var renderedFile = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["Render"])(template, options)
-    return callback(null, renderedFile)
-  })
-});
-
-
-/***/ }),
-
 /***/ "./src/filters.js":
 /*!************************!*\
   !*** ./src/filters.js ***!
@@ -456,41 +427,39 @@ var helpers = {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: __express, H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, F, setDefaultFilters, autoEscaping, defaultTags */
+/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, __express, F, setDefaultFilters, autoEscaping, defaultTags */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./express */ "./src/express.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _express__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers */ "./src/helpers.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "H", function() { return _helpers__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers */ "./src/helpers.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "H", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Compile", function() { return _compile__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Compile", function() { return _compile__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["defineFilter"]; });
 
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineFilter"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["defineHelper"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineHelper"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["defineNativeHelper"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineNativeHelper"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["definePartial"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["definePartial"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["Render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["Render"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["__express"]; });
 
-/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "F", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "F", function() { return _filters__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setDefaultFilters", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["setDefaultFilters"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setDefaultFilters", function() { return _filters__WEBPACK_IMPORTED_MODULE_3__["setDefaultFilters"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["autoEscaping"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return _filters__WEBPACK_IMPORTED_MODULE_3__["autoEscaping"]; });
 
-/* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return _regexps__WEBPACK_IMPORTED_MODULE_5__["defaultTags"]; });
-
+/* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return _regexps__WEBPACK_IMPORTED_MODULE_4__["defaultTags"]; });
 
 
 
@@ -703,7 +672,7 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, __express */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -713,6 +682,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return defineNativeHelper; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return definePartial; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cache", function() { return cache; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return __express; });
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
 /* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
 /* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./src/index.js");
@@ -744,8 +715,9 @@ function Render (template, options) {
   if (typeof template === 'function') {
     return template(options, _index__WEBPACK_IMPORTED_MODULE_2__)
   } else if (typeof template === 'string') {
-    var templateFunc = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(template)
-    return templateFunc(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+    var res = handleTemplateCache(options, template)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+    // console.log('Cache at Render: ' + JSON.stringify(cache))
+    return res
   }
 }
 
@@ -753,6 +725,53 @@ function definePartial (name, str) {
   _partials__WEBPACK_IMPORTED_MODULE_5__["default"][name] = str
 }
 
+var cache = {}
+
+function handleTemplateCache (options, str) {
+  var filePath = options.filePath
+  var name = options.templateName
+  if (filePath) {
+    if (cache[filePath]) {
+      // console.log('returning cached 43')
+      return cache[filePath]
+    } else {
+      var fs = __webpack_require__(/*! fs */ "fs")
+      var fileContent = fs.readFileSync(filePath, 'utf8')
+      cache[filePath] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(fileContent)
+      return cache[filePath]
+    }
+  } else if (name) {
+    if (cache[name]) {
+      // console.log('returning cached 53')
+      return cache[name]
+    } else if (str) {
+      cache[name] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
+      return cache[name]
+    }
+  } else if (str) {
+    // console.log('no cache')
+    return Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
+  }
+}
+
+function __express (filePath, options, callback) {
+  options.filePath = filePath
+  var renderedFile = handleTemplateCache(options)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+  // console.log('Cache at __express: ' + JSON.stringify(cache))
+  return callback(null, renderedFile)
+}
+
+
+/***/ }),
+
+/***/ "fs":
+/*!*********************!*\
+  !*** external "fs" ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
 
 /***/ })
 
