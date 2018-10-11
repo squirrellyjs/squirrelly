@@ -8,7 +8,7 @@ export {
   Render,
   softCaching,
   renderFile,
-  loadTemplate,
+  load,
   __express } from './utils'
 export {
   default as F,

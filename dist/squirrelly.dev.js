@@ -425,7 +425,7 @@ var helpers = {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, renderFile, loadTemplate, __express, F, setDefaultFilters, autoEscaping, defaultTags */
+/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, renderFile, load, __express, F, setDefaultFilters, autoEscaping, defaultTags */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -451,7 +451,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["renderFile"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "loadTemplate", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["loadTemplate"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "load", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["load"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["__express"]; });
 
@@ -674,7 +674,7 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, softCache, softCaching, loadTemplate, renderFile, __express */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, softCache, softCaching, load, renderFile, __express */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -687,7 +687,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cache", function() { return cache; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "softCache", function() { return softCache; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "softCaching", function() { return softCaching; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadTemplate", function() { return loadTemplate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "load", function() { return load; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return renderFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return __express; });
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
@@ -721,7 +721,7 @@ function Render (template, options) {
   if (typeof template === 'function') {
     return template(options, _index__WEBPACK_IMPORTED_MODULE_2__)
   } else if (typeof template === 'string') {
-    var res = loadTemplate(options, template)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+    var res = load(options, template)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
     return res
   }
 }
@@ -738,45 +738,48 @@ function softCaching (bool) {
   softCache = bool
 }
 
-function loadTemplate (options, str) {
-  var filePath = options.filePath
-  var name = options.templateName
-  if (filePath) {
-    if (cache[filePath]) {
-      // returning template cached by filename
-      return cache[filePath]
-    } else {
-      var fs = __webpack_require__(/*! fs */ "fs")
-      var fileContent = fs.readFileSync(filePath, 'utf8')
-      cache[filePath] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(fileContent)
-      return cache[filePath]
-    }
-  } else if (name) {
-    if (cache[name]) {
-      // returning template cached by name
-      return cache[name]
-    } else if (str) {
-      cache[name] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
-      return cache[name]
-    }
-  } else if (str) {
-    if (options.softCache || (softCache && (options.softCache !== false))) {
-      if (cache[str]) {
-        return cache[str]
-      } else {
-        cache[str] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
-        return cache[str]
+function load (options, str) {
+  var filePath = options.$file
+  var name = options.$name
+  if (options.$cache !== false) { // If caching isn't disabled
+    if (filePath) { // If the $file attribute is passed in
+      if (cache[filePath]) { // If the template is cached
+        return cache[filePath] // Return template
+      } else { // Otherwise, read file
+        var fs = __webpack_require__(/*! fs */ "fs")
+        var fileContent = fs.readFileSync(filePath, 'utf8')
+        cache[filePath] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(fileContent) // Add the template to the cache
+        return cache[filePath] // Then return the cached template
       }
+    } else if (name) { // If the $name attribute is passed in
+      if (cache[name]) { // If there's a cache for that name
+        return cache[name] // Return cached template
+      } else if (str) { // Otherwise, as long as there's a string passed in
+        cache[name] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str) // Add the template to the cache
+        return cache[name] // Return cached template
+      }
+    } else if (str) { // If the string is passed in
+      if (softCache) {
+        if (cache[str]) { // If it's cached
+          return cache[str]
+        } else {
+          cache[str] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str) // Add it to cache
+          return cache[str]
+        }
+      } else {
+        return Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
+      }
+    } else {
+      return 'Error'
     }
+  } else { // If caching is disabled
     return Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
   }
-  // Implied else
-  return 'Error'
 }
 
 function renderFile (filePath, options) {
-  options.filePath = filePath
-  return loadTemplate(options)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+  options.$file = filePath
+  return load(options)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
 }
 
 function __express (filePath, options, callback) {
