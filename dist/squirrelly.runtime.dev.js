@@ -117,7 +117,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function Compile (str) {
   var lastIndex = 0
-  var funcStr = ''
+  var funcStr = '' // This will be called with Function() and returned
   var helperArray = [] // A list of all 'outstanding' helpers, or unclosed helpers
   var helperNumber = -1
   var helperAutoId = 0 // Squirrelly automatically generates an ID for helpers that don't have a custom ID
@@ -249,7 +249,7 @@ function Compile (str) {
   return func
 }
 
-if (true) {
+if (true) { // Don't include Sqrl.Compile() in the runtime library, to make it more lightweight
   Compile = {} // eslint-disable-line no-func-assign
 }
 
@@ -320,7 +320,7 @@ var defaultFilterCache = {
 }
 
 function setDefaultFilters (obj) {
-  if (obj === 'clear') {
+  if (obj === 'clear') { // If someone calls Sqrl.setDefaultFilters('clear') it clears all default filters
     defaultFilters = {}
   } else {
     for (var key in obj) {
@@ -587,24 +587,25 @@ var initialTags = {
   e: '}}'
 }
 
+// The regExp below matches all helper references inside helper parameters
 var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
 
 var regEx = initialRegEx
 var tags = initialTags
 
-function setup () {
+function setup () { // Resets the current tags to the default tags
   tags = initialTags
   regEx = initialRegEx
   regEx.lastIndex = 0
 }
 
-function defaultTags (tagArray) {
+function defaultTags (tagArray) { // Redefine the default tags of the regexp
   changeTags(tagArray[0], tagArray[1])
   initialRegEx = regEx
   initialTags = tags
 }
 
-function changeTags (firstTag, secondTag) {
+function changeTags (firstTag, secondTag) { // Update current tags
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
   var lastIndex = regEx.lastIndex
   tags = {
@@ -628,9 +629,11 @@ function replaceParamHelpers (params) {
   })
   return params
 }
-// The initial RegExp broken down:
 
-// Total RegEx:
+// The whole regular expression can be hard to comprehend, so here it's broken down.
+// You can pass the string between "START REGEXP" and "END REGEXP" into a regular expression
+// That removes whitespace and comments, and outputs a working regular expression.
+
 /* START REGEXP
 {{ *? //the beginning
 (?: //or for each possible tag
