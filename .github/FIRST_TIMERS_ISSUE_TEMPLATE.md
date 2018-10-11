@@ -12,7 +12,7 @@ If you haven’t yet, sign up for [Hacktoberfest](https://hacktoberfest.digitalo
 Nothing. This issue is meant to welcome you to Open Source :) We are happy to walk you through the process.
 
 ### :clipboard: Step by Step
-- [ ] 🙋 **Claim this issue**: Comment below.
+- [ ] 🙋 **Claim this issue**: Comment below. If the issue has the 'available' label, your claim will probably be granted.
   Please 🙏 only claim if you want to start working on it within a day.
 - [ ] 📝 **Update** the file [$FILENAME in the `nebrelbug/$REPO` repository]($BRANCH_URL) (press the little pen Icon) and edit the line(s) as shown below.
 
@@ -29,3 +29,6 @@ $DIFF
 ### 🤔❓ Questions
 
 Comment and we'll try to help as soon as possible 😃
+
+### Can't find any open issues?
+Try filtering by the 'available' label. If that doesn't work, head over to [squirrelly.js.org](https://github.com/nebrelbug/squirrelly.js.org) and see if there are issues there.

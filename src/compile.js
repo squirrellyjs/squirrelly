@@ -12,7 +12,7 @@ import P from './partials'
 
 function Compile (str) {
   var lastIndex = 0
-  var funcStr = ''
+  var funcStr = '' // This will be called with Function() and returned
   var helperArray = [] // A list of all 'outstanding' helpers, or unclosed helpers
   var helperNumber = -1
   var helperAutoId = 0 // Squirrelly automatically generates an ID for helpers that don't have a custom ID
@@ -144,7 +144,7 @@ function Compile (str) {
   return func
 }
 
-if (RUNTIME) {
+if (RUNTIME) { // Don't include Sqrl.Compile() in the runtime library, to make it more lightweight
   Compile = {} // eslint-disable-line no-func-assign
 }
 
