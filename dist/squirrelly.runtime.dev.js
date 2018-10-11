@@ -262,7 +262,7 @@ if (true) {
 /*!************************!*\
   !*** ./src/filters.js ***!
   \************************/
-/*! exports provided: filters, defaultFilters, defaultFilterCache, setDefaultFilters, autoEscaping, autoEscape, cacheDefaultFilters, parseFiltered, default, defineFilter */
+/*! exports provided: filters, defaultFilters, defaultFilterCache, setDefaultFilters, autoEscape, autoEscaping, cacheDefaultFilters, parseFiltered, default, defineFilter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -271,29 +271,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultFilters", function() { return defaultFilters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultFilterCache", function() { return defaultFilterCache; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDefaultFilters", function() { return setDefaultFilters; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return autoEscaping; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "autoEscape", function() { return autoEscape; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return autoEscaping; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cacheDefaultFilters", function() { return cacheDefaultFilters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseFiltered", function() { return parseFiltered; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return filters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return defineFilter; });
+var escMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}
+
+function replaceChar (s) {
+  return escMap[s]
+}
+
+var escapeRegEx = /[&<"']/g
+var escapeRegExTest = /[&<"']/
+
 var filters = {
   e: function (str) {
-    var escMap = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;',
-      '/': '&#x2F;'
-    }
     // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
-    function replaceChar (s) {
-      return escMap[s]
-    }
     var newStr = String(str)
-    if (/[&<>"'/]/.test(newStr)) {
-      return newStr.replace(/[&<>"'/]/g, replaceChar)
+    if (escapeRegExTest.test(newStr)) {
+      return newStr.replace(escapeRegEx, replaceChar)
     } else {
       return newStr
     }
@@ -302,10 +305,11 @@ var filters = {
 // Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
 
 var defaultFilters = {
-  /* All strings are automatically passed through
-each of the default filters the user
-Has set to true. This opens up a realm of possibilities like autoEscape, etc.
-*/
+  /*
+  All strings are automatically passed through
+  each of the default filters the user
+  Has set to true. This opens up a realm of possibilities.
+  */
   // e: false, // Escape is turned off by default for performance
 }
 
@@ -328,16 +332,12 @@ function setDefaultFilters (obj) {
   cacheDefaultFilters()
 }
 
+var autoEscape = true
+
 function autoEscaping (bool) {
-  if (bool) {
-    autoEscape = true
-  } else {
-    autoEscape = false
-  }
+  autoEscape = bool
   return autoEscape
 }
-
-var autoEscape = true
 
 function cacheDefaultFilters () {
   defaultFilterCache = {
