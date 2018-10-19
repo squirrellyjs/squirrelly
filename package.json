@@ -2,7 +2,7 @@
   "name": "squirrelly",
   "version": "6.0.0",
   "description": "A simple yet powerful modern template engine that works in the browser, in Node.js, and with ExpressJS.",
-  "main": "./dist/squirrelly.dev.js",
+  "main": "./dist/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
   "scripts": {
     "test": "standard 'src/*.js' && mocha",
