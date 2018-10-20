@@ -2,6 +2,5 @@ language: node_js
 node_js:
   - "node"
   - "8"
-  - "7"
   - "6"
-script: npm run build && npm test
+script: yarn build && yarn test
