@@ -34,16 +34,11 @@ export function definePartial (name, str) {
 
 export var cache = {}
 
-export var softCache = false
-
-export function softCaching (bool) {
-  softCache = bool
-}
-
 export function load (options, str) {
   var filePath = options.$file
   var name = options.$name
-  if (options.$cache !== false) { // If caching isn't disabled
+  var caching = options.$cache
+  if (caching !== false) { // If caching isn't disabled
     if (filePath) { // If the $file attribute is passed in
       if (cache[filePath]) { // If the template is cached
         return cache[filePath] // Return template
@@ -61,7 +56,7 @@ export function load (options, str) {
         return cache[name] // Return cached template
       }
     } else if (str) { // If the string is passed in
-      if (softCache) {
+      if (caching === true) {
         if (cache[str]) { // If it's cached
           return cache[str]
         } else {

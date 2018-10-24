@@ -6,7 +6,6 @@ export {
   defineNativeHelper,
   definePartial,
   Render,
-  softCaching,
   renderFile,
   load,
   __express } from './utils'

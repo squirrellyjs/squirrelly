@@ -427,7 +427,7 @@ var helpers = {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, softCaching, renderFile, load, __express, F, setDefaultFilters, autoEscaping, defaultTags */
+/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, renderFile, load, __express, F, setDefaultFilters, autoEscaping, defaultTags */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -448,8 +448,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["definePartial"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["Render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "softCaching", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["softCaching"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["renderFile"]; });
 
@@ -681,7 +679,7 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, softCache, softCaching, load, renderFile, __express */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, load, renderFile, __express */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -692,8 +690,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return definePartial; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cache", function() { return cache; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "softCache", function() { return softCache; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "softCaching", function() { return softCaching; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "load", function() { return load; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return renderFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return __express; });
@@ -739,16 +735,11 @@ function definePartial (name, str) {
 
 var cache = {}
 
-var softCache = false
-
-function softCaching (bool) {
-  softCache = bool
-}
-
 function load (options, str) {
   var filePath = options.$file
   var name = options.$name
-  if (options.$cache !== false) { // If caching isn't disabled
+  var caching = options.$cache
+  if (caching !== false) { // If caching isn't disabled
     if (filePath) { // If the $file attribute is passed in
       if (cache[filePath]) { // If the template is cached
         return cache[filePath] // Return template
@@ -766,7 +757,7 @@ function load (options, str) {
         return cache[name] // Return cached template
       }
     } else if (str) { // If the string is passed in
-      if (softCache) {
+      if (caching === true) {
         if (cache[str]) { // If it's cached
           return cache[str]
         } else {
