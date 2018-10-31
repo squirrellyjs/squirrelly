@@ -12,7 +12,7 @@ import P from './partials'
 
 function Compile (str) {
   var lastIndex = 0 // Because lastIndex can be complicated, and this way the minifier can minify more
-  var funcStr = ''
+  var funcStr = '' // This will be called with Function() and returned
   var helperArray = [] // A list of all 'outstanding' helpers, or unclosed helpers
   var helperNumber = -1
   var helperAutoId = 0 // Squirrelly automatically generates an ID for helpers that don't have a custom ID
@@ -114,8 +114,6 @@ function Compile (str) {
       } else {
         funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');' // If it's not native, passing args to a non-native helper
       }
-    } else {
-      console.error('Err 0')
     }
     /* eslint-disable no-inner-declarations */
     function globalRef (refName, filters) {
@@ -146,7 +144,7 @@ function Compile (str) {
   return func
 }
 
-if (RUNTIME) {
+if (RUNTIME) { // Don't include Sqrl.Compile() in the runtime library, to make it more lightweight
   Compile = {} // eslint-disable-line no-func-assign
 }
 

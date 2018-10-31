@@ -1,20 +1,23 @@
+var escMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}
+
+function replaceChar (s) {
+  return escMap[s]
+}
+
+var escapeRegEx = /[&<"']/g
+var escapeRegExTest = /[&<"']/
+
 export var filters = {
   e: function (str) {
-    var escMap = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;',
-      '/': '&#x2F;'
-    }
     // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
-    function replaceChar (s) {
-      return escMap[s]
-    }
     var newStr = String(str)
-    if (/[&<>"'/]/.test(newStr)) {
-      return newStr.replace(/[&<>"'/]/g, replaceChar)
+    if (escapeRegExTest.test(newStr)) {
+      return newStr.replace(escapeRegEx, replaceChar)
     } else {
       return newStr
     }
@@ -23,20 +26,22 @@ export var filters = {
 // Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
 
 export var defaultFilters = {
-  /* All strings are automatically passed through
-each of the default filters the user
-Has set to true. This opens up a realm of possibilities like autoEscape, etc.
-*/
+  /*
+  All strings are automatically passed through
+  each of the default filters the user
+  Has set to true. This opens up a realm of possibilities.
+  */
   // e: false, // Escape is turned off by default for performance
 }
 
 export var defaultFilterCache = {
+  // This is to prevent having to re-calculate default filters every time you return a filtered string
   start: '',
   end: ''
 }
 
 export function setDefaultFilters (obj) {
-  if (obj === 'clear') {
+  if (obj === 'clear') { // If someone calls Sqrl.setDefaultFilters('clear') it clears all default filters
     defaultFilters = {}
   } else {
     for (var key in obj) {
@@ -48,16 +53,12 @@ export function setDefaultFilters (obj) {
   cacheDefaultFilters()
 }
 
+export var autoEscape = true
+
 export function autoEscaping (bool) {
-  if (bool) {
-    autoEscape = true
-  } else {
-    autoEscape = false
-  }
+  autoEscape = bool
   return autoEscape
 }
-
-export var autoEscape = true
 
 export function cacheDefaultFilters () {
   defaultFilterCache = {
@@ -78,7 +79,7 @@ export function parseFiltered (initialString, filterString) {
   if (filterString && filterString !== '') {
     filtersArray = filterString.split('|')
     for (var i = 0; i < filtersArray.length; i++) {
-      filtersArray[i] = filtersArray[i].trim()
+      filtersArray[i] = filtersArray[i].trim() // Removing the spaces just in case someone put | filter| or | filter | or something similar
       if (filtersArray[i] === '') continue
       if (filtersArray[i] === 'safe') {
         // If 'safe' is one of the filters, set safe to true but don't add Sqrl.F.safe

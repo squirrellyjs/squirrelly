@@ -29,7 +29,7 @@ Custom delimeters!
 var bigTemplateResult = `
 Hi
 
-&lt;script&gt;alert(&#39;hey&#39;)&lt;&#x2F;script&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;&#x2F;p&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;&#x2F;p&gt;&lt;p&gt;alert(&#39;hey&#39;)&lt;&#x2F;p&gt;
+&lt;script>alert(&#39;hey&#39;)&lt;/script>&lt;p>alert(&#39;hey&#39;)&lt;/p>&lt;p>alert(&#39;hey&#39;)&lt;/p>&lt;p>alert(&#39;hey&#39;)&lt;/p>
 
 Reversed value: IH, Key: firstchild
 
@@ -56,7 +56,7 @@ Salutations. Index:5 Old key: thirdchild
 The content of gubler: Hey, the content of pineapple: HI
 
 Custom delimeters!
-Hey,&lt;p&gt;Malicious XSS&lt;&#x2F;p&gt;,Hey,3,12
+Hey,&lt;p>Malicious XSS&lt;/p>,Hey,3,12
 `
 
 var simpleTemplateResult = `

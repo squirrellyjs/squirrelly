@@ -1,0 +1,10 @@
+labels:
+  - first-timers-only
+  - available
+  - Hacktoberfest
+  - up-for-grabs
+  - help wanted
+  - good first issue
+  - beginner friendly
+
+template: .github/FIRST_TIMERS_ISSUE_TEMPLATE.md

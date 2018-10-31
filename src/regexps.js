@@ -1,27 +1,28 @@
-export var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
+export var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)|(?:!--[^]+?--)) *?}}/g
 export var initialTags = {
   s: '{{',
   e: '}}'
 }
 
+// The regExp below matches all helper references inside helper parameters
 var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
 
 export var regEx = initialRegEx
 export var tags = initialTags
 
-export function setup () {
+export function setup () { // Resets the current tags to the default tags
   tags = initialTags
   regEx = initialRegEx
   regEx.lastIndex = 0
 }
 
-export function defaultTags (tagArray) {
+export function defaultTags (tagArray) { // Redefine the default tags of the regexp
   changeTags(tagArray[0], tagArray[1])
   initialRegEx = regEx
   initialTags = tags
 }
 
-export function changeTags (firstTag, secondTag) {
+export function changeTags (firstTag, secondTag) { // Update current tags
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
   var lastIndex = regEx.lastIndex
   tags = {
@@ -45,15 +46,17 @@ export function replaceParamHelpers (params) {
   })
   return params
 }
-// The initial RegExp broken down:
 
-// Total RegEx:
+// The whole regular expression can be hard to comprehend, so here it's broken down.
+// You can pass the string between "START REGEXP" and "END REGEXP" into a regular expression
+// That removes whitespace and comments, and outputs a working regular expression.
+
 /* START REGEXP
 {{ *? //the beginning
 (?: //or for each possible tag
 (?: //if a global or helper ref
 (?: //choosing global or helper ref
-(?:([a-zA-Z_$][\w]* *?(?:[^\s\w\($][^\n]*)*?)) //global reference
+(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?)) //global reference
 |
 (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 )
@@ -67,6 +70,8 @@ export function replaceParamHelpers (params) {
 (?:# *?([a-zA-Z_$][\w]*))
 | //now for a self closing tag
 (?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)
+| //now for comments
+(?:!--[^]+?--)
 ) //end or for each possible tag
  *?}}
 

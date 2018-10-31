@@ -4,7 +4,7 @@
 
 **Summary** 
 
-Squirrelly is a modern, configurable, and blazing fast template engine implemented in JavaScript. It works out of the box with ExpressJS and weighs only **2.5KB gzipped**.
+Squirrelly is a modern, configurable, and blazing fast template engine implemented in JavaScript. It works out of the box with ExpressJS and weighs only **2.6KB gzipped**.
 
 ## Why Squirrelly?
 
@@ -16,8 +16,10 @@ Squirrelly is a modern, configurable, and blazing fast template engine implement
 - Custom delimeters
 - Precompilation
 - Partials
-- Native code
 - Writing JavaScript inside the template
+- Comments
+- Caching
+- Just look at the performance benchmarks [here](https://github.com/nebrelbug/squirrelly-benchmarks)
 
 ## Docs
 We know nobody reads through the long and boring documentation in the ReadMe anyway, so head over to the documentation website:

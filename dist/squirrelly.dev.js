@@ -117,7 +117,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function Compile (str) {
   var lastIndex = 0
-  var funcStr = ''
+  var funcStr = '' // This will be called with Function() and returned
   var helperArray = [] // A list of all 'outstanding' helpers, or unclosed helpers
   var helperNumber = -1
   var helperAutoId = 0 // Squirrelly automatically generates an ID for helpers that don't have a custom ID
@@ -188,7 +188,7 @@ function Compile (str) {
         var nativeH = _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][parent.name]
         if (nativeH.blocks && nativeH.blocks[m[9]]) {
           funcStr += nativeH.blocks[m[9]](parent.id)
-          lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex
+          lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // Some native helpers set regEx.lastIndex
         } else {
           console.warn("Native helper '%s' doesn't accept that block.", parent.name)
         }
@@ -217,10 +217,8 @@ function Compile (str) {
         funcStr += _nativeHelpers__WEBPACK_IMPORTED_MODULE_1__["default"][m[10]].selfClosing(innerParams)
         lastIndex = _regexps__WEBPACK_IMPORTED_MODULE_0__["regEx"].lastIndex // changeTags sets regEx.lastIndex
       } else {
-        funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');'
+        funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');' // If it's not native, passing args to a non-native helper
       }
-    } else {
-      console.error('Err 0')
     }
     /* eslint-disable no-inner-declarations */
     function globalRef (refName, filters) {
@@ -230,7 +228,7 @@ function Compile (str) {
     function helperRef (name, id, filters) {
       var prefix
       if (typeof id !== 'undefined') {
-        if (/(?:\.\.\/)+/g.test(id)) {
+        if (/(?:\.\.\/)+/g.test(id)) { // Test if the helper reference is prefixed with ../
           prefix = helperArray[helperNumber - (id.length / 3) - 1].id
         } else {
           prefix = id.slice(0, -1)
@@ -258,40 +256,11 @@ if (false) {}
 
 /***/ }),
 
-/***/ "./src/express.js":
-/*!************************!*\
-  !*** ./src/express.js ***!
-  \************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
-/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
-/* global fs */
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function (filePath, options, callback) {
-  fs.readFile(filePath, function (err, content) {
-    if (err) {
-      return callback(err)
-    }
-    var sqrlString = content.toString()
-    var template = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(sqrlString)
-    var renderedFile = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["Render"])(template, options)
-    return callback(null, renderedFile)
-  })
-});
-
-
-/***/ }),
-
 /***/ "./src/filters.js":
 /*!************************!*\
   !*** ./src/filters.js ***!
   \************************/
-/*! exports provided: filters, defaultFilters, defaultFilterCache, setDefaultFilters, autoEscaping, autoEscape, cacheDefaultFilters, parseFiltered, default, defineFilter */
+/*! exports provided: filters, defaultFilters, defaultFilterCache, setDefaultFilters, autoEscape, autoEscaping, cacheDefaultFilters, parseFiltered, default, defineFilter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -300,29 +269,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultFilters", function() { return defaultFilters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultFilterCache", function() { return defaultFilterCache; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDefaultFilters", function() { return setDefaultFilters; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return autoEscaping; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "autoEscape", function() { return autoEscape; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return autoEscaping; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cacheDefaultFilters", function() { return cacheDefaultFilters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseFiltered", function() { return parseFiltered; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return filters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return defineFilter; });
+var escMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}
+
+function replaceChar (s) {
+  return escMap[s]
+}
+
+var escapeRegEx = /[&<"']/g
+var escapeRegExTest = /[&<"']/
+
 var filters = {
   e: function (str) {
-    var escMap = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;',
-      '/': '&#x2F;'
-    }
     // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
-    function replaceChar (s) {
-      return escMap[s]
-    }
     var newStr = String(str)
-    if (/[&<>"'/]/.test(newStr)) {
-      return newStr.replace(/[&<>"'/]/g, replaceChar)
+    if (escapeRegExTest.test(newStr)) {
+      return newStr.replace(escapeRegEx, replaceChar)
     } else {
       return newStr
     }
@@ -331,20 +303,22 @@ var filters = {
 // Don't need a filter for unescape because that's just a flag telling Squirrelly not to escape
 
 var defaultFilters = {
-  /* All strings are automatically passed through
-each of the default filters the user
-Has set to true. This opens up a realm of possibilities like autoEscape, etc.
-*/
+  /*
+  All strings are automatically passed through
+  each of the default filters the user
+  Has set to true. This opens up a realm of possibilities.
+  */
   // e: false, // Escape is turned off by default for performance
 }
 
 var defaultFilterCache = {
+  // This is to prevent having to re-calculate default filters every time you return a filtered string
   start: '',
   end: ''
 }
 
 function setDefaultFilters (obj) {
-  if (obj === 'clear') {
+  if (obj === 'clear') { // If someone calls Sqrl.setDefaultFilters('clear') it clears all default filters
     defaultFilters = {}
   } else {
     for (var key in obj) {
@@ -356,16 +330,12 @@ function setDefaultFilters (obj) {
   cacheDefaultFilters()
 }
 
+var autoEscape = true
+
 function autoEscaping (bool) {
-  if (bool) {
-    autoEscape = true
-  } else {
-    autoEscape = false
-  }
+  autoEscape = bool
   return autoEscape
 }
-
-var autoEscape = true
 
 function cacheDefaultFilters () {
   defaultFilterCache = {
@@ -386,7 +356,7 @@ function parseFiltered (initialString, filterString) {
   if (filterString && filterString !== '') {
     filtersArray = filterString.split('|')
     for (var i = 0; i < filtersArray.length; i++) {
-      filtersArray[i] = filtersArray[i].trim()
+      filtersArray[i] = filtersArray[i].trim() // Removing the spaces just in case someone put | filter| or | filter | or something similar
       if (filtersArray[i] === '') continue
       if (filtersArray[i] === 'safe') {
         // If 'safe' is one of the filters, set safe to true but don't add Sqrl.F.safe
@@ -455,41 +425,43 @@ var helpers = {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: __express, H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, F, setDefaultFilters, autoEscaping, defaultTags */
+/*! exports provided: H, Compile, defineFilter, defineHelper, defineNativeHelper, definePartial, Render, renderFile, load, __express, F, setDefaultFilters, autoEscaping, defaultTags */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./express */ "./src/express.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _express__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers */ "./src/helpers.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "H", function() { return _helpers__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers */ "./src/helpers.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "H", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Compile", function() { return _compile__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Compile", function() { return _compile__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["defineFilter"]; });
 
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineFilter", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineFilter"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["defineHelper"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineHelper"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["defineNativeHelper"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["defineNativeHelper"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["definePartial"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["definePartial"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["Render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return _utils__WEBPACK_IMPORTED_MODULE_3__["Render"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["renderFile"]; });
 
-/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "F", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "load", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["load"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setDefaultFilters", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["setDefaultFilters"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return _utils__WEBPACK_IMPORTED_MODULE_2__["__express"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return _filters__WEBPACK_IMPORTED_MODULE_4__["autoEscaping"]; });
+/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "F", function() { return _filters__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return _regexps__WEBPACK_IMPORTED_MODULE_5__["defaultTags"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setDefaultFilters", function() { return _filters__WEBPACK_IMPORTED_MODULE_3__["setDefaultFilters"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "autoEscaping", function() { return _filters__WEBPACK_IMPORTED_MODULE_3__["autoEscaping"]; });
+
+/* harmony import */ var _regexps__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regexps */ "./src/regexps.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return _regexps__WEBPACK_IMPORTED_MODULE_4__["defaultTags"]; });
 
 
 
@@ -603,30 +575,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return defaultTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
-var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)) *?}}/g
+var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)|(?:!--[^]+?--)) *?}}/g
 var initialTags = {
   s: '{{',
   e: '}}'
 }
 
+// The regExp below matches all helper references inside helper parameters
 var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
 
 var regEx = initialRegEx
 var tags = initialTags
 
-function setup () {
+function setup () { // Resets the current tags to the default tags
   tags = initialTags
   regEx = initialRegEx
   regEx.lastIndex = 0
 }
 
-function defaultTags (tagArray) {
+function defaultTags (tagArray) { // Redefine the default tags of the regexp
   changeTags(tagArray[0], tagArray[1])
   initialRegEx = regEx
   initialTags = tags
 }
 
-function changeTags (firstTag, secondTag) {
+function changeTags (firstTag, secondTag) { // Update current tags
   var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
   var lastIndex = regEx.lastIndex
   tags = {
@@ -650,15 +623,17 @@ function replaceParamHelpers (params) {
   })
   return params
 }
-// The initial RegExp broken down:
 
-// Total RegEx:
+// The whole regular expression can be hard to comprehend, so here it's broken down.
+// You can pass the string between "START REGEXP" and "END REGEXP" into a regular expression
+// That removes whitespace and comments, and outputs a working regular expression.
+
 /* START REGEXP
 {{ *? //the beginning
 (?: //or for each possible tag
 (?: //if a global or helper ref
 (?: //choosing global or helper ref
-(?:([a-zA-Z_$][\w]* *?(?:[^\s\w\($][^\n]*)*?)) //global reference
+(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?)) //global reference
 |
 (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 )
@@ -672,6 +647,8 @@ function replaceParamHelpers (params) {
 (?:# *?([a-zA-Z_$][\w]*))
 | //now for a self closing tag
 (?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)
+| //now for comments
+(?:!--[^]+?--)
 ) //end or for each possible tag
  *?}}
 
@@ -698,7 +675,7 @@ Here's the RegExp I use to turn the expanded version between START REGEXP and EN
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial */
+/*! exports provided: defineFilter, defineHelper, defineNativeHelper, Render, definePartial, cache, load, renderFile, __express */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -708,6 +685,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defineNativeHelper", function() { return defineNativeHelper; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Render", function() { return Render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "definePartial", function() { return definePartial; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cache", function() { return cache; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "load", function() { return load; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderFile", function() { return renderFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__express", function() { return __express; });
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filters */ "./src/filters.js");
 /* harmony import */ var _compile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./compile */ "./src/compile.js");
 /* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./src/index.js");
@@ -716,7 +697,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _partials__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./partials */ "./src/partials.js");
 
 
-
+ // So we can pass Sqrl as a parameter to Render()
 
 
 
@@ -734,11 +715,13 @@ function defineNativeHelper (name, obj) {
 }
 
 function Render (template, options) {
+  // If the template parameter is a function, call that function with (options, Sqrl)
+  // If it's a string, first compile the string and then call the function
   if (typeof template === 'function') {
     return template(options, _index__WEBPACK_IMPORTED_MODULE_2__)
   } else if (typeof template === 'string') {
-    var templateFunc = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(template)
-    return templateFunc(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+    var res = load(options, template)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+    return res
   }
 }
 
@@ -746,6 +729,68 @@ function definePartial (name, str) {
   _partials__WEBPACK_IMPORTED_MODULE_5__["default"][name] = str
 }
 
+var cache = {}
+
+function load (options, str) {
+  var filePath = options.$file
+  var name = options.$name
+  var caching = options.$cache
+  if (caching !== false) { // If caching isn't disabled
+    if (filePath) { // If the $file attribute is passed in
+      if (cache[filePath]) { // If the template is cached
+        return cache[filePath] // Return template
+      } else { // Otherwise, read file
+        var fs = __webpack_require__(/*! fs */ "fs")
+        var fileContent = fs.readFileSync(filePath, 'utf8')
+        cache[filePath] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(fileContent) // Add the template to the cache
+        return cache[filePath] // Then return the cached template
+      }
+    } else if (name) { // If the $name attribute is passed in
+      if (cache[name]) { // If there's a cache for that name
+        return cache[name] // Return cached template
+      } else if (str) { // Otherwise, as long as there's a string passed in
+        cache[name] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str) // Add the template to the cache
+        return cache[name] // Return cached template
+      }
+    } else if (str) { // If the string is passed in
+      if (caching === true) {
+        if (cache[str]) { // If it's cached
+          return cache[str]
+        } else {
+          cache[str] = Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str) // Add it to cache
+          return cache[str]
+        }
+      } else {
+        return Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
+      }
+    } else {
+      return 'Error'
+    }
+  } else { // If caching is disabled
+    return Object(_compile__WEBPACK_IMPORTED_MODULE_1__["default"])(str)
+  }
+}
+
+function renderFile (filePath, options) {
+  options.$file = filePath
+  return load(options)(options, _index__WEBPACK_IMPORTED_MODULE_2__)
+}
+
+function __express (filePath, options, callback) {
+  return callback(null, renderFile(filePath, options))
+}
+
+
+/***/ }),
+
+/***/ "fs":
+/*!*********************!*\
+  !*** external "fs" ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
 
 /***/ })
 

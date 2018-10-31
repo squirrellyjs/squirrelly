@@ -23,11 +23,62 @@ export function Render (template, options) {
   if (typeof template === 'function') {
     return template(options, Sqrl)
   } else if (typeof template === 'string') {
-    var templateFunc = C(template)
-    return templateFunc(options, Sqrl)
+    var res = load(options, template)(options, Sqrl)
+    return res
   }
 }
 
 export function definePartial (name, str) {
   P[name] = str
+}
+
+export var cache = {}
+
+export function load (options, str) {
+  var filePath = options.$file
+  var name = options.$name
+  var caching = options.$cache
+  if (caching !== false) { // If caching isn't disabled
+    if (filePath) { // If the $file attribute is passed in
+      if (cache[filePath]) { // If the template is cached
+        return cache[filePath] // Return template
+      } else { // Otherwise, read file
+        var fs = require('fs')
+        var fileContent = fs.readFileSync(filePath, 'utf8')
+        cache[filePath] = C(fileContent) // Add the template to the cache
+        return cache[filePath] // Then return the cached template
+      }
+    } else if (name) { // If the $name attribute is passed in
+      if (cache[name]) { // If there's a cache for that name
+        return cache[name] // Return cached template
+      } else if (str) { // Otherwise, as long as there's a string passed in
+        cache[name] = C(str) // Add the template to the cache
+        return cache[name] // Return cached template
+      }
+    } else if (str) { // If the string is passed in
+      if (caching === true) {
+        if (cache[str]) { // If it's cached
+          return cache[str]
+        } else {
+          cache[str] = C(str) // Add it to cache
+          return cache[str]
+        }
+      } else {
+        return C(str)
+      }
+    } else {
+      return 'Error'
+    }
+  } else { // If caching is disabled
+    return C(str)
+  }
+}
+
+export function renderFile (filePath, options) {
+  options.$file = filePath
+  return load(options)(options, Sqrl)
+}
+
+export function __express (filePath, options, callback) {
+  return callback(null, renderFile(filePath, options))
 }
