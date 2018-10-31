@@ -116,7 +116,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Compile (str) {
-  var lastIndex = 0
+  var lastIndex = 0 // Because lastIndex can be complicated, and this way the minifier can minify more
   var funcStr = '' // This will be called with Function() and returned
   var helperArray = [] // A list of all 'outstanding' helpers, or unclosed helpers
   var helperNumber = -1
