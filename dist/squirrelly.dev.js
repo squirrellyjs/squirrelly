@@ -575,7 +575,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return defaultTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
-var initialRegEx = /{{ *?(?:(?:(?:(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))|(?:\/ *?([a-zA-Z_$][\w]*))|(?:# *?([a-zA-Z_$][\w]*))|(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)|(?:!--[^]+?--)) *?}}/g
+var initialRegEx = /{{ *?(?:(?:(?:(?:([\w$]+ *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([\w$]+) *?\(([^\n]*)\) *?([\w$]*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:([\w$]+) *?\(([^\n]*)\) *?\/)|(?:!--[^]+?--)) *?}}\n?/g
 var initialTags = {
   s: '{{',
   e: '}}'
@@ -600,7 +600,7 @@ function defaultTags (tagArray) { // Redefine the default tags of the regexp
 }
 
 function changeTags (firstTag, secondTag) { // Update current tags
-  var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - tags.e.length) + secondTag
+  var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - (tags.e.length + 3)) + secondTag + '\\n?'
   var lastIndex = regEx.lastIndex
   tags = {
     s: firstTag,
@@ -633,24 +633,25 @@ function replaceParamHelpers (params) {
 (?: //or for each possible tag
 (?: //if a global or helper ref
 (?: //choosing global or helper ref
-(?:([a-zA-Z_$][\w]* *?(?:[^\s\w($][^\n]*)*?)) //global reference
+(?:([\w$]+ *?(?:[^\s\w($][^\n]*)*?)) //global reference
 |
 (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 )
 (?: *?(\| *?[\w$]+? *?)+?)? //filter
 ) //end if a global or helper ref
 | //now if a helper oTag
-(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?([\w]*))
+(?:([\w$]+) *?\(([^\n]*)\) *?([\w$]*))
 | //now if a helper cTag
-(?:\/ *?([a-zA-Z_$][\w]*))
+(?:\/ *?([\w$]+))
 | //now if a helper block
-(?:# *?([a-zA-Z_$][\w]*))
+(?:# *?([\w$]+))
 | //now for a self closing tag
-(?:([a-zA-Z_$][\w]*) *?\(([^\n]*)\) *?\/)
+(?:([\w$]+) *?\(([^\n]*)\) *?\/)
 | //now for comments
 (?:!--[^]+?--)
 ) //end or for each possible tag
  *?}}
+\n? //To replace a newline at the end of a line
 
 END REGEXP */
 /*

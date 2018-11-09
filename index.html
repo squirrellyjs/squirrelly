@@ -15,12 +15,13 @@
 Hi
 {{log("Hope you like Squirrelly!")/}}
 {{htmlstuff}}
-{{foreach(options.obj)}}
+{{foreach(options.obj) }}
+
 Reversed value: {{@this|reverse}}, Key: {{@key}}
 {{if(@key==="thirdchild")}}
 {{each(options.obj[@key])}}
-Salutations. Index: {{@index}}
-Old key: {{@../key}}
+
+Salutations! Index: {{@index}}, old key: {{@../key}}
 {{/each}}
 {{/if}}
 {{/foreach}}
@@ -34,8 +35,10 @@ As do pineapples
 
 This is a partial: {{include("mypartial")/}}
 {{tags(--,--)/}}
+
 Custom delimeters!
 --arr--
+
 </textarea>
     <div id="renderResult" style="white-space:pre-line;"></div>
     <div class="leftTitle label">Options</div>
@@ -94,11 +97,14 @@ Custom delimeters!
         }
 
         function render() {
+            console.clear()
             var options = JSON.parse("{" + document.getElementById('options').value + "}")
+            console.log(JSON.stringify(options))
             var template = document.getElementById('template').value
             var functionResult = Sqrl.Compile(template).toString()
             document.getElementById('functionResult').innerHTML = escape(functionResult)
             document.getElementById('renderResult').innerHTML = Sqrl.Render(template, options)
+            console.log(Sqrl.Render(template, options))
         }
         render()
         document.getElementById("template").addEventListener("input", render)
