@@ -1,4 +1,4 @@
-export var initialRegEx = /{{ *?(?:(?:(?:(?:([\w$]+ *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([\w$]+) *?\(([^\n]*)\) *?([\w$]*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:([\w$]+) *?\(([^\n]*)\) *?\/)|(?:!--[^]+?--)) *?}}\n?/g
+export var initialRegEx = /{{ *?(?:(?:(?:(?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:([\w$]+) *?\(([^\n]*?)\) *?\/)|(?:!--[^]+?--)) *?}}\n?/g
 export var initialTags = {
   s: '{{',
   e: '}}'
@@ -56,20 +56,20 @@ export function replaceParamHelpers (params) {
 (?: //or for each possible tag
 (?: //if a global or helper ref
 (?: //choosing global or helper ref
-(?:([\w$]+ *?(?:[^\s\w($][^\n]*)*?)) //global reference
+(?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?)) //global reference
 |
 (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 )
 (?: *?(\| *?[\w$]+? *?)+?)? //filter
 ) //end if a global or helper ref
 | //now if a helper oTag
-(?:([\w$]+) *?\(([^\n]*)\) *?([\w$]*))
+(?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))
 | //now if a helper cTag
 (?:\/ *?([\w$]+))
 | //now if a helper block
 (?:# *?([\w$]+))
 | //now for a self closing tag
-(?:([\w$]+) *?\(([^\n]*)\) *?\/)
+(?:([\w$]+) *?\(([^\n]*?)\) *?\/)
 | //now for comments
 (?:!--[^]+?--)
 ) //end or for each possible tag

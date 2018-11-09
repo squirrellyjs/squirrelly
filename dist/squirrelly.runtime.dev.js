@@ -352,7 +352,7 @@ function cacheDefaultFilters () {
 }
 function parseFiltered (initialString, filterString) {
   var filtersArray
-  var safe
+  var safe = false
   var filterStart = ''
   var filterEnd = ''
   if (filterString && filterString !== '') {
@@ -376,8 +376,9 @@ function parseFiltered (initialString, filterString) {
     filterStart += 'Sqrl.F.e('
     filterEnd += ')'
   }
-
-  return filterStart + initialString + filterEnd
+  var filterResult = filterStart + initialString + filterEnd
+  console.log('Filter result: ' + filterResult)
+  return filterResult
 }
 
 function defineFilter (name, callback) {
@@ -579,7 +580,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTags", function() { return defaultTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeTags", function() { return changeTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceParamHelpers", function() { return replaceParamHelpers; });
-var initialRegEx = /{{ *?(?:(?:(?:(?:([\w$]+ *?(?:[^\s\w($][^\n]*)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([\w$]+) *?\(([^\n]*)\) *?([\w$]*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:([\w$]+) *?\(([^\n]*)\) *?\/)|(?:!--[^]+?--)) *?}}\n?/g
+var initialRegEx = /{{ *?(?:(?:(?:(?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:([\w$]+) *?\(([^\n]*?)\) *?\/)|(?:!--[^]+?--)) *?}}\n?/g
 var initialTags = {
   s: '{{',
   e: '}}'
@@ -637,20 +638,20 @@ function replaceParamHelpers (params) {
 (?: //or for each possible tag
 (?: //if a global or helper ref
 (?: //choosing global or helper ref
-(?:([\w$]+ *?(?:[^\s\w($][^\n]*)*?)) //global reference
+(?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?)) //global reference
 |
 (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
 )
 (?: *?(\| *?[\w$]+? *?)+?)? //filter
 ) //end if a global or helper ref
 | //now if a helper oTag
-(?:([\w$]+) *?\(([^\n]*)\) *?([\w$]*))
+(?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))
 | //now if a helper cTag
 (?:\/ *?([\w$]+))
 | //now if a helper block
 (?:# *?([\w$]+))
 | //now for a self closing tag
-(?:([\w$]+) *?\(([^\n]*)\) *?\/)
+(?:([\w$]+) *?\(([^\n]*?)\) *?\/)
 | //now for comments
 (?:!--[^]+?--)
 ) //end or for each possible tag

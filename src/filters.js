@@ -73,7 +73,7 @@ export function cacheDefaultFilters () {
 }
 export function parseFiltered (initialString, filterString) {
   var filtersArray
-  var safe
+  var safe = false
   var filterStart = ''
   var filterEnd = ''
   if (filterString && filterString !== '') {
@@ -97,8 +97,9 @@ export function parseFiltered (initialString, filterString) {
     filterStart += 'Sqrl.F.e('
     filterEnd += ')'
   }
-
-  return filterStart + initialString + filterEnd
+  var filterResult = filterStart + initialString + filterEnd
+  console.log('Filter result: ' + filterResult)
+  return filterResult
 }
 
 function defineFilter (name, callback) {
