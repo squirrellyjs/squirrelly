@@ -1,7 +1,7 @@
 {
   "name": "squirrelly",
-  "version": "6.1.1",
-  "description": "A simple yet powerful modern template engine that works in the browser, in Node.js, and with ExpressJS.",
+  "version": "7.0.0-beta",
+  "description": "A simple and powerful template engine that supports helpers, partials, filters, native code, and Express.",
   "main": "./dist/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
   "scripts": {
