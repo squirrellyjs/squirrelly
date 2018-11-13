@@ -97,9 +97,8 @@ export function parseFiltered (initialString, filterString) {
     filterStart += 'Sqrl.F.e('
     filterEnd += ')'
   }
-  var filterResult = filterStart + initialString + filterEnd
-  console.log('Filter result: ' + filterResult)
-  return filterResult
+
+  return filterStart + initialString + filterEnd
 }
 
 function defineFilter (name, callback) {
