@@ -1,6 +1,6 @@
 
 # squirrelly 
-[![Build Status](https://travis-ci.org/nebrelbug/squirrelly.svg?branch=master)](https://travis-ci.org/nebrelbug/squirrelly) [![dependencies Status](https://david-dm.org/nebrelbug/squirrelly/status.svg)](https://david-dm.org/nebrelbug/squirrelly) [![npm downloads](https://img.shields.io/npm/dt/squirrelly.svg)](https://www.npmjs.com/package/squirrelly) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://badges.gitter.im/squirrellyjs/Lobby.svg)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/nebrelbug/squirrelly.svg?branch=master)](https://travis-ci.org/nebrelbug/squirrelly) [![dependencies Status](https://david-dm.org/nebrelbug/squirrelly/status.svg)](https://david-dm.org/nebrelbug/squirrelly) [![npm downloads](https://img.shields.io/npm/dt/squirrelly.svg)](https://www.npmjs.com/package/squirrelly) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://badges.gitter.im/squirrellyjs/Lobby.svg)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Donate to squirrelly: https://opencollective.com/squirrelly](https://img.shields.io/badge/Open_Collective-donate-brightgreen.svg)](https://opencollective.com/squirrelly)
 
 **Summary** 
 
@@ -25,6 +25,31 @@ Squirrelly is a modern, configurable, and blazing fast template engine implement
 We know nobody reads through the long and boring documentation in the ReadMe anyway, so head over to the documentation website:
 
 [https://squirrelly.js.org](https://squirrelly.js.org)
+
+## Examples
+### Simple Template
+```
+var myTemplate = "<p>My favorite kind of cake is: {{favoriteCake}}</p>"
+​
+Sqrl.Render(myTemplate, {favoriteCake: 'Chocolate!'})
+// Returns: '<p>My favorite kind of cake is: Chocolate!</p>
+```
+### Conditionals
+```
+{{if(options.somevalue === 1)}}
+Display this
+{{#else}}
+Display this
+{{/if}}
+```
+### Loops
+```
+{{each(options.somearray)}}
+Display this
+The current array element is {{@this}}
+The current index is {{@index}}
+{{/each}}
+```
 ## Tests
 
 The default test can be run with `npm test`, and it just checks that compiling and rendering a simple template results in the correct string.

@@ -27,11 +27,10 @@ export var filters = {
 
 export var defaultFilters = {
   /*
-  All strings are automatically passed through
-  each of the default filters the user
+  All strings are automatically passed through each of the default filters the user
   Has set to true. This opens up a realm of possibilities.
   */
-  // e: false, // Escape is turned off by default for performance
+  // somefilter: false
 }
 
 export var defaultFilterCache = {
