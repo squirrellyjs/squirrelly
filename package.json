@@ -14,7 +14,8 @@
     "build:lib:prod": "webpack --env.production",
     "build:lib": "npm run build:lib:dev && npm run build:lib:prod",
     "build": "npm run build:lib && npm run build:runtime",
-    "format": "standard --fix 'src/*.js'"
+    "format": "standard --fix 'src/*.js'",
+    "postinstall": "opencollective-postinstall"
   },
   "keywords": [
     "template",
@@ -41,7 +42,10 @@
   "bugs": {
     "url": "https://github.com/nebrelbug/squirrelly/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "opencollective-postinstall": "^2.0.1",
+    "opencollective": "^1.0.3"
+  },
   "devDependencies": {
     "mocha": "^5.1.1",
     "standard": "^12.0.1",
@@ -56,5 +60,9 @@
   },
   "browser": {
     "fs": false
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/squirrelly"
   }
 }
