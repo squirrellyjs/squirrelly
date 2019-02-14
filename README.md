@@ -1,6 +1,6 @@
 
 # squirrelly 
-[![Build Status](https://travis-ci.org/nebrelbug/squirrelly.svg?branch=master)](https://travis-ci.org/nebrelbug/squirrelly) [![dependencies Status](https://david-dm.org/nebrelbug/squirrelly/status.svg)](https://david-dm.org/nebrelbug/squirrelly) [![npm downloads](https://img.shields.io/npm/dt/squirrelly.svg)](https://www.npmjs.com/package/squirrelly) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://badges.gitter.im/squirrellyjs/Lobby.svg)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Backers on Open Collective](https://opencollective.com/squirrelly/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/squirrelly/sponsors/badge.svg)](#sponsors) 
+[![Build Status](https://travis-ci.org/nebrelbug/squirrelly.svg?branch=master)](https://travis-ci.org/nebrelbug/squirrelly) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://badges.gitter.im/squirrellyjs/Lobby.svg)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Tip me at paypal.me/bengubler](https://img.shields.io/badge/Paypal-tip%20me-brightgreen.svg)](https://paypal.me/bengubler)
 
 **Summary** 
 
@@ -71,32 +71,10 @@ For a good pull request, we ask you provide the following:
 ## Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/nebrelbug/squirrelly/graphs/contributors"><img src="https://opencollective.com/squirrelly/contributors.svg?width=890&button=false" /></a>
 
+The top 7:
 
-## Backers
-
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/squirrelly#backer)]
-
-<a href="https://opencollective.com/squirrelly#backers" target="_blank"><img src="https://opencollective.com/squirrelly/backers.svg?width=890"></a>
-
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/squirrelly#sponsor)]
-
-<a href="https://opencollective.com/squirrelly/sponsor/0/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/1/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/2/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/3/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/4/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/5/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/6/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/7/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/8/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/squirrelly/sponsor/9/website" target="_blank"><img src="https://opencollective.com/squirrelly/sponsor/9/avatar.svg"></a>
-
-
+[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/0)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/0)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/1)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/1)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/2)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/2)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/3)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/3)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/4)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/4)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/5)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/5)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/6)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/6)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/7)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/7)
 
 ## License
 
