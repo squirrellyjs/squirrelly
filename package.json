@@ -1,6 +1,6 @@
 {
   "name": "squirrelly",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "description": "Simple and powerful template engine that supports helpers, partials, filters, native code, and Express.",
   "main": "./dist/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
