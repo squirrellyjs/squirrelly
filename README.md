@@ -6,6 +6,8 @@
 
 Squirrelly is a modern, configurable, and blazing fast template engine implemented in JavaScript. It works out of the box with ExpressJS and weighs only **2.6KB gzipped**.
 
+Notice: Squirrelly Version 8 is coming out soon! [Learn More](#version-8)
+
 ## Why Squirrelly?
 
 ### Features:
@@ -75,6 +77,29 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 The top 7:
 
 [![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/0)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/0)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/1)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/1)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/2)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/2)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/3)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/3)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/4)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/4)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/5)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/5)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/6)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/6)[![](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/images/7)](https://sourcerer.io/fame/nebrelbug/nebrelbug/squirrelly/links/7)
+
+## Version 8
+
+Some of you may have been wondering about the lack of activity on this repository over the last few months. The answer is that, for quite a while, I've been working on a brand-new version of Squirrelly. You can [read about it on GitHub](https://github.com/nebrelbug/squirrelly/issues/106), but here's a quick overview:
+
+### Low-Level Changes
+- New, more reliable parser -- see a draft [here](https://gist.github.com/nebrelbug/7f1d0d0c80b90c86ed629cc8a10e6cb5)
+- AST generation before compiled-function generation
+- Partials will be referenced instead of inlined
+- Bundling with Rollup for smaller code size
+
+### New Features
+- Layouts
+- Async support
+- Helpers will be prefixed with `~`, so `{{~if(options.stuff}}`
+- 'Interpolate syntax': `{{=4+3}}`
+- Native Code: what was previously `{{js(var x = 0)/}}` will become: `{{!var x = 0}}`
+- Filter parameters, ex. `{{somearray | join(",") }}`
+- Save the cache and load it later
+- Plugins
+
+### Bug Fixes
+- Filter chaining will work once more
 
 ## License
 
