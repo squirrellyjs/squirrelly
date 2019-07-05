@@ -1,4 +1,4 @@
-
+<a href="https://squirrelly.js.org"><img src="./squirrelly-logo.svg" align="right" width="30%" alt="Squirrel"></a>
 # squirrelly 
 [![Build Status](https://travis-ci.org/nebrelbug/squirrelly.svg?branch=master)](https://travis-ci.org/nebrelbug/squirrelly) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nebrelbug/squirrelly&amp;utm_campaign=Badge_Grade)[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://badges.gitter.im/squirrellyjs/Lobby.svg)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Tip me at paypal.me/bengubler](https://img.shields.io/badge/Paypal-tip%20me-brightgreen.svg)](https://paypal.me/bengubler)
 
