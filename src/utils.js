@@ -38,26 +38,35 @@ export function load (options, str) {
   var filePath = options.$file
   var name = options.$name
   var caching = options.$cache
-  if (caching !== false) { // If caching isn't disabled
-    if (filePath) { // If the $file attribute is passed in
-      if (cache[filePath]) { // If the template is cached
+  if (caching !== false) {
+    // If caching isn't disabled
+    if (filePath) {
+      // If the $file attribute is passed in
+      if (cache[filePath]) {
+        // If the template is cached
         return cache[filePath] // Return template
-      } else { // Otherwise, read file
+      } else {
+        // Otherwise, read file
         var fs = require('fs')
         var fileContent = fs.readFileSync(filePath, 'utf8')
         cache[filePath] = C(fileContent) // Add the template to the cache
         return cache[filePath] // Then return the cached template
       }
-    } else if (name) { // If the $name attribute is passed in
-      if (cache[name]) { // If there's a cache for that name
+    } else if (name) {
+      // If the $name attribute is passed in
+      if (cache[name]) {
+        // If there's a cache for that name
         return cache[name] // Return cached template
-      } else if (str) { // Otherwise, as long as there's a string passed in
+      } else if (str) {
+        // Otherwise, as long as there's a string passed in
         cache[name] = C(str) // Add the template to the cache
         return cache[name] // Return cached template
       }
-    } else if (str) { // If the string is passed in
+    } else if (str) {
+      // If the string is passed in
       if (caching === true) {
-        if (cache[str]) { // If it's cached
+        if (cache[str]) {
+          // If it's cached
           return cache[str]
         } else {
           cache[str] = C(str) // Add it to cache
@@ -69,8 +78,18 @@ export function load (options, str) {
     } else {
       return 'Error'
     }
-  } else { // If caching is disabled
-    return C(str)
+  } else {
+    // If caching is disabled
+    if (filePath) {
+      // If the $file attribute is passed in
+      var fs2 = require('fs')
+      return C(fs2.readFileSync(filePath, 'utf8')) // Then return the cached template
+    } else if (str) {
+      // If the string is passed in
+      return C(str)
+    } else {
+      throw Error('No template')
+    }
   }
 }
 
