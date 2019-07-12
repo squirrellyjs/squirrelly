@@ -5,16 +5,9 @@
   "main": "./dist/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
   "scripts": {
-    "test": "standard 'src/*.js' && mocha",
-    "build:runtime:dev": "webpack --env.target=browser",
-    "build:runtime:prod": "webpack --env.target=browser --env.production",
-    "build:runtime": "npm run build:runtime:dev && npm run build:runtime:prod",
-    "build:lib:dev": "webpack",
-    "build:lib:prod": "webpack --env.production",
-    "build:lib": "npm run build:lib:dev && npm run build:lib:prod",
-    "build": "npm run build:lib && npm run build:runtime",
-    "format": "standard --fix 'src/*.js'",
-    "postinstall": "node postinstall.js"
+    "test": "./node_modules/.bin/standard 'src/*.js' && ./node_modules/.bin/mocha",
+    "build": "./node_modules/.bin/rollup -c",
+    "format": "./node_modules/.bin/standard --fix 'src/*.js'"
   },
   "keywords": [
     "template",
