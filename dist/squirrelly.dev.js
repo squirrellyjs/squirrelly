@@ -4,23 +4,6 @@
   (global = global || self, factory(global.Sqrl = {}));
 }(this, function (exports) { 'use strict';
 
-  var Sqrl = /*#__PURE__*/Object.freeze({
-    get H () { return helpers; },
-    get Compile () { return Compile; },
-    get defineFilter () { return defineFilter; },
-    get defineHelper () { return defineHelper; },
-    get defineNativeHelper () { return defineNativeHelper; },
-    get definePartial () { return definePartial; },
-    get Render () { return Render; },
-    get renderFile () { return renderFile; },
-    get load () { return load; },
-    get __express () { return __express; },
-    get F () { return filters; },
-    get setDefaultFilters () { return setDefaultFilters; },
-    get autoEscaping () { return autoEscaping; },
-    get defaultTags () { return defaultTags; }
-  });
-
   var helpers = {
   // No helpers are included by default for the sake of size,
   // But there's an example of a helper below
@@ -40,6 +23,10 @@
       return today
     } */
   };
+
+  var Partials = {/*
+      partialName: "partialString"
+  */};
 
   var initialRegEx = /{{ *?(?:(?:(?:(?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:([\w$]+) *?\(([^\n]*?)\) *?\/)|(?:!--[^]+?--)) *?}}\n?/g;
   var initialTags = {
@@ -287,10 +274,6 @@
     return filterStart + initialString + filterEnd
   }
 
-  var Partials = {/*
-      partialName: "partialString"
-  */};
-
   function Compile (str) {
     var lastIndex = 0; // Because lastIndex can be complicated, and this way the minifier can minify more
     var funcStr = ''; // This will be called with Function() and returned
@@ -438,12 +421,12 @@
   }
 
   function Render (template, options) {
-    // If the template parameter is a function, call that function with (options, Sqrl)
+    // If the template parameter is a function, call that function with (options, squirrelly stuff)
     // If it's a string, first compile the string and then call the function
     if (typeof template === 'function') {
-      return template(options, Sqrl)
+      return template(options, { H: helpers, F: filters, P: Partials })
     } else if (typeof template === 'string') {
-      var res = load(options, template)(options, Sqrl);
+      var res = load(options, template)(options, { H: helpers, F: filters, P: Partials });
       return res
     }
   }
@@ -515,18 +498,17 @@
 
   function renderFile (filePath, options) {
     options.$file = filePath;
-    return load(options)(options, Sqrl)
+    return load(options)(options, { H: helpers, F: filters, P: Partials })
   }
 
   function __express (filePath, options, callback) {
     return callback(null, renderFile(filePath, options))
   }
 
-
-
   exports.Compile = Compile;
   exports.F = filters;
   exports.H = helpers;
+  exports.P = Partials;
   exports.Render = Render;
   exports.__express = __express;
   exports.autoEscaping = autoEscaping;
