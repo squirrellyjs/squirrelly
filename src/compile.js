@@ -1,4 +1,3 @@
-/* global RUNTIME */
 import {
   regEx,
   setup,
@@ -142,10 +141,6 @@ function Compile (str) {
   funcStr += 'return tR'
   var func = new Function('options', 'Sqrl', funcStr.replace(/\n/g, '\\n').replace(/\r/g, '\\r')) //eslint-disable-line
   return func
-}
-
-if (RUNTIME) { // Don't include Sqrl.Compile() in the runtime library, to make it more lightweight
-  Compile = {} // eslint-disable-line no-func-assign
 }
 
 export default Compile

@@ -1,4 +1,3 @@
-/* global RUNTIME */
 import { changeTags } from './regexps'
 var nativeHelpers = {
   if: {
@@ -49,8 +48,5 @@ var nativeHelpers = {
     }
   }
 }
-// We don't need to export nativeHelpers for the runtime script
-if (RUNTIME) {
-  nativeHelpers = {}
-}
+
 export default nativeHelpers

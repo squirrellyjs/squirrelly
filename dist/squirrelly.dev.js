@@ -6,7 +6,7 @@
 
   var Sqrl = /*#__PURE__*/Object.freeze({
     get H () { return helpers; },
-    get Compile () { return C; },
+    get Compile () { return Compile; },
     get defineFilter () { return defineFilter; },
     get defineHelper () { return defineHelper; },
     get defineNativeHelper () { return defineNativeHelper; },
@@ -135,7 +135,6 @@
   Here's the RegExp I use to turn the expanded version between START REGEXP and END REGEXP to a working one: I replace [\f\n\r\t\v\u00a0\u1680\u2000\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]| \/\/[\w ']+\n with nothing.
   */
 
-  /* global RUNTIME */
   var nativeHelpers = {
     if: {
       helperStart: function (param) { // helperStart is called with (params, id) but id isn't needed
@@ -185,11 +184,6 @@
       }
     }
   };
-  // We don't need to export nativeHelpers for the runtime script
-  if (RUNTIME) {
-    nativeHelpers = {};
-  }
-  var n = nativeHelpers;
 
   var escMap = {
     '&': '&amp;',
@@ -297,8 +291,6 @@
       partialName: "partialString"
   */};
 
-  /* global RUNTIME */
-
   function Compile (str) {
     var lastIndex = 0; // Because lastIndex can be complicated, and this way the minifier can minify more
     var funcStr = ''; // This will be called with Function() and returned
@@ -328,7 +320,7 @@
           id = helperAutoId;
           helperAutoId++;
         }
-        var native = n.hasOwnProperty(m[5]); // true or false
+        var native = nativeHelpers.hasOwnProperty(m[5]); // true or false
         helperNumber += 1;
         var params = m[6] || '';
         params = replaceParamHelpers(params);
@@ -343,7 +335,7 @@
         };
         helperArray[helperNumber] = helperTag;
         if (native) {
-          funcStr += n[m[5]].helperStart(params, id);
+          funcStr += nativeHelpers[m[5]].helperStart(params, id);
           lastIndex = regEx.lastIndex; // the changeTags function sets lastIndex already
         } else {
           funcStr += 'tR+=Sqrl.H.' + m[5] + '(' + params + ',function(hvals){var hvals' + id + "=hvals;var tR='';";
@@ -354,7 +346,7 @@
         if (mostRecentHelper && mostRecentHelper.name === m[8]) {
           helperNumber -= 1;
           if (mostRecentHelper.native === true) {
-            funcStr += n[mostRecentHelper.name].helperEnd(mostRecentHelper.params, mostRecentHelper.id);
+            funcStr += nativeHelpers[mostRecentHelper.name].helperEnd(mostRecentHelper.params, mostRecentHelper.id);
           } else {
             if (helperContainsBlocks[mostRecentHelper.id]) {
               funcStr += 'return tR}});';
@@ -369,7 +361,7 @@
         // It's a helper block.
         var parent = helperArray[helperNumber];
         if (parent.native) {
-          var nativeH = n[parent.name];
+          var nativeH = nativeHelpers[parent.name];
           if (nativeH.blocks && nativeH.blocks[m[9]]) {
             funcStr += nativeH.blocks[m[9]](parent.id);
             lastIndex = regEx.lastIndex; // Some native helpers set regEx.lastIndex
@@ -397,8 +389,8 @@
           var partialContent = Partials[partialParams];
           str = preContent + partialContent + endContent;
           lastIndex = regEx.lastIndex = m.index;
-        } else if (n.hasOwnProperty(m[10]) && n[m[10]].hasOwnProperty('selfClosing')) {
-          funcStr += n[m[10]].selfClosing(innerParams);
+        } else if (nativeHelpers.hasOwnProperty(m[10]) && nativeHelpers[m[10]].hasOwnProperty('selfClosing')) {
+          funcStr += nativeHelpers[m[10]].selfClosing(innerParams);
           lastIndex = regEx.lastIndex; // changeTags sets regEx.lastIndex
         } else {
           funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');'; // If it's not native, passing args to a non-native helper
@@ -433,12 +425,6 @@
     return func
   }
 
-  if (RUNTIME) { // Don't include Sqrl.Compile() in the runtime library, to make it more lightweight
-    Compile = {}; // eslint-disable-line no-func-assign
-  }
-
-  var C = Compile;
-
   function defineFilter (name, callback) {
     filters[name] = callback;
   }
@@ -448,7 +434,7 @@
   }
 
   function defineNativeHelper (name, obj) {
-    n[name] = obj;
+    nativeHelpers[name] = obj;
   }
 
   function Render (template, options) {
@@ -483,7 +469,7 @@
           // Otherwise, read file
           var fs = require('fs');
           var fileContent = fs.readFileSync(filePath, 'utf8');
-          cache[filePath] = C(fileContent); // Add the template to the cache
+          cache[filePath] = Compile(fileContent); // Add the template to the cache
           return cache[filePath] // Then return the cached template
         }
       } else if (name) {
@@ -493,7 +479,7 @@
           return cache[name] // Return cached template
         } else if (str) {
           // Otherwise, as long as there's a string passed in
-          cache[name] = C(str); // Add the template to the cache
+          cache[name] = Compile(str); // Add the template to the cache
           return cache[name] // Return cached template
         }
       } else if (str) {
@@ -503,11 +489,11 @@
             // If it's cached
             return cache[str]
           } else {
-            cache[str] = C(str); // Add it to cache
+            cache[str] = Compile(str); // Add it to cache
             return cache[str]
           }
         } else {
-          return C(str)
+          return Compile(str)
         }
       } else {
         return 'Error'
@@ -517,10 +503,10 @@
       if (filePath) {
         // If the $file attribute is passed in
         var fs2 = require('fs');
-        return C(fs2.readFileSync(filePath, 'utf8')) // Then return the cached template
+        return Compile(fs2.readFileSync(filePath, 'utf8')) // Then return the cached template
       } else if (str) {
         // If the string is passed in
-        return C(str)
+        return Compile(str)
       } else {
         throw Error('No template')
       }
@@ -538,7 +524,7 @@
 
 
 
-  exports.Compile = C;
+  exports.Compile = Compile;
   exports.F = filters;
   exports.H = helpers;
   exports.Render = Render;
