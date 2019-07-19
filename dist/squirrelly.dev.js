@@ -504,8 +504,11 @@
       } else {
         return Compile(str)
       }
+    } else if (name && caching !== false && cache.hasOwnProperty(name)) {
+      // If only name is passed in and it exists in cache
+      return cache[name]
     } else {
-      // Neither $file nor str is passed in
+      // Neither $file nor str nor existing name is passed in
       return 'No template'
     }
   }
