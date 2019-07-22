@@ -37,58 +37,39 @@ export function load (options, str) {
   var filePath = options.$file
   var name = options.$name
   var caching = options.$cache
-  if (caching !== false) {
-    // If caching isn't disabled
-    if (filePath) {
-      // If the $file attribute is passed in
-      if (cache[filePath]) {
-        // If the template is cached
-        return cache[filePath] // Return template
-      } else {
-        // Otherwise, read file
-        var fs = require('fs')
-        var fileContent = fs.readFileSync(filePath, 'utf8')
-        cache[filePath] = C(fileContent) // Add the template to the cache
-        return cache[filePath] // Then return the cached template
+
+  if (filePath) {
+    // If $file is passed in
+    const fs = require('fs')
+    if (caching !== false) {
+      if (!cache.hasOwnProperty(filePath)) {
+        cache[filePath] = C(fs.readFileSync(filePath, 'utf8'))
       }
-    } else if (name) {
-      // If the $name attribute is passed in
-      if (cache[name]) {
-        // If there's a cache for that name
-        return cache[name] // Return cached template
-      } else if (str) {
-        // Otherwise, as long as there's a string passed in
-        cache[name] = C(str) // Add the template to the cache
-        return cache[name] // Return cached template
-      }
-    } else if (str) {
-      // If the string is passed in
-      if (caching === true) {
-        if (cache[str]) {
-          // If it's cached
-          return cache[str]
-        } else {
-          cache[str] = C(str) // Add it to cache
-          return cache[str]
-        }
-      } else {
-        return C(str)
-      }
+      return cache[filePath]
     } else {
-      return 'Error'
+      return C(fs.readFileSync(filePath, 'utf8'))
     }
-  } else {
-    // If caching is disabled
-    if (filePath) {
-      // If the $file attribute is passed in
-      var fs2 = require('fs')
-      return C(fs2.readFileSync(filePath, 'utf8')) // Then return the cached template
-    } else if (str) {
-      // If the string is passed in
+  } else if (str) {
+    // If str is passed in
+    if (name && caching !== false) {
+      if (!cache.hasOwnProperty(name)) {
+        cache[name] = C(str)
+      }
+      return cache[name]
+    } else if (caching === true) {
+      if (!cache.hasOwnProperty(str)) {
+        cache[str] = C(str)
+      }
+      return cache[str]
+    } else {
       return C(str)
-    } else {
-      throw Error('No template')
     }
+  } else if (name && caching !== false && cache.hasOwnProperty(name)) {
+    // If only name is passed in and it exists in cache
+    return cache[name]
+  } else {
+    // Neither $file nor str nor existing name is passed in
+    return 'No template'
   }
 }
 
