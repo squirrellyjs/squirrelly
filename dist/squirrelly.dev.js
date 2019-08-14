@@ -28,32 +28,39 @@
       partialName: "partialString"
   */};
 
-  var initialRegEx = /{{ *?(?:(?:(?:(?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:([\w$]+) *?\(([^\n]*?)\) *?\/)|(?:!--[^]+?--)) *?}}\n?/g;
+  var initialRegEx = /{{ *?(?:(?:([\w$]+) *?\((.*?)\) *?([\w$]*))|(?:([\w$]+) *?\((.*?)\) *?\/)|(?:([\w$@].*?) *?((?:\| *?[\w$]+ *)*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:!--[^]+?--)) *?}}\n?/g;
   var initialTags = {
     s: '{{',
     e: '}}'
   };
 
   // The regExp below matches all helper references inside helper parameters
-  var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g;
+  var paramHelperRefRegExp = /@(?:((?:\.\.\/)+)|([\w$]+):)?/g;
 
   var regEx = initialRegEx;
   var tags = initialTags;
 
-  function setup () { // Resets the current tags to the default tags
+  function setup () {
+    // Resets the current tags to the default tags
     tags = initialTags;
     regEx = initialRegEx;
     regEx.lastIndex = 0;
   }
 
-  function defaultTags (tagArray) { // Redefine the default tags of the regexp
+  function defaultTags (tagArray) {
+    // Redefine the default tags of the regexp
     changeTags(tagArray[0], tagArray[1]);
     initialRegEx = regEx;
     initialTags = tags;
   }
 
-  function changeTags (firstTag, secondTag) { // Update current tags
-    var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - (tags.e.length + 3)) + secondTag + '\\n?';
+  function changeTags (firstTag, secondTag) {
+    // Update current tags
+    var newRegEx =
+      firstTag +
+      regEx.source.slice(tags.s.length, 0 - (tags.e.length + 3)) +
+      secondTag +
+      '\\n?';
     var lastIndex = regEx.lastIndex;
     tags = {
       s: firstTag,
@@ -63,18 +70,18 @@
     regEx.lastIndex = lastIndex;
   }
 
-  function replaceParamHelpers (params) {
-    params = params.replace(paramHelperRefRegExp, function (m, p1, p2) { // p1 scope, p2 string
-      if (typeof p2 === 'undefined') {
-        return m
+  function replaceHelperRefs (str, helperArray, helperNumber) {
+    return str.replace(paramHelperRefRegExp, function (m, scope, id) {
+      var suffix;
+      if (scope && scope.length) {
+        suffix = helperArray[helperNumber - scope.length / 3 - 1].id;
+      } else if (id) {
+        suffix = id;
       } else {
-        if (typeof p1 === 'undefined') {
-          p1 = '';
-        }
-        return 'hvals' + p1 + '.' + p2
+        suffix = '';
       }
-    });
-    return params
+      return 'hvals' + suffix + '.'
+    })
   }
 
   // The whole regular expression can be hard to comprehend, so here it's broken down.
@@ -84,22 +91,18 @@
   /* START REGEXP
   {{ *? //the beginning
   (?: //or for each possible tag
+  (?:([\w$]+) *?\((.*?)\) *?([\w$]*)) //if a helper oTag
+  | //now for a self closing tag
+  (?:([\w$]+) *?\((.*?)\) *?\/)
+  | //now if a ref
   (?: //if a global or helper ref
-  (?: //choosing global or helper ref
-  (?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?)) //global reference
-  |
-  (?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
-  )
-  (?: *?(\| *?[\w$]+? *?)+?)? //filter
+  ([\w$@].*?) *? //ref content
+  ((?:\| *?[\w$]+ *)*) //filters
   ) //end if a global or helper ref
-  | //now if a helper oTag
-  (?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))
   | //now if a helper cTag
   (?:\/ *?([\w$]+))
   | //now if a helper block
   (?:# *?([\w$]+))
-  | //now for a self closing tag
-  (?:([\w$]+) *?\(([^\n]*?)\) *?\/)
   | //now for comments
   (?:!--[^]+?--)
   ) //end or for each possible tag
@@ -108,18 +111,16 @@
 
   END REGEXP */
   /*
-  p1: global ref main
-  p2: helper ref id (with ':' after it) or path
-  p3: helper ref main
-  p4: filters
-  p5: helper name
-  p6: helper parameters
-  p7: helper id
-  p8: helper cTag name
+  p1: helper start name
+  p2: helper start params
+  p3: helper start id
+  p4: self-closing helper name
+  p5: self-closing helper params
+  p6: ref content
+  p7: ref filters
+  p8: helper close name
   p9: helper block name
-  p10: self closing helper name
-  p11: self closing helper params
-  Here's the RegExp I use to turn the expanded version between START REGEXP and END REGEXP to a working one: I replace [\f\n\r\t\v\u00a0\u1680\u2000\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]| \/\/[\w ']+\n with nothing.
+  Here's the RegExp I use to turn the expanded version between START REGEXP and END REGEXP to a working one: I replace [^\S ]+| \/\/[\w ']+\n with "".
   */
 
   var nativeHelpers = {
@@ -294,53 +295,85 @@
           "';";
       }
     }
+    function ref (content, filters) {
+      // console.log('refcontent: ' + content)
+      // console.log('filters: ' + filters)
+      var replaced = replaceHelperRefs(content, helperArray, helperNumber);
+
+      if (content[0] === '@') {
+        return parseFiltered(replaced, filters)
+      }
+      return parseFiltered('options.' + replaced, filters)
+    }
 
     setup();
     while ((m = regEx.exec(str)) !== null) {
       addString(m.index); // Add the string between the last tag (or start of file) and the current tag
       lastIndex = m[0].length + m.index;
+
       if (m[1]) {
-        // It's a global ref. p4 = filters
-        funcStr += 'tR+=' + globalRef(m[1], m[4]) + ';';
-      } else if (m[3]) {
-        // It's a helper ref. p2 = id (with ':' after it) or path, p4 = filters
-        funcStr += 'tR+=' + helperRef(m[3], m[2], m[4]) + ';';
-      } else if (m[5]) {
-        // It's a helper oTag. p6 parameters, p7 id
-        var id = m[7];
+        // helper start. m[1] = helpername, m[2] = helper params, m[3] = id
+        var id = m[3];
         if (id === '' || id === null) {
           id = helperAutoId;
           helperAutoId++;
         }
-        var native = nativeHelpers.hasOwnProperty(m[5]); // true or false
+        var native = nativeHelpers.hasOwnProperty(m[1]); // true or false
         helperNumber += 1;
-        var params = m[6] || '';
-        params = replaceParamHelpers(params);
+        var params = m[2] || '';
+        params = replaceHelperRefs(params, helperArray, helperNumber);
+        // console.log(params)
         if (!native) {
           params = '[' + params + ']';
         }
         var helperTag = {
-          name: m[5],
+          name: m[1],
           id: id,
           params: params,
           native: native
         };
         helperArray[helperNumber] = helperTag;
         if (native) {
-          funcStr += nativeHelpers[m[5]].helperStart(params, id);
+          funcStr += nativeHelpers[m[1]].helperStart(params, id);
           lastIndex = regEx.lastIndex; // the changeTags function sets lastIndex already
         } else {
           funcStr +=
             'tR+=Sqrl.H.' +
-            m[5] +
+            m[1] +
             '(' +
             params +
             ',function(hvals){var hvals' +
             id +
             "=hvals;var tR='';";
         }
+      } else if (m[4]) {
+        // self-closing helper. m[4] name, m[5] params
+        // It's a self-closing helper
+        var innerParams = m[5] || '';
+        innerParams = replaceHelperRefs(innerParams, helperArray, helperNumber);
+        if (m[4] === 'include') {
+          // This code literally gets the template string up to the include self-closing helper,
+          // adds the content of the partial, and adds the template string after the include self-closing helper
+          var preContent = str.slice(0, m.index);
+          var endContent = str.slice(m.index + m[0].length);
+          var partialParams = innerParams.replace(/'|"/g, ''); // So people can write {{include(mypartial)/}} or {{include('mypartial')/}}
+          var partialContent = Partials[partialParams];
+          str = preContent + partialContent + endContent;
+          lastIndex = regEx.lastIndex = m.index;
+        } else if (
+          nativeHelpers.hasOwnProperty(m[4]) &&
+          nativeHelpers[m[4]].hasOwnProperty('selfClosing')
+        ) {
+          funcStr += nativeHelpers[m[4]].selfClosing(innerParams);
+          lastIndex = regEx.lastIndex; // changeTags sets regEx.lastIndex
+        } else {
+          funcStr += 'tR+=Sqrl.H.' + m[4] + '(' + innerParams + ');'; // If it's not native, passing args to a non-native helper
+        }
+      } else if (m[6]) {
+        // ref. m[6] content, m[7] filters
+        funcStr += 'tR+=' + ref(m[6], m[7]) + ';';
       } else if (m[8]) {
-        // It's a helper cTag.
+        // helper close. m[8] name
         var mostRecentHelper = helperArray[helperNumber];
         if (mostRecentHelper && mostRecentHelper.name === m[8]) {
           helperNumber -= 1;
@@ -360,7 +393,7 @@
           console.error("Helper beginning & end don't match.");
         }
       } else if (m[9]) {
-        // It's a helper block.
+        // helper block. m[9] name
         var parent = helperArray[helperNumber];
         if (parent.native) {
           var nativeH = nativeHelpers[parent.name];
@@ -391,48 +424,7 @@
               "=hvals;var tR='';";
           }
         }
-      } else if (m[10]) {
-        // It's a self-closing helper
-        var innerParams = m[11] || '';
-        innerParams = replaceParamHelpers(innerParams);
-        if (m[10] === 'include') {
-          // This code literally gets the template string up to the include self-closing helper,
-          // adds the content of the partial, and adds the template string after the include self-closing helper
-          var preContent = str.slice(0, m.index);
-          var endContent = str.slice(m.index + m[0].length);
-          var partialParams = innerParams.replace(/'|"/g, ''); // So people can write {{include(mypartial)/}} or {{include('mypartial')/}}
-          var partialContent = Partials[partialParams];
-          str = preContent + partialContent + endContent;
-          lastIndex = regEx.lastIndex = m.index;
-        } else if (
-          nativeHelpers.hasOwnProperty(m[10]) &&
-          nativeHelpers[m[10]].hasOwnProperty('selfClosing')
-        ) {
-          funcStr += nativeHelpers[m[10]].selfClosing(innerParams);
-          lastIndex = regEx.lastIndex; // changeTags sets regEx.lastIndex
-        } else {
-          funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');'; // If it's not native, passing args to a non-native helper
-        }
       }
-      /* eslint-disable no-inner-declarations */
-      function globalRef (refName, filters) {
-        return parseFiltered('options.' + refName, filters)
-      }
-
-      function helperRef (name, id, filters) {
-        var prefix;
-        if (typeof id !== 'undefined') {
-          if (/(?:\.\.\/)+/g.test(id)) {
-            // Test if the helper reference is prefixed with ../
-            prefix = helperArray[helperNumber - id.length / 3 - 1].id;
-          } else {
-            prefix = id.slice(0, -1);
-          }
-          return parseFiltered('hvals' + prefix + '.' + name, filters)
-        } // Implied 'else'
-        return parseFiltered('hvals.' + name, filters)
-      }
-      /* eslint-enable no-inner-declarations */
     }
     addString(str.length); // Add the string from the last tag-close to the end of the file, if there is one
     funcStr += 'return tR';

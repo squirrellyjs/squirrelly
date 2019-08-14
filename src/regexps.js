@@ -1,11 +1,11 @@
-export var initialRegEx = /{{ *?(?:(?:(?:(?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?))|(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *))(?: *?(\| *?[\w$]+? *?)+?)?)|(?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:([\w$]+) *?\(([^\n]*?)\) *?\/)|(?:!--[^]+?--)) *?}}\n?/g
+export var initialRegEx = /{{ *?(?:(?:([\w$]+) *?\((.*?)\) *?([\w$]*))|(?:([\w$]+) *?\((.*?)\) *?\/)|(?:([\w$@].*?) *?((?:\| *?[\w$]+ *)*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:!--[^]+?--)) *?}}\n?/g
 export var initialTags = {
   s: '{{',
   e: '}}'
 }
 
 // The regExp below matches all helper references inside helper parameters
-var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`|(@)(?:((?:\.\.\/)+)|([\w$]+):)?/g
+var paramHelperRefRegExp = /@(?:((?:\.\.\/)+)|([\w$]+):)?/g
 
 export var regEx = initialRegEx
 export var tags = initialTags
@@ -40,22 +40,18 @@ export function changeTags (firstTag, secondTag) {
   regEx.lastIndex = lastIndex
 }
 
-export function replaceHelperRefs (params) {
-  params = params.replace(paramHelperRefRegExp, function (
-    m,
-    notInsideString,
-    scope,
-    id
-  ) {
-    // p1 scope, p2 string
-    if (!notInsideString) {
-      return m
+export function replaceHelperRefs (str, helperArray, helperNumber) {
+  return str.replace(paramHelperRefRegExp, function (m, scope, id) {
+    var suffix
+    if (scope && scope.length) {
+      suffix = helperArray[helperNumber - scope.length / 3 - 1].id
+    } else if (id) {
+      suffix = id
     } else {
-      var suffix = scope || id || ''
-      return 'hvals' + suffix + '.'
+      suffix = ''
     }
+    return 'hvals' + suffix + '.'
   })
-  return params
 }
 
 // The whole regular expression can be hard to comprehend, so here it's broken down.
@@ -65,22 +61,18 @@ export function replaceHelperRefs (params) {
 /* START REGEXP
 {{ *? //the beginning
 (?: //or for each possible tag
+(?:([\w$]+) *?\((.*?)\) *?([\w$]*)) //if a helper oTag
+| //now for a self closing tag
+(?:([\w$]+) *?\((.*?)\) *?\/)
+| //now if a ref
 (?: //if a global or helper ref
-(?: //choosing global or helper ref
-(?:([\w$]+ *?(?:[^\s\w($][^\n]*?)*?)) //global reference
-|
-(?:@(?:([\w$]+:|(?:\.\.\/)+))? *(.+?) *) //helper reference
-)
-(?: *?(\| *?[\w$]+? *?)+?)? //filter
+([\w$@].*?) *? //ref content
+((?:\| *?[\w$]+ *)*) //filters
 ) //end if a global or helper ref
-| //now if a helper oTag
-(?:([\w$]+) *?\(([^\n]*?)\) *?([\w$]*))
 | //now if a helper cTag
 (?:\/ *?([\w$]+))
 | //now if a helper block
 (?:# *?([\w$]+))
-| //now for a self closing tag
-(?:([\w$]+) *?\(([^\n]*?)\) *?\/)
 | //now for comments
 (?:!--[^]+?--)
 ) //end or for each possible tag
@@ -89,16 +81,14 @@ export function replaceHelperRefs (params) {
 
 END REGEXP */
 /*
-p1: global ref main
-p2: helper ref id (with ':' after it) or path
-p3: helper ref main
-p4: filters
-p5: helper name
-p6: helper parameters
-p7: helper id
-p8: helper cTag name
+p1: helper start name
+p2: helper start params
+p3: helper start id
+p4: self-closing helper name
+p5: self-closing helper params
+p6: ref content
+p7: ref filters
+p8: helper close name
 p9: helper block name
-p10: self closing helper name
-p11: self closing helper params
-Here's the RegExp I use to turn the expanded version between START REGEXP and END REGEXP to a working one: I replace [\f\n\r\t\v\u00a0\u1680\u2000\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]| \/\/[\w ']+\n with nothing.
+Here's the RegExp I use to turn the expanded version between START REGEXP and END REGEXP to a working one: I replace [^\S ]+| \/\/[\w ']+\n with "".
 */
