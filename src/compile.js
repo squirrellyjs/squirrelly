@@ -23,7 +23,14 @@ function Compile (str) {
         "';"
     }
   }
+  function globalRef (refName, filters) {
+    return parseFiltered('options.' + refName, filters)
+  }
 
+  function helperRef (name, id, filters) {
+    var content = replaceHelperRefs(name)
+    return parseFiltered(content, filters)
+  }
   setup()
   while ((m = regEx.exec(str)) !== null) {
     addString(m.index) // Add the string between the last tag (or start of file) and the current tag
@@ -143,16 +150,6 @@ function Compile (str) {
         funcStr += 'tR+=Sqrl.H.' + m[10] + '(' + innerParams + ');' // If it's not native, passing args to a non-native helper
       }
     }
-    /* eslint-disable no-inner-declarations */
-    function globalRef (refName, filters) {
-      return parseFiltered('options.' + refName, filters)
-    }
-
-    function helperRef (name, id, filters) {
-      var content = replaceHelperRefs(name)
-      return parseFiltered('hvals' + prefix + '.' + name, filters)
-    }
-    /* eslint-enable no-inner-declarations */
   }
   addString(str.length) // Add the string from the last tag-close to the end of the file, if there is one
   funcStr += 'return tR'
