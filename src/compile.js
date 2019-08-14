@@ -1,4 +1,4 @@
-import { regEx, setup, replaceParamHelpers } from './regexps'
+import { regEx, setup, replaceHelperRefs } from './regexps'
 import nativeHelpers from './nativeHelpers'
 import { parseFiltered } from './filters'
 import P from './partials'
@@ -44,7 +44,7 @@ function Compile (str) {
       var native = nativeHelpers.hasOwnProperty(m[5]) // true or false
       helperNumber += 1
       var params = m[6] || ''
-      params = replaceParamHelpers(params)
+      params = replaceHelperRefs(params)
       if (!native) {
         params = '[' + params + ']'
       }
@@ -123,7 +123,7 @@ function Compile (str) {
     } else if (m[10]) {
       // It's a self-closing helper
       var innerParams = m[11] || ''
-      innerParams = replaceParamHelpers(innerParams)
+      innerParams = replaceHelperRefs(innerParams)
       if (m[10] === 'include') {
         // This code literally gets the template string up to the include self-closing helper,
         // adds the content of the partial, and adds the template string after the include self-closing helper
@@ -149,17 +149,8 @@ function Compile (str) {
     }
 
     function helperRef (name, id, filters) {
-      var prefix
-      if (typeof id !== 'undefined') {
-        if (/(?:\.\.\/)+/g.test(id)) {
-          // Test if the helper reference is prefixed with ../
-          prefix = helperArray[helperNumber - id.length / 3 - 1].id
-        } else {
-          prefix = id.slice(0, -1)
-        }
-        return parseFiltered('hvals' + prefix + '.' + name, filters)
-      } // Implied 'else'
-      return parseFiltered('hvals.' + name, filters)
+      var content = replaceHelperRefs(name)
+      return parseFiltered('hvals' + prefix + '.' + name, filters)
     }
     /* eslint-enable no-inner-declarations */
   }

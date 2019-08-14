@@ -5,25 +5,32 @@ export var initialTags = {
 }
 
 // The regExp below matches all helper references inside helper parameters
-var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[\\]@(?:[\w$]*:)?[\w$]+|@(?:([\w$]*):)?([\w$]+)/g
+var paramHelperRefRegExp = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`|(@)(?:((?:\.\.\/)+)|([\w$]+):)?/g
 
 export var regEx = initialRegEx
 export var tags = initialTags
 
-export function setup () { // Resets the current tags to the default tags
+export function setup () {
+  // Resets the current tags to the default tags
   tags = initialTags
   regEx = initialRegEx
   regEx.lastIndex = 0
 }
 
-export function defaultTags (tagArray) { // Redefine the default tags of the regexp
+export function defaultTags (tagArray) {
+  // Redefine the default tags of the regexp
   changeTags(tagArray[0], tagArray[1])
   initialRegEx = regEx
   initialTags = tags
 }
 
-export function changeTags (firstTag, secondTag) { // Update current tags
-  var newRegEx = firstTag + regEx.source.slice(tags.s.length, 0 - (tags.e.length + 3)) + secondTag + '\\n?'
+export function changeTags (firstTag, secondTag) {
+  // Update current tags
+  var newRegEx =
+    firstTag +
+    regEx.source.slice(tags.s.length, 0 - (tags.e.length + 3)) +
+    secondTag +
+    '\\n?'
   var lastIndex = regEx.lastIndex
   tags = {
     s: firstTag,
@@ -33,15 +40,19 @@ export function changeTags (firstTag, secondTag) { // Update current tags
   regEx.lastIndex = lastIndex
 }
 
-export function replaceParamHelpers (params) {
-  params = params.replace(paramHelperRefRegExp, function (m, p1, p2) { // p1 scope, p2 string
-    if (typeof p2 === 'undefined') {
+export function replaceHelperRefs (params) {
+  params = params.replace(paramHelperRefRegExp, function (
+    m,
+    notInsideString,
+    scope,
+    id
+  ) {
+    // p1 scope, p2 string
+    if (!notInsideString) {
       return m
     } else {
-      if (typeof p1 === 'undefined') {
-        p1 = ''
-      }
-      return 'hvals' + p1 + '.' + p2
+      var suffix = scope || id || ''
+      return 'hvals' + suffix + '.'
     }
   })
   return params

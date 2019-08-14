@@ -1,0 +1,32 @@
+{{ *? //the beginning
+(?: //or for each possible tag
+(?:([\w$]+) *?\((.*?)\) *?([\w$]*)) //if a helper oTag
+| //now for a self closing tag
+(?:([\w$]+) *?\((.*?)\) *?\/)
+| //now if a ref
+(?: //if a global or helper ref
+([\w$@].*?) *? //ref content
+((?:\| *?[\w$]+ *)*) //filters
+) //end if a global or helper ref
+| //now if a helper cTag
+(?:\/ *?([\w$]+))
+| //now if a helper block
+(?:# *?([\w$]+))
+| //now for comments
+(?:!--[^]+?--)
+) //end or for each possible tag
+ *?}}
+\n? //To replace a newline at the end of a line
+
+
+"(?:[^"\\]|\\.)*"
+|
+'(?:[^'\\]|\\.)*'
+|
+`(?:[^`\\]|\\.)*`
+|
+(@)
+(?:
+((?:\.\.\/)+)
+|
+([\w$]+):)?
