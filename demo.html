@@ -164,6 +164,10 @@
         <textarea autocomplete="off" id="template">
 Hi
 {{log("Hope you like Squirrelly!")/}}
+This is a filtered ref:
+{{ obj.firstchild | reverse | capitalize }}
+
+This is some HTML (automatically escaped)
 {{ htmlstuff }}
 {{ foreach(options.obj) }}
 
@@ -171,7 +175,7 @@ Reversed value: {{@this|reverse}}, Key: {{@key}}
 {{if(@key==="thirdchild")}}
 {{each(options.obj[@key])}}
 
-Salutations! Index: {{@index}}, old key: {{@../key}}
+  Salutations! Index: {{@index}}, old key: {{@../key}}
 {{/each}}
 {{/if}}
 {{/foreach}}
@@ -201,7 +205,7 @@ Custom delimeters!
 "htmlstuff": "<script>alert('hey')</script><p>alert('hey')</p><p>alert('hey')</p><p>alert('hey')</p>",
 "arr": ["Hey", "<p>Malicious XSS</p>", "Hey", 3, 12],
 "obj": {
-    "firstchild": "HI",
+    "firstchild": "this is a lowercase string",
     "secondchild": "HEY",
     "thirdchild": [3, 6, 3, 2, 5, 4]
 }
@@ -221,6 +225,10 @@ Custom delimeters!
             out += String(str).charAt(i)
           }
           return out || str
+        })
+
+        Sqrl.defineFilter('capitalize', function(str) {
+          return str.toUpperCase()
         })
 
         Sqrl.defineHelper('customhelper', function(
