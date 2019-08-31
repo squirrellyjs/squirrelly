@@ -1,6 +1,6 @@
 /* eslint-env mocha */
-var assert = require('assert')
-var Sqrl = require('../dist/squirrelly.min.js')
+import assert from 'assert'
+import * as Sqrl from '../src'
 // This is a mocha test file containing a couple of tests to make sure Squirrelly isn't broken.
 // The code at the bottom tests that when you render simpleTemplate with options, it equals simpleTemplateResult.
 // It also tests that bigTemplate, rendered, equals bigTemplateResult.

@@ -2,4 +2,7 @@ node_modules
 coverage
 .nyc_output
 /.vs
-yarn-error.log
+/.vscode
+.yarn-error.log
+/dist
+/lib

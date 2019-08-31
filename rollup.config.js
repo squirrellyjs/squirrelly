@@ -16,7 +16,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      file: 'dist/squirrelly.dev.js',
+      file: 'dist/squirrelly.js',
       format: 'umd',
       name: 'Sqrl',
       sourcemap: true
@@ -36,7 +36,7 @@ export default [
   {
     input: 'src/runtime.js',
     output: {
-      file: 'dist/squirrelly.runtime.dev.js',
+      file: 'dist/squirrelly.runtime.js',
       format: 'umd',
       name: 'Sqrl',
       sourcemap: true

@@ -2,12 +2,16 @@
   "name": "squirrelly",
   "version": "7.5.0",
   "description": "Simple and powerful template engine that supports helpers, partials, filters, native code, and Express.",
-  "main": "./dist/squirrelly.min.js",
+  "main": "./lib/index.js",
   "homepage": "https://squirrelly.js.org",
+  "files": [
+    "lib",
+    "dist"
+  ],
   "scripts": {
-    "test": "./node_modules/.bin/standard 'src/*.js' && ./node_modules/.bin/mocha",
-    "build": "./node_modules/.bin/rollup -c",
-    "format": "./node_modules/.bin/standard --fix 'src/*.js'"
+    "test": "standard --fix src/**/*.js && mocha -r @babel/register",
+    "build": "gulp build",
+    "format": "standard --fix src/**/*.js"
   },
   "keywords": [
     "template",
@@ -34,9 +38,21 @@
   "bugs": {
     "url": "https://github.com/squirrellyjs/squirrelly/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "core-js": "^3.2.1",
+    "regenerator-runtime": "^0.13.3"
+  },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-regenerator": "^7.4.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-sourcemaps": "^2.6.5",
     "mocha": "^5.1.1",
+    "prettier": "^1.18.2",
     "rollup": "^1.16.7",
     "rollup-plugin-terser": "^5.1.1",
     "standard": "^12.0.1"
