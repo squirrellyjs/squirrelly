@@ -1,14 +1,14 @@
 import gulp from 'gulp'
 import babel from 'gulp-babel'
 import sourcemaps from 'gulp-sourcemaps'
-import del from 'del'
+import fs from 'fs-extra'
 import { rollup } from 'rollup'
 
 import rollupConfig from './rollup.config'
 
 export async function clean () {
-  await del('dist/**/*')
-  await del('lib/**/*')
+  await fs.remove('dist')
+  await fs.remove('lib')
 }
 
 export function buildCjs () {
