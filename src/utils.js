@@ -49,7 +49,7 @@ export function load (options, str) {
     } else {
       return C(fs.readFileSync(filePath, 'utf8'))
     }
-  } else if (str) {
+  } else if (typeof str === 'string') {
     // If str is passed in
     if (name && caching !== false) {
       if (!cache.hasOwnProperty(name)) {
