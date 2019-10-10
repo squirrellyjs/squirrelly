@@ -472,7 +472,7 @@
 
     if (filePath) {
       // If $file is passed in
-      const fs = require('fs');
+      var fs = require('fs');
       if (caching !== false) {
         if (!cache.hasOwnProperty(filePath)) {
           cache[filePath] = Compile(fs.readFileSync(filePath, 'utf8'));
