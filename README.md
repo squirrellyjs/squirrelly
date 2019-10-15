@@ -75,7 +75,7 @@ accepted using GitHub pull requests; for more information, see
 
 For a good pull request, we ask you provide the following:
 
-1. Include a clear description of your pull request in the description with the basic "what" and "why"s for the request.
+1. Include a clear description of your pull request in the description with the basic "what" and "why" for the request.
 2. The test should pass.
 3. The pull request should include tests for the change. A new feature should have tests for the new feature and bug fixes should include a test that fails without the corresponding code change and passes after they are applied.
 4. If the pull request is a new feature, please include appropriate documentation in the `README.md` file as well.
