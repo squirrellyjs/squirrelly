@@ -16,6 +16,15 @@
         "doc",
         "test"
       ]
+    },
+    {
+      "login": "SerMock",
+      "name": "Mark Evans",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/10904123?v=4",
+      "profile": "https://github.com/SerMock",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
