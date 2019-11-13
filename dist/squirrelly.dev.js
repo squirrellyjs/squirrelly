@@ -28,7 +28,7 @@
       partialName: "partialString"
   */};
 
-  var initialRegEx = /{{ *?(?:(?:([\w$]+) *?\((.*?)\) *?([\w$]*))|(?:([\w$]+) *?\((.*?)\) *?\/)|(?:([\w$@].*?) *?((?:\| *?[\w$]+ *)*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:!--[^]+?--)) *?}}\n?/g;
+  var initialRegEx = /{{ *?(?:(?:([\w$]+) *?\((.*?)\) *?([\w$]*))|(?:([\w$]+) *?\((.*?)\) *?\/)|(?:([\w$@].*?) *?((?:\| *?[\w$]+ *)*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:!\-\-[^]+?\-\-)) *?}}\n?/g; // eslint-disable-line no-useless-escape
   var initialTags = {
     s: '{{',
     e: '}}'
@@ -104,7 +104,7 @@
   | //now if a helper block
   (?:# *?([\w$]+))
   | //now for comments
-  (?:!--[^]+?--)
+  (?:!\-\-[^]+?\-\-)
   ) //end or for each possible tag
    *?}}
   \n? //To replace a newline at the end of a line

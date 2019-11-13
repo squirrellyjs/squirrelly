@@ -1,4 +1,4 @@
-export var initialRegEx = /{{ *?(?:(?:([\w$]+) *?\((.*?)\) *?([\w$]*))|(?:([\w$]+) *?\((.*?)\) *?\/)|(?:([\w$@].*?) *?((?:\| *?[\w$]+ *)*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:!--[^]+?--)) *?}}\n?/g
+export var initialRegEx = /{{ *?(?:(?:([\w$]+) *?\((.*?)\) *?([\w$]*))|(?:([\w$]+) *?\((.*?)\) *?\/)|(?:([\w$@].*?) *?((?:\| *?[\w$]+ *)*))|(?:\/ *?([\w$]+))|(?:# *?([\w$]+))|(?:!\-\-[^]+?\-\-)) *?}}\n?/g // eslint-disable-line no-useless-escape
 export var initialTags = {
   s: '{{',
   e: '}}'
@@ -74,7 +74,7 @@ export function replaceHelperRefs (str, helperArray, helperNumber) {
 | //now if a helper block
 (?:# *?([\w$]+))
 | //now for comments
-(?:!--[^]+?--)
+(?:!\-\-[^]+?\-\-)
 ) //end or for each possible tag
  *?}}
 \n? //To replace a newline at the end of a line

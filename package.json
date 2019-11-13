@@ -3,12 +3,18 @@
   "version": "7.7.0",
   "description": "Simple and powerful template engine that supports helpers, partials, filters, native code, and Express.",
   "main": "./dist/squirrelly.min.js",
+  "module": "./dist/es/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
   "scripts": {
     "test": "./node_modules/.bin/standard 'src/*.js' && ./node_modules/.bin/mocha",
     "build": "./node_modules/.bin/rollup -c",
     "format": "./node_modules/.bin/standard --fix 'src/*.js'"
   },
+  "files": [
+    "dist/",
+    "postinstall.js",
+    "cli.js"
+  ],
   "keywords": [
     "template",
     "engine",
