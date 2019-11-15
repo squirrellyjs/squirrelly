@@ -5,6 +5,7 @@
   "main": "./dist/squirrelly.min.js",
   "module": "./dist/es/squirrelly.min.js",
   "homepage": "https://squirrelly.js.org",
+  "sideEffects": false,
   "scripts": {
     "test": "./node_modules/.bin/standard 'src/*.js' && ./node_modules/.bin/mocha",
     "build": "./node_modules/.bin/rollup -c",
