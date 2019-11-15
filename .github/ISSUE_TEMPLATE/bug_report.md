@@ -1,5 +1,5 @@
 ---
-name: :bug: Bug report
+name: Bug report :bug:
 about: Create a report to help us improve
 
 ---
