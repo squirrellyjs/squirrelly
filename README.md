@@ -6,39 +6,44 @@
 
 **Summary**
 
-Squirrelly is a modern, configurable, and blazing fast template engine implemented in JavaScript. It works out of the box with ExpressJS and the **full version** weighs only **~2.2KB gzipped**.
+:fire: Squirrelly is a modern, configurable, and blazing fast template engine implemented in JavaScript. It works out of the box with ExpressJS and the **full version** weighs only **~2.2KB gzipped**.
 
 Notice: Squirrelly Version 8 is coming out soon! [Learn More](#version-8)
 
 ## Why Squirrelly?
 
-### Features:
+Simply put, Squirrelly is super lightweight, super fast, simple, and gets the job done.
 
-- Custom helpers
-- Custom filters
-- Conditionals
-- Loops
-- Custom delimeters
-- Precompilation
-- Partials
-- Writing JavaScript inside the template
-- Comments
-- Caching
-- Just look at the performance benchmarks [here](https://github.com/nebrelbug/squirrelly-benchmarks)
+### 🌟 Features
 
-## Docs
+- :wrench: Custom helpers
+- :wrench: Custom filters
+- :package: 0 dependencies
+- :hammer: Conditionals
+- :zap: Exports ES Modules as well as UMD
+- :hammer: Loops
+- :wrench: Custom delimeters
+- :pencil2: Easy template syntax
+- :wrench: Precompilation
+- :hammer: Partials
+- :wrench: Inline JavaScript
+- :hammer: Comments
+- :wrench: Caching
+- :rocket: SUPER fast (look at the performance benchmarks [here](https://github.com/nebrelbug/squirrelly-benchmarks))
+
+## :scroll: Docs
 
 We know nobody reads through the long and boring documentation in the ReadMe anyway, so head over to the documentation website:
 
-[https://squirrelly.js.org](https://squirrelly.js.org)
+:pencil: [https://squirrelly.js.org](https://squirrelly.js.org)
 
-## Examples
+## :notebook: Examples
 
 ### Simple Template
 
 ```
 var myTemplate = "<p>My favorite kind of cake is: {{favoriteCake}}</p>"
-​
+
 Sqrl.Render(myTemplate, {favoriteCake: 'Chocolate!'})
 // Returns: '<p>My favorite kind of cake is: Chocolate!</p>
 ```
@@ -63,11 +68,11 @@ The current index is {{@index}}
 {{/each}}
 ```
 
-## Tests
+## :heavy_check_mark: Tests
 
 The default test can be run with `npm test`, and it just checks that compiling and rendering a simple template results in the correct string.
 
-## Contributing
+## :handshake: Contributing
 
 We love contributions from the community! Contributions are
 accepted using GitHub pull requests; for more information, see
@@ -104,18 +109,18 @@ The top 7:
 
 -->
 
-## Version 8
+## :fire: Version 8
 
 Some of you may have been wondering about the lack of activity on this repository over the last few months. The answer is that, for quite a while, I've been working on a brand-new version of Squirrelly. You can [read about it on GitHub](https://github.com/nebrelbug/squirrelly/issues/106), but here's a quick overview:
 
-### Low-Level Changes
+### :sparkles: Low-Level Changes
 
 - New, more reliable parser -- see a draft [here](https://gist.github.com/nebrelbug/7f1d0d0c80b90c86ed629cc8a10e6cb5)
 - AST generation before compiled-function generation
 - Partials will be referenced instead of inlined
 - Bundling with Rollup for smaller code size
 
-### New Features
+### :sparkles: New Features
 
 - Layouts
 - Async support
@@ -126,7 +131,7 @@ Some of you may have been wondering about the lack of activity on this repositor
 - Save the cache and load it later
 - Plugins
 
-### Bug Fixes
+### :bug: Bug Fixes
 
 - ~~Filter chaining will work once more~~ (this was fixed in 7.5.0)
 
