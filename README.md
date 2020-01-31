@@ -2,13 +2,18 @@
 
 # squirrelly
 
-[![Build Status](https://img.shields.io/travis/com/squirrellyjs/squirrelly)](https://travis-ci.org/nebrelbug/squirrelly) [![Codacy Badge](https://img.shields.io/codacy/grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&utm_medium=referral&utm_content=nebrelbug/squirrelly&utm_campaign=Badge_Grade) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://img.shields.io/gitter/room/squirrellyjs/squirrelly?color=%2346BC99)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Tip me at paypal.me/bengubler](https://img.shields.io/badge/Paypal-tip%20me-brightgreen.svg)](https://paypal.me/bengubler) [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat)](#contributors)
+[![Travis (.com) branch](https://img.shields.io/travis/com/squirrellyjs/squirrelly/v7)](https://travis-ci.com/squirrellyjs/squirrelly)
+[![Codacy Badge](https://img.shields.io/codacy/grade/b848f0c508e841cf8fd3ab7308cfee34)](https://www.codacy.com/app/nebrelbug/squirrelly?utm_source=github.com&utm_medium=referral&utm_content=nebrelbug/squirrelly&utm_campaign=Badge_Grade)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://img.shields.io/gitter/room/squirrellyjs/squirrelly?color=%2346BC99)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Tip me at paypal.me/bengubler](https://img.shields.io/badge/Paypal-tip%20me-brightgreen.svg)](https://paypal.me/bengubler)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat)](#contributors)
 
 **Summary**
 
 Squirrelly is a modern, configurable, and blazing fast template engine implemented in JavaScript. It works out of the box with ExpressJS and the **full version** weighs only **~2.2KB gzipped**.
 
-Notice: Squirrelly Version 8 is coming out soon! [Learn More](#version-8)
+Notice: Squirrelly Version 8 is released! [Learn More](https://github.com/squirrellyjs/squirrelly). All future development of Squirrelly 7 will be happening on the `v7` branch.
 
 ## Why Squirrelly?
 
