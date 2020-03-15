@@ -138,7 +138,7 @@
     "travis-deploy-once": "^5.0.9",
     "ts-jest": "^25.1.0",
     "ts-node": "^8.5.4",
-    "typedoc": "^0.16.7",
+    "typedoc": "^0.17.0",
     "typescript": "^3.0.3"
   },
   "husky": {
