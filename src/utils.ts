@@ -7,7 +7,20 @@ import { SqrlConfig } from './config'
 
 /* END TYPES */
 
-export var promiseImpl = new Function('return this;')().Promise
+export var promiseImpl = new Function('return this')().Promise
+
+var asyncFunc: FunctionConstructor | false = false
+
+try {
+  asyncFunc = new Function('return (async function(){}).constructor')()
+} catch (e) {
+  // We shouldn't actually ever have any other errors, but...
+  if (!(e instanceof SyntaxError)) {
+    throw e
+  }
+}
+
+export { asyncFunc }
 
 export function hasOwnProp (obj: object, prop: string) {
   return Object.prototype.hasOwnProperty.call(obj, prop)
@@ -41,6 +54,8 @@ function trimWS (str: string, env: SqrlConfig, wsLeft: string, wsRight?: string)
 
   if (typeof env.autoTrim === 'string') {
     leftTrim = rightTrim = env.autoTrim
+    // Don't need to check if env.autoTrim is false
+    // Because leftTrim, rightTrim are initialized as falsy
   } else if (Array.isArray(env.autoTrim)) {
     // kinda confusing
     // but _}} will trim the left side of the following string
@@ -56,14 +71,11 @@ function trimWS (str: string, env: SqrlConfig, wsLeft: string, wsRight?: string)
     rightTrim = wsRight
   }
 
-  if (
-    (leftTrim === 'slurp' && rightTrim === 'slurp') ||
-    (leftTrim === true && rightTrim === true)
-  ) {
+  if (leftTrim === 'slurp' && rightTrim === 'slurp') {
     return str.trim()
   }
 
-  if (leftTrim === '_' || leftTrim === 'slurp' || leftTrim === true) {
+  if (leftTrim === '_' || leftTrim === 'slurp') {
     // console.log('trimming left' + leftTrim)
     // full slurp
     if (String.prototype.trimLeft) {
@@ -77,7 +89,7 @@ function trimWS (str: string, env: SqrlConfig, wsLeft: string, wsRight?: string)
     str = str.replace(/^(?:\n|\r|\r\n)/, '')
   }
 
-  if (rightTrim === '_' || rightTrim === 'slurp' || rightTrim === true) {
+  if (rightTrim === '_' || rightTrim === 'slurp') {
     // console.log('trimming right' + rightTrim)
     // full slurp
     if (String.prototype.trimRight) {

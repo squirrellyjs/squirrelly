@@ -58,20 +58,6 @@ describe('Async Render checks', () => {
       Sqrl.render('{{~async async-test()/}}', { name: 'Ada Lovelace' }, { async: true }, cb)
     })
   })
-
-  describe('Async works', () => {
-    test('throws if async filters in non-async env', () => {
-      expect(() => {
-        Sqrl.compile('{{it.val | async upper}}')
-      }).toThrow()
-    })
-
-    test('throws if async helpers in non-async env', () => {
-      expect(() => {
-        Sqrl.compile('{{~async async-test()/}}')
-      }).toThrow()
-    })
-  })
 })
 
 describe('Async Loops', () => {

@@ -9,7 +9,7 @@ import { HelperFunction, FilterFunction } from './containers'
 import { TemplateFunction } from './compile'
 import { Cacher } from './storage'
 
-type trimConfig = 'nl' | 'slurp' | boolean
+type trimConfig = 'nl' | 'slurp' | false
 
 export interface SqrlConfig {
   varName: string

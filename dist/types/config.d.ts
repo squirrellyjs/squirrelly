@@ -2,7 +2,7 @@ export declare type FetcherFunction = (container: 'H' | 'F', name: string) => Fu
 import { HelperFunction, FilterFunction } from './containers';
 import { TemplateFunction } from './compile';
 import { Cacher } from './storage';
-declare type trimConfig = 'nl' | 'slurp' | boolean;
+declare type trimConfig = 'nl' | 'slurp' | false;
 export interface SqrlConfig {
     varName: string;
     autoTrim: trimConfig | [trimConfig, trimConfig];

@@ -12,10 +12,10 @@ describe('Whitespace trim', () => {
       Object.defineProperty(String.prototype, 'trimLeft', { value: undefined })
       expect(trimWS('  jestjs', defaultConfig, '_')).toBe('jestjs')
     })
-    it('WS 1 char', () => {
+    it('WS newline', () => {
       expect(trimWS('\njestjs', defaultConfig, '-')).toBe('jestjs')
     })
-    it('WS slurp and WS 1 char are equal with 1 char of whitespace', () => {
+    it('WS slurp and WS newline are equal with nl or newline of whitespace', () => {
       Object.defineProperty(String.prototype, 'trimLeft', { value: undefined })
       expect(trimWS(' jestjs', defaultConfig, '_')).toBe(trimWS('\njestjs', defaultConfig, '-'))
     })
@@ -29,10 +29,10 @@ describe('Whitespace trim', () => {
       Object.defineProperty(String.prototype, 'trimRight', { value: undefined })
       expect(trimWS('jestjs  ', defaultConfig, '', '_')).toBe('jestjs')
     })
-    it('WS 1 char', () => {
+    it('WS nl', () => {
       expect(trimWS('jestjs\n', defaultConfig, '', '-')).toBe('jestjs')
     })
-    it('WS slurp and WS 1 char are equal with 1 char of whitespace', () => {
+    it('WS slurp and WS nl are equal with nl of whitespace', () => {
       Object.defineProperty(String.prototype, 'trimRight', { value: undefined })
       expect(trimWS('jestjs ', defaultConfig, '', '_')).toBe(
         trimWS('jestjs\n', defaultConfig, '', '-')

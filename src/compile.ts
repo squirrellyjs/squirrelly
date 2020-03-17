@@ -1,5 +1,6 @@
 import compileToString from './compile-string'
 import { getConfig } from './config'
+import { asyncFunc } from './utils'
 import SqrlErr from './err'
 
 /* TYPES */
@@ -12,25 +13,20 @@ export type TemplateFunction = (data: object, config: SqrlConfig, cb?: CallbackF
 
 export default function compile (str: string, env?: PartialConfig): TemplateFunction {
   var options: SqrlConfig = getConfig(env || {})
-  var ctor // constructor
+  var ctor = Function // constructor
 
   /* ASYNC HANDLING */
   // The below code is modified from mde/ejs. All credit should go to them.
   if (options.async) {
     // Have to use generated function for this, since in envs without support,
     // it breaks in parsing
-    try {
-      ctor = new Function('return (async function(){}).constructor;')()
-    } catch (e) {
-      if (e instanceof SyntaxError) {
-        throw new Error("This environment doesn't support async/await")
-      } else {
-        throw e
-      }
+    if (asyncFunc) {
+      ctor = asyncFunc
+    } else {
+      throw SqrlErr("This environment doesn't support async/await")
     }
-  } else {
-    ctor = Function
   }
+
   /* END ASYNC HANDLING */
   try {
     return new ctor(
