@@ -54,10 +54,10 @@ function trimWS(str, env, wsLeft, wsRight) {
         leftTrim = env.autoTrim[1];
         rightTrim = env.autoTrim[0];
     }
-    if (wsLeft) {
+    if (wsLeft || wsLeft === false) {
         leftTrim = wsLeft;
     }
-    if (wsRight) {
+    if (wsRight || wsRight === false) {
         rightTrim = wsRight;
     }
     if (leftTrim === 'slurp' && rightTrim === 'slurp') {
@@ -170,7 +170,7 @@ function parse(str, env) {
         ')', 'g');
     var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*', 'g');
     var startInd = 0;
-    var trimNextLeftWs = '';
+    var trimNextLeftWs = false;
     function parseTag() {
         var currentObj = { f: [] };
         var numParens = 0;
@@ -292,10 +292,10 @@ function parse(str, env) {
         parentObj.d = [];
         var lastBlock = false;
         var buffer = [];
-        function pushString(strng, shouldTrimRightPrecedingString) {
+        function pushString(strng, shouldTrimRightOfString) {
             if (strng) {
                 var stringToPush = strng.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-                stringToPush = trimWS(stringToPush, env, trimNextLeftWs, shouldTrimRightPrecedingString);
+                stringToPush = trimWS(stringToPush, env, trimNextLeftWs, shouldTrimRightOfString);
                 if (stringToPush) {
                     buffer.push(stringToPush);
                 }
@@ -370,7 +370,7 @@ function parse(str, env) {
             // ===== DONE ADDING OBJECT TO BUFFER =====
         }
         if (firstParse) {
-            pushString(str.slice(startInd, str.length));
+            pushString(str.slice(startInd, str.length), false);
             parentObj.d = buffer;
         }
         else {

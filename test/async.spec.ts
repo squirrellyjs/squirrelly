@@ -67,7 +67,7 @@ describe('Async Loops', () => {
 {{~async async-test() /}},
 {{/each}}`
     expect(await Sqrl.render(asyncLoopTemplate, {}, { async: true })).toEqual(
-      'HI FROM ASYNC,\nHI FROM ASYNC,\nHI FROM ASYNC,\n'
+      '\nHI FROM ASYNC,\nHI FROM ASYNC,\nHI FROM ASYNC,\n'
     )
   })
 
@@ -79,6 +79,6 @@ describe('Async Loops', () => {
 {{/foreach}}`
     expect(
       await Sqrl.render(asyncLoopTemplate, { key1: 'prop1', key2: 'prop2' }, { async: true })
-    ).toEqual('HI FROM ASYNC,key1,prop1\nHI FROM ASYNC,key2,prop2\n')
+    ).toEqual('\nHI FROM ASYNC,key1,prop1\nHI FROM ASYNC,key2,prop2\n')
   })
 })

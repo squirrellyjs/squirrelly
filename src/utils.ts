@@ -48,7 +48,12 @@ export function copyProps<T> (toObj: T, fromObj: T, notConfig?: boolean) {
   return toObj
 }
 
-function trimWS (str: string, env: SqrlConfig, wsLeft: string, wsRight?: string): string {
+function trimWS (
+  str: string,
+  env: SqrlConfig,
+  wsLeft: string | false,
+  wsRight?: string | false
+): string {
   var leftTrim
   var rightTrim
 
@@ -63,11 +68,11 @@ function trimWS (str: string, env: SqrlConfig, wsLeft: string, wsRight?: string)
     rightTrim = env.autoTrim[0]
   }
 
-  if (wsLeft) {
+  if (wsLeft || wsLeft === false) {
     leftTrim = wsLeft
   }
 
-  if (wsRight) {
+  if (wsRight || wsRight === false) {
     rightTrim = wsRight
   }
 

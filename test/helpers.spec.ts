@@ -18,7 +18,8 @@ describe('Helper tests', () => {
   it('parses a simple helper: each and if', () => {
     var res = render(eachTemplate, { kids: ['Ben', 'Polly', 'Joel', 'Phronsie', 'Davie'] })
     expect(res).toEqual(
-      `The Daugherty's have 8 kids. Their names are:
+      `
+The Daugherty's have 8 kids. Their names are:
 
 Ben,
 Polly,
@@ -38,7 +39,7 @@ Key: {{key}}, Val: {{val}}
   it('parses a simple helper: foreach', () => {
     var res = render(forEachTemplate, { numbers: { one: 1, two: 2 } })
 
-    expect(res).toEqual('Key: one, Val: 1\nKey: two, Val: 2\n')
+    expect(res).toEqual('\nKey: one, Val: 1\nKey: two, Val: 2\n')
   })
 
   var tryCatchTemplate = `
@@ -62,7 +63,8 @@ Uh-oh, error! Message was '{{err.message}}'
 
   it('parses a simple helper: try', () => {
     var res = render(tryCatchTemplate, { hi: false })
-    expect(res).toEqual(`This won't work: 
+    expect(res).toEqual(`
+This won't work: 
 Uh-oh, error! Message was 'str does not fit expected format'
 `)
   })

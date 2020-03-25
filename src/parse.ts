@@ -46,7 +46,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
   )
   var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*', 'g')
   var startInd = 0
-  var trimNextLeftWs = ''
+  var trimNextLeftWs: string | false = false
 
   function parseTag (): TemplateObject {
     var currentObj: TemplateObject = { f: [] }
@@ -164,10 +164,10 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
     var lastBlock: ParentTemplateObject | false = false
     var buffer: Array<AstObject> = []
 
-    function pushString (strng: string, shouldTrimRightPrecedingString?: string) {
+    function pushString (strng: string, shouldTrimRightOfString?: string | false) {
       if (strng) {
         var stringToPush = strng.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
-        stringToPush = trimWS(stringToPush, env, trimNextLeftWs, shouldTrimRightPrecedingString)
+        stringToPush = trimWS(stringToPush, env, trimNextLeftWs, shouldTrimRightOfString)
 
         if (stringToPush) {
           buffer.push(stringToPush)
@@ -248,7 +248,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
     }
 
     if (firstParse) {
-      pushString(str.slice(startInd, str.length))
+      pushString(str.slice(startInd, str.length), false)
       parentObj.d = buffer
     } else {
       throw SqrlErr('unclosed helper "' + parentObj.n + '"')
