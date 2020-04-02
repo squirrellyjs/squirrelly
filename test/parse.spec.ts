@@ -128,7 +128,46 @@ describe('parse test', () => {
   test('throws with unclosed tag', () => {
     expect(() => {
       parse('{{hi("hey")', defaultConfig)
-    }).toThrow()
+    }).toThrowError(`unclosed tag at line 1 col 1:
+
+  {{hi("hey")
+  ^`)
+  })
+
+  test('throws with unclosed single-quote string', () => {
+    expect(() => {
+      parse("{{ ' }}", defaultConfig)
+    }).toThrowError(`unclosed string at line 1 col 4:
+
+  {{ ' }}
+     ^`)
+  })
+
+  test('throws with unclosed double-quote string', () => {
+    expect(() => {
+      parse('{{ " }}', defaultConfig)
+    }).toThrowError(`unclosed string at line 1 col 4:
+
+  {{ " }}
+     ^`)
+  })
+
+  test('throws with unclosed template literal', () => {
+    expect(() => {
+      parse('{{ ` }}', defaultConfig)
+    }).toThrowError(`unclosed string at line 1 col 4:
+
+  {{ \` }}
+     ^`)
+  })
+
+  test('throws with unclosed multi-line comment', () => {
+    expect(() => {
+      parse('{{! /* }}', defaultConfig)
+    }).toThrowError(`unclosed comment at line 1 col 5:
+
+  {{! /* }}
+      ^`)
   })
 
   it('works with self-closing helpers', () => {

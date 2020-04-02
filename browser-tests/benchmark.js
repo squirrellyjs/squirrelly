@@ -470,7 +470,7 @@ window['app'] = function(selector) {
 <br><br>
 <em>Note: 'Squirrelly - Fast' uses a Squirrelly template with native code tags instead of the builtin helper.</em>
 <br><br>
-<em>Note: For some reason, results are different when serving this file vs. viewing it as static HTML. Serving seems to return the most accurate results</em>
+<em>Note: For some reason, results are different when serving this file vs. viewing it as static HTML. Serving seems to return the most accurate results. Specifically, Mustache is quite a bit slower when served, possibly due to disabling caching not working when viewing the file. In that case, Mustache's performance when served is more accurate.</em>
 <br><br>
 </div>
 <strong>Longer (more ops/sec) is better</strong>
@@ -491,7 +491,7 @@ window['app'] = function(selector) {
     <p class="item">
     </p>
 </div>
-<div id="test-container" style="min-width: 400px; margin: 0 auto"></div>`
+<div id="test-container" style="min-width: 400px; margin: 0; width: 60%;"></div>`
 
   var data = config
   data.testList = testList
