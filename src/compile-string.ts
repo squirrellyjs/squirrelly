@@ -14,9 +14,7 @@ export default function compileToString (str: string, env: SqrlConfig) {
   var res =
     "var tR='';" +
     (env.useWith ? 'with(' + env.varName + '||{}){' : '') +
-    compileScope(buffer, env)
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '\\r') +
+    compileScope(buffer, env) +
     'if(cb){cb(null,tR)} return tR' +
     (env.useWith ? '}' : '')
 
@@ -166,7 +164,7 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
         // self-closing helper
       } else if (type === '!') {
         // execute
-        returnStr += content
+        returnStr += content + '\n'
       } else if (type === '?') {
         // custom (implement later)
       }

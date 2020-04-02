@@ -35,20 +35,30 @@ export interface ParentTemplateObject extends TemplateObject {
 
 var asyncRegExp = /^async +/
 
+var templateLitReg = /`(?:\\[\s\S]|\${(?:[^{}]|{(?:[^{}]|{[^}]*})*})*}|(?!\${)[^\\`])*`/g
+
+var singleQuoteReg = /'(?:\\[\s\w"'\\`]|[^\n\r'\\])*?'/g
+
+var doubleQuoteReg = /"(?:\\[\s\w"'\\`]|[^\n\r"\\])*?"/g
+
 export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
-  var powerchars = new RegExp(
-    '([|()]|=>)|' +
-    '\'(?:\\\\[\\s\\w"\'\\\\`]|[^\\n\\r\'\\\\])*?\'|`(?:\\\\[\\s\\w"\'\\\\`]|[^\\\\`])*?`|"(?:\\\\[\\s\\w"\'\\\\`]|[^\\n\\r"\\\\])*?"' + // matches strings
-      '|\\/\\*[^]*?\\*\\/|((\\/)?(-|_)?' +
+  templateLitReg.lastIndex = 0
+  singleQuoteReg.lastIndex = 0
+  doubleQuoteReg.lastIndex = 0
+
+  var parseCloseReg = new RegExp(
+    '([|()]|=>)|' + // powerchars
+    '\'|"|`|\\/\\*|\\s*((\\/)?(-|_)?' + // comments, strings
       env.tags[1] +
       ')',
     'g'
   )
+
   var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*', 'g')
   var startInd = 0
   var trimNextLeftWs: string | false = false
 
-  function parseTag (): TemplateObject {
+  function parseTag (tagOpenIndex: number): TemplateObject {
     var currentObj: TemplateObject = { f: [] }
     var numParens = 0
     var firstChar = str[startInd]
@@ -100,11 +110,11 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
       startInd = indx + 1
     }
 
-    powerchars.lastIndex = startInd
+    parseCloseReg.lastIndex = startInd
 
     var m
     // tslint:disable-next-line:no-conditional-assignment
-    while ((m = powerchars.exec(str)) !== null) {
+    while ((m = parseCloseReg.exec(str)) !== null) {
       var char = m[1]
       var tagClose = m[2]
       var slash = m[3]
@@ -151,10 +161,46 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
         } // TODO throw err
         currentObj.t = currentType
         return currentObj
+      } else {
+        var punctuator = m[0]
+        if (punctuator === '/*') {
+          var commentCloseInd = str.indexOf('*/', parseCloseReg.lastIndex)
+
+          if (commentCloseInd === -1) {
+            ParseErr('unclosed comment', str, m.index)
+          }
+          parseCloseReg.lastIndex = commentCloseInd
+        } else if (punctuator === "'") {
+          singleQuoteReg.lastIndex = m.index
+
+          var singleQuoteMatch = singleQuoteReg.exec(str)
+          if (singleQuoteMatch) {
+            parseCloseReg.lastIndex = singleQuoteReg.lastIndex
+          } else {
+            ParseErr('unclosed string', str, m.index)
+          }
+        } else if (punctuator === '"') {
+          doubleQuoteReg.lastIndex = m.index
+          var doubleQuoteMatch = doubleQuoteReg.exec(str)
+
+          if (doubleQuoteMatch) {
+            parseCloseReg.lastIndex = doubleQuoteReg.lastIndex
+          } else {
+            ParseErr('unclosed string', str, m.index)
+          }
+        } else if (punctuator === '`') {
+          templateLitReg.lastIndex = m.index
+          var templateLitMatch = templateLitReg.exec(str)
+          if (templateLitMatch) {
+            parseCloseReg.lastIndex = templateLitReg.lastIndex
+          } else {
+            ParseErr('unclosed string', str, m.index)
+          }
+        }
       }
     }
     // TODO: Do I need this?
-    ParseErr('unclosed tag', str, str.length)
+    ParseErr('unclosed tag', str, tagOpenIndex)
     return currentObj // To prevent TypeScript from erroring
   }
 
@@ -166,11 +212,23 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
 
     function pushString (strng: string, shouldTrimRightOfString?: string | false) {
       if (strng) {
-        var stringToPush = strng.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
-        stringToPush = trimWS(stringToPush, env, trimNextLeftWs, shouldTrimRightOfString)
+        // if string is truthy it must be of type 'string'
 
-        if (stringToPush) {
-          buffer.push(stringToPush)
+        // TODO: benchmark replace( /(\\|')/g, '\\$1')
+        strng = trimWS(
+          strng,
+          env,
+          trimNextLeftWs, // this will only be false on the first str, the next ones will be null or undefined
+          shouldTrimRightOfString
+        )
+
+        if (strng) {
+          // replace \ with \\, ' with \'
+
+          strng = strng.replace(/\\|'/g, '\\$&').replace(/\r\n|\n|\r/g, '\\n')
+          // we're going to convert all CRLF to LF so it doesn't take more than one replace
+
+          buffer.push(strng)
         }
       }
     }
@@ -185,7 +243,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
       pushString(precedingString, shouldTrimRightPrecedingString)
       startInd = tagOpenMatch.index + tagOpenMatch[0].length
 
-      var currentObj = parseTag()
+      var currentObj = parseTag(tagOpenMatch.index)
       // ===== NOW ADD THE OBJECT TO OUR BUFFER =====
 
       var currentType = currentObj.t

@@ -9,9 +9,6 @@ var fs = require('fs'),
 
 const complexTemplate = fs.readFileSync(filePath, 'utf8')
 
-/**
- * Dummy test
- */
 describe('parse test', () => {
   it('parses a simple template', () => {
     var buff = parse('hi {{ hey }}', defaultConfig)
@@ -56,7 +53,7 @@ describe('parse test', () => {
   it('compiles complex template', () => {
     var buff = parse(complexTemplate, defaultConfig)
     expect(buff).toEqual([
-      'Hi\n',
+      'Hi\\n',
       { f: [], n: 'log', p: '"Hope you like Squirrelly!"', t: 's' },
       { f: [], c: 'htmlstuff', t: 'r' },
       {
@@ -67,7 +64,7 @@ describe('parse test', () => {
         t: '~',
         b: [],
         d: [
-          '\nReversed value: ',
+          '\\nReversed value: ',
           { f: [['reverse', '']], c: 'val', t: 'r' },
           ', Key: ',
           { f: [], c: 'key', t: 'r' },
@@ -86,7 +83,7 @@ describe('parse test', () => {
                 t: '~',
                 b: [],
                 d: [
-                  '\nSalutations! Index: ',
+                  '\\nSalutations! Index: ',
                   { f: [], c: 'index', t: 'r' },
                   ', old key: ',
                   { f: [], c: 'key', t: 'r' }
@@ -96,7 +93,7 @@ describe('parse test', () => {
           }
         ]
       },
-      '\n',
+      '\\n',
       {
         f: [],
         n: 'customhelper',
@@ -108,16 +105,16 @@ describe('parse test', () => {
             n: 'cabbage',
             t: '#',
             d: [
-              'Cabbages taste good\n',
+              'Cabbages taste good\\n',
               { f: [], c: 'console.log(hi);', t: '!' },
               { f: [], c: 'custom stuff', t: '?' }
             ]
           },
-          { f: [], n: 'pineapple', t: '#', d: ['As do pineapples\n'] }
+          { f: [], n: 'pineapple', t: '#', d: ['As do pineapples\\n'] }
         ],
         d: []
       },
-      '\nThis is a partial: ',
+      '\\nThis is a partial: ',
       { f: [], n: 'include', p: '"mypartial"', t: 's' }
     ])
   })
