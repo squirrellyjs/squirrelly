@@ -7131,11 +7131,6 @@ prettier-standard@^16.1.0:
     multimatch "^3.0.0"
     prettierx "0.11.0"
 
-prettier@^1.0.0:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
-  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
-
 prettierx@0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/prettierx/-/prettierx-0.11.0.tgz#d6e86ff8737a0e69a6c9b2e44502d978a7f10854"
@@ -7866,10 +7861,10 @@ rollup-plugin-node-resolve@^5.2.0:
     resolve "^1.11.1"
     rollup-pluginutils "^2.8.1"
 
-rollup-plugin-prettier@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-prettier/-/rollup-plugin-prettier-0.7.0.tgz#4947889e467cb388798e5017e18b6a4047776511"
-  integrity sha512-LGy//t1XJRlhCVV1f7XaAaNumK3HOdq517xQh7G3kY3bGBG8sRUtl+wU8M1r6hEIMz9WBduVPOAB+kHTdDT8yA==
+rollup-plugin-prettier@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-prettier/-/rollup-plugin-prettier-2.0.0.tgz#25384206b14173e6c346c96c5cfb10ca76f5da4b"
+  integrity sha512-aK8fe+QPmxXmu2cvHu73Knw1Z3Xx7Fpsd32poqgQVbMQd6G3vNE5PhObZVYs9k3+yHcZt4UdshhTXFA/lwqhjQ==
   dependencies:
     diff "4.0.2"
     lodash.hasin "4.5.2"
@@ -7877,7 +7872,6 @@ rollup-plugin-prettier@^0.7.0:
     lodash.isnil "4.0.0"
     lodash.omitby "4.6.0"
     magic-string "0.25.7"
-    prettier "^1.0.0"
 
 rollup-plugin-replace@^2.1.0:
   version "2.2.0"
