@@ -29,7 +29,7 @@ Version 8 is still in beta. Squirrelly v7 will continue to be maintained, and ca
 
 [Read about the changes](https://squirrelly.js.org/blog/squirrelly-version-8)
 
-*Looking for a [lightweight, faster, and more reliable](https://eta.js.org/docs/about/eta-vs-ejs) alternative to EJS? Check out Squirrelly's cousin, [Eta](https://eta.js.org).*
+*Looking for a [lightweight, faster, and more reliable](https://eta.js.org/docs/about/eta-vs-ejs) __alternative to EJS?__ Check out Squirrelly's cousin, [Eta](https://eta.js.org).*
 
 ## Why Squirrelly?
 
