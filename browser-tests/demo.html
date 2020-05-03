@@ -162,18 +162,18 @@ Hi
 {{!console.log("Hope you like Squirrelly!");}}
 {{it.htmlstuff}}
 
-{{~foreach(it.obj) => key, val}}
+{{@foreach(it.obj) => key, val}}
 Reversed value: {{val|reverse}}, Key: {{key}}
 
-{{~if(key==="thirdchild")}}
-{{~each(it.obj[key]) => index, key}}
+{{@if(key==="thirdchild")}}
+{{@each(it.obj[key]) => index, key}}
     Salutations! Index: {{index}}, old key: {{key}}
 
 {{/each}}
 {{/if}}
 {{/foreach}}
 
-{{~customhelper()}}
+{{@customhelper()}}
 {{#cabbage}}
 Cabbages taste good
 {{!console.log("Hi from inside a template");}}
@@ -181,7 +181,7 @@ Cabbages taste good
 As do pineapples
 {{/customhelper}}
 
-This is a partial: {{~include("mypartial")/}}
+This is a partial: {{@include("mypartial")/}}
 </textarea
         >
       </div>

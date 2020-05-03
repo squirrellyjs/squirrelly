@@ -5,8 +5,8 @@ import { render, filters, defaultConfig, compileToString } from '../src/index'
 var eachTemplate = `
 The Daugherty's have 8 kids. Their names are:
 
-{{~each (it.kids) => val, index}}
-{{~if(index < it.kids.length - 1 _}}
+{{@each (it.kids) => val, index}}
+{{@if(index < it.kids.length - 1 _}}
   {{val}},
 {{#else _}}
   and {{val}}
@@ -30,7 +30,7 @@ and Davie`
   })
 
   var forEachTemplate = `
-{{~foreach (it.numbers) => key, val}}
+{{@foreach (it.numbers) => key, val}}
 Key: {{key}}, Val: {{val}}
 
 {{/foreach}}
@@ -43,7 +43,7 @@ Key: {{key}}, Val: {{val}}
   })
 
   var tryCatchTemplate = `
-{{~try}}
+{{@try}}
 This won't work: {{ *it.hi | validate}}
 {{#catch => err}}
 
@@ -69,7 +69,7 @@ Uh-oh, error! Message was 'str does not fit expected format'
 `)
   })
 
-  var ifTemplate = `{{ ~if (it.number === 3) -}}
+  var ifTemplate = `{{ @if (it.number === 3) -}}
 Number is three
 {{- #elif (it.number === 4) -}}
 Number is four
@@ -84,13 +84,13 @@ Number is five
   })
 
   var ifTemplateFilter = `
-{{~ if (it.number === 3) | filterThatShouldntBeHere}}
+{{@ if (it.number === 3) | filterThatShouldntBeHere}}
 Number is three
 {{/if}}
 `
 
   var ifTemplateBlock = `
-{{~ if (it.number === 3) | filterThatShouldntBeHere}}
+{{@ if (it.number === 3) | filterThatShouldntBeHere}}
 Number is three
 {{#tomato}}
 Uh-oh, If doesn't know what to do
@@ -111,12 +111,12 @@ Uh-oh, If doesn't know what to do
 
   test('throws when useScope helper has unrecognized blocks', () => {
     expect(() => {
-      render('{{~useScope(it)=>{val1, val2} }}{{#randomblock}}{{/useScope}}', {})
+      render('{{@useScope(it)=>{val1, val2} }}{{#randomblock}}{{/useScope}}', {})
     }).toThrow()
   })
 
   var tryTemplateFilter = `
-{{~try | filter1}}
+{{@try | filter1}}
 Some content
 {{#catch => err}}
 Uh-oh, error! Message was '{{err.message}}'
@@ -124,7 +124,7 @@ Uh-oh, error! Message was '{{err.message}}'
 `
 
   var tryTemplateBlock = `
-{{~try}}
+{{@try}}
 Some content
 {{#catch => err}}
 Uh-oh, error! Message was '{{err.message}}'
@@ -147,13 +147,13 @@ Uh-oh, error! Message was '{{err.message}}'
 
   test('throws when include helper has blocks', () => {
     expect(() => {
-      render('{{~include("partial")}}{{#block1}}{{/include}}', {})
+      render('{{@include("partial")}}{{#block1}}{{/include}}', {})
     }).toThrow()
   })
 
   test('throws when include helper points to unrecognized partial', () => {
     expect(() => {
-      render('{{~include("some-partial")/}}', {})
+      render('{{@include("some-partial")/}}', {})
     }).toThrow()
   })
 })

@@ -157,7 +157,7 @@
           var currentAttribute = 'c'; // default - Valid values: 'c'=content, 'f'=filter, 'fp'=filter params, 'p'=param, 'n'=name
           var currentType = 'r'; // Default
           startInd += 1; // assume we're gonna skip the first character
-          if (firstChar === '~' || firstChar === '#' || firstChar === '/') {
+          if (firstChar === '@' || firstChar === '#' || firstChar === '/') {
               currentAttribute = 'n';
               currentType = firstChar;
           }
@@ -255,7 +255,7 @@
                   tagOpenReg.lastIndex = startInd;
                   // console.log('tagClose: ' + startInd)
                   trimNextLeftWs = wsControl;
-                  if (slash && currentType === '~') {
+                  if (slash && currentType === '@') {
                       currentType = 's';
                   } // TODO throw err
                   currentObj.t = currentType;
@@ -336,7 +336,7 @@
               var currentObj = parseTag(tagOpenMatch.index);
               // ===== NOW ADD THE OBJECT TO OUR BUFFER =====
               var currentType = currentObj.t;
-              if (currentType === '~') {
+              if (currentType === '@') {
                   var hName = currentObj.n || '';
                   if (env.async && asyncRegExp.test(hName)) {
                       currentObj.a = true;
@@ -498,7 +498,7 @@
               returnStr += "tR+='" + str + "';";
           }
           else {
-              var type = currentBlock.t; // ~, s, !, ?, r
+              var type = currentBlock.t; // @, s, !, ?, r
               var content = currentBlock.c || '';
               var filters = currentBlock.f;
               var name = currentBlock.n || '';
@@ -521,7 +521,7 @@
                   returnStr += 'tR+=' + filtered + ';';
                   // reference
               }
-              else if (type === '~') {
+              else if (type === '@') {
                   // helper
                   if (env.storage.nativeHelpers.get(name)) {
                       returnStr += env.storage.nativeHelpers.get(name)(currentBlock, env);

@@ -5,7 +5,7 @@ import { trimWS } from './utils'
 
 import { SqrlConfig } from './config'
 
-export type TagType = '~' | '/' | '#' | '?' | 'r' | '!' | 's'
+export type TagType = '@' | '/' | '#' | '?' | 'r' | '!' | 's'
 export type TemplateAttribute = 'c' | 'f' | 'fp' | 'p' | 'n' | 'res' | 'err'
 export type TemplateObjectAttribute = 'c' | 'p' | 'n' | 'res'
 
@@ -66,7 +66,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
     var currentType: TagType = 'r' // Default
     startInd += 1 // assume we're gonna skip the first character
 
-    if (firstChar === '~' || firstChar === '#' || firstChar === '/') {
+    if (firstChar === '@' || firstChar === '#' || firstChar === '/') {
       currentAttribute = 'n'
       currentType = firstChar
     } else if (firstChar === '!' || firstChar === '?') {
@@ -156,7 +156,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
         tagOpenReg.lastIndex = startInd
         // console.log('tagClose: ' + startInd)
         trimNextLeftWs = wsControl
-        if (slash && currentType === '~') {
+        if (slash && currentType === '@') {
           currentType = 's'
         } // TODO throw err
         currentObj.t = currentType
@@ -247,7 +247,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
       // ===== NOW ADD THE OBJECT TO OUR BUFFER =====
 
       var currentType = currentObj.t
-      if (currentType === '~') {
+      if (currentType === '@') {
         var hName = currentObj.n || ''
         if (env.async && asyncRegExp.test(hName)) {
           currentObj.a = true

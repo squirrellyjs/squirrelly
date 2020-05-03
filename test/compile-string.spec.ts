@@ -32,7 +32,7 @@ describe('Compile to String test', () => {
   })
 
   it('works with helpers', () => {
-    var str = compileToString('{{~each(x) => hi }} Hey {{#else }} oops {{/ each}}', defaultConfig)
+    var str = compileToString('{{@each(x) => hi }} Hey {{#else }} oops {{/ each}}', defaultConfig)
     expect(str).toEqual(
       "var tR='';tR+=c.l('H','each')({exec:function(hi){var tR='';tR+=' Hey ';return tR},params:[x]},[{exec:function(){var tR='';tR+=' oops ';return tR},params:[],name:'else'},],c);if(cb){cb(null,tR)} return tR"
     )
@@ -47,19 +47,19 @@ describe('Compile to String test', () => {
 
   test('throws with bad filter syntax', () => {
     expect(() => {
-      compileToString('{{~hi () hey | hi /}}', defaultConfig)
+      compileToString('{{@hi () hey | hi /}}', defaultConfig)
     }).toThrow()
   })
 
   it('works with self-closing helpers', () => {
-    var str = compileToString('{{~log ("hey") | hi /}}', defaultConfig)
+    var str = compileToString('{{@log ("hey") | hi /}}', defaultConfig)
     expect(str).toEqual(
       "var tR='';tR+=c.l('F','hi')(c.l('H','log')({params:[\"hey\"]},[],c));if(cb){cb(null,tR)} return tR"
     )
   })
 
   it('works with helpers with results', () => {
-    var str = compileToString('{{~log ("hey") => res, res2}}{{/log}}', defaultConfig)
+    var str = compileToString('{{@log ("hey") => res, res2}}{{/log}}', defaultConfig)
     expect(str).toEqual(
       "var tR='';tR+=c.l('H','log')({exec:function(res, res2){var tR='';return tR},params:[\"hey\"]},[],c);if(cb){cb(null,tR)} return tR"
     )
@@ -67,7 +67,7 @@ describe('Compile to String test', () => {
 
   test("throws when helpers start and end don't match", () => {
     expect(() => {
-      compileToString('{{~each(x) => hi }} Hey {{#else }} oops {{/ if}}', defaultConfig)
+      compileToString('{{@each(x) => hi }} Hey {{#else }} oops {{/ if}}', defaultConfig)
     }).toThrow()
   })
 })

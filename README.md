@@ -77,7 +77,7 @@ Sqrl.render(myTemplate, {favoriteCake: 'Chocolate!'})
 ### Conditionals
 
 ```
-{{~if(it.somevalue === 1)}}
+{{@if(it.somevalue === 1)}}
 Display this
 {{#else}}
 Display this
@@ -87,7 +87,7 @@ Display this
 ### Loops
 
 ```
-{{~each(it.somearray) => val, index}}
+{{@each(it.somearray) => val, index}}
 Display this
 The current array element is {{val}}
 The current index is {{index}}

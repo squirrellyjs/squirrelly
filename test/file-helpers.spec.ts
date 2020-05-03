@@ -9,7 +9,7 @@ templates.define('test-template', compile('HEY {{it.name}}'))
 describe('include works', () => {
   it('simple parser works with "includeFile"', async () => {
     var renderedTemplate = render(
-      '{{~includeFile("simple", it)/}}',
+      '{{@includeFile("simple", it)/}}',
       { name: 'Ben' },
       { filename: path.join(__dirname, 'templates/placeholder.sqrl') }
     )
@@ -19,7 +19,7 @@ describe('include works', () => {
 
   it('"includeFile" works with "views" array', async () => {
     var renderedTemplate = render(
-      '{{~includeFile("randomtemplate", it)/}}',
+      '{{@includeFile("randomtemplate", it)/}}',
       { user: 'Ben' },
       {
         filename: path.join(__dirname, 'templates/placeholder.sqrl'),
@@ -31,14 +31,14 @@ describe('include works', () => {
   })
 
   it('simple parser works with "include"', async () => {
-    var renderedTemplate = render('{{~include("test-template", it)/}}', { name: 'Ben' })
+    var renderedTemplate = render('{{@include("test-template", it)/}}', { name: 'Ben' })
 
     expect(renderedTemplate).toEqual('HEY Ben')
   })
 
   test('throws if helper "includeFile" has blocks', () => {
     expect(() => {
-      render('{{~includeFile("test-template", it)}} {{#block1}} {{/includeFile}}', {
+      render('{{@includeFile("test-template", it)}} {{#block1}} {{/includeFile}}', {
         name: 'stuff'
       })
     }).toThrow()
@@ -47,7 +47,7 @@ describe('include works', () => {
   test('throws if helper "includeFile" cannot find template', () => {
     expect(() => {
       render(
-        '{{~includeFile("missing-template", it)}}  {{/includeFile}}',
+        '{{@includeFile("missing-template", it)}}  {{/includeFile}}',
         {},
         {
           filename: path.join(__dirname, 'templates/placeholder.sqrl'),
@@ -59,7 +59,7 @@ describe('include works', () => {
 
   test('throws if helper "include" has blocks', () => {
     expect(() => {
-      render('{{~include("test-template", it)}} {{#block2}} {{/includeFile}}', { name: 'stuff' })
+      render('{{@include("test-template", it)}} {{#block2}} {{/includeFile}}', { name: 'stuff' })
     }).toThrow()
   })
 })
@@ -82,7 +82,7 @@ Ben's cool site
     expect(renderedTemplate).toEqual(layoutRes)
   })
 
-  var extendsTemplate = `{{~extends('layout1', it)}}
+  var extendsTemplate = `{{@extends('layout1', it)}}
 This is the content of the page
 {{#title}}
 Custom Title
@@ -92,11 +92,11 @@ Custom Title
 
   var layoutTemplate = `<h1>My layout</h1>
 <h2>
-{{~block('title')}}
+{{@block('title')}}
 this is the default title
 {{/block}}
 </h2>
-{{~block('description')}}
+{{@block('description')}}
 The default description
 {{/block}}
 <p> This is a cool layout by {{it.name}}</p>

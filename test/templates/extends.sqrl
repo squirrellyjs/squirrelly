@@ -1,4 +1,4 @@
-{{~extendsFile('layout', {name: it.name})}}
+{{@extendsFile('layout', {name: it.name})}}
 This is the content of the page
 {{#title}}
 Custom Title

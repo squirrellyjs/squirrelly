@@ -110,7 +110,7 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
       // we know string exists
       returnStr += "tR+='" + str + "';"
     } else {
-      var type = currentBlock.t // ~, s, !, ?, r
+      var type = currentBlock.t // @, s, !, ?, r
       var content = currentBlock.c || ''
       var filters = currentBlock.f
       var name = currentBlock.n || ''
@@ -132,7 +132,7 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
         var filtered = filter(content, filters, env)
         returnStr += 'tR+=' + filtered + ';'
         // reference
-      } else if (type === '~') {
+      } else if (type === '@') {
         // helper
         if (env.storage.nativeHelpers.get(name)) {
           returnStr += env.storage.nativeHelpers.get(name)(currentBlock, env)

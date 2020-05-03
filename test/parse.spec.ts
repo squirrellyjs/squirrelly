@@ -1,4 +1,4 @@
-/* global it, expect, describe */
+/* global it, expect, describe, test */
 
 import { parse } from '../src/index'
 import { defaultConfig } from '../src/config'
@@ -36,14 +36,14 @@ describe('parse test', () => {
   })
 
   it('works with helpers', () => {
-    var buff = parse('{{~each(x) => hi }} Hey {{#else }} oops {{/ each}}', defaultConfig)
+    var buff = parse('{{@each(x) => hi }} Hey {{#else }} oops {{/ each}}', defaultConfig)
     expect(buff).toEqual([
       {
         f: [],
         n: 'each',
         p: 'x',
         res: 'hi',
-        t: '~',
+        t: '@',
         b: [{ f: [], n: 'else', t: '#', d: [' oops '] }],
         d: [' Hey ']
       }
@@ -61,7 +61,7 @@ describe('parse test', () => {
         n: 'foreach',
         p: 'options.obj',
         res: 'val, key',
-        t: '~',
+        t: '@',
         b: [],
         d: [
           '\\nReversed value: ',
@@ -72,7 +72,7 @@ describe('parse test', () => {
             f: [],
             n: 'if',
             p: 'key==="thirdchild"',
-            t: '~',
+            t: '@',
             b: [],
             d: [
               {
@@ -80,7 +80,7 @@ describe('parse test', () => {
                 n: 'each',
                 p: 'options.obj[key]',
                 res: 'index, key',
-                t: '~',
+                t: '@',
                 b: [],
                 d: [
                   '\\nSalutations! Index: ',
@@ -98,7 +98,7 @@ describe('parse test', () => {
         f: [],
         n: 'customhelper',
         p: '',
-        t: '~',
+        t: '@',
         b: [
           {
             f: [],
@@ -121,7 +121,7 @@ describe('parse test', () => {
 
   test('throws with bad filter syntax', () => {
     expect(() => {
-      parse('{{~hi () hey | hi /}}', defaultConfig)
+      parse('{{@hi () hey | hi /}}', defaultConfig)
     }).toThrow()
   })
 
@@ -171,18 +171,18 @@ describe('parse test', () => {
   })
 
   it('works with self-closing helpers', () => {
-    var buff = parse('{{~log ("hey") | hi /}}', defaultConfig)
+    var buff = parse('{{@log ("hey") | hi /}}', defaultConfig)
     expect(buff).toEqual([{ f: [['hi', '']], n: 'log', p: '"hey"', t: 's' }])
   })
 
   it('works with helpers with results', () => {
-    var buff = parse('{{~log ("hey") => res, res2}}{{/log}}', defaultConfig)
-    expect(buff).toEqual([{ f: [], n: 'log', p: '"hey"', res: 'res, res2', t: '~', b: [], d: [] }])
+    var buff = parse('{{@log ("hey") => res, res2}}{{/log}}', defaultConfig)
+    expect(buff).toEqual([{ f: [], n: 'log', p: '"hey"', res: 'res, res2', t: '@', b: [], d: [] }])
   })
 
   test("throws when helpers start and end don't match", () => {
     expect(() => {
-      parse('{{~each(x) => hi }} Hey {{#else }} oops {{/ if}}', defaultConfig)
+      parse('{{@each(x) => hi }} Hey {{#else }} oops {{/ if}}', defaultConfig)
     }).toThrow()
   })
 })

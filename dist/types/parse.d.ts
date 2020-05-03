@@ -1,5 +1,5 @@
 import { SqrlConfig } from './config';
-export declare type TagType = '~' | '/' | '#' | '?' | 'r' | '!' | 's';
+export declare type TagType = '@' | '/' | '#' | '?' | 'r' | '!' | 's';
 export declare type TemplateAttribute = 'c' | 'f' | 'fp' | 'p' | 'n' | 'res' | 'err';
 export declare type TemplateObjectAttribute = 'c' | 'p' | 'n' | 'res';
 export declare type AstObject = string | TemplateObject;

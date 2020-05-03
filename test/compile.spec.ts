@@ -29,7 +29,7 @@ describe('Compile test', () => {
   })
 
   it('works with helpers', () => {
-    var str = compile('{{~each(x) => hi }} Hey {{#else }} oops {{/ each}}')
+    var str = compile('{{@each(x) => hi }} Hey {{#else }} oops {{/ each}}')
     expect(str).toBeTruthy()
   })
 
@@ -41,7 +41,7 @@ describe('Compile test', () => {
 
   test('throws with bad filter syntax', () => {
     expect(() => {
-      compile('{{~hi () hey | hi /}}')
+      compile('{{@hi () hey | hi /}}')
     }).toThrow()
   })
 
@@ -52,18 +52,18 @@ describe('Compile test', () => {
   })
 
   it('works with self-closing helpers', () => {
-    var str = compile('{{~log ("hey") | hi /}}')
+    var str = compile('{{@log ("hey") | hi /}}')
     expect(str).toBeTruthy()
   })
 
   it('works with helpers with results', () => {
-    var str = compile('{{~log ("hey") => res, res2}}{{/log}}')
+    var str = compile('{{@log ("hey") => res, res2}}{{/log}}')
     expect(str).toBeTruthy()
   })
 
   test("throws when helpers start and end don't match", () => {
     expect(() => {
-      compile('{{~each(x) => hi }} Hey {{#else }} oops {{/ if}}')
+      compile('{{@each(x) => hi }} Hey {{#else }} oops {{/ if}}')
     }).toThrow()
   })
 })

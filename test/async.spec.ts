@@ -35,7 +35,7 @@ describe('Async Render checks', () => {
     })
     it('Async helper works', async () => {
       expect(
-        await Sqrl.render('{{~async async-test()/}}', { name: 'Ada Lovelace' }, { async: true })
+        await Sqrl.render('{{@async async-test()/}}', { name: 'Ada Lovelace' }, { async: true })
       ).toEqual('HI FROM ASYNC')
     })
 
@@ -55,7 +55,7 @@ describe('Async Render checks', () => {
         }
       }
 
-      Sqrl.render('{{~async async-test()/}}', { name: 'Ada Lovelace' }, { async: true }, cb)
+      Sqrl.render('{{@async async-test()/}}', { name: 'Ada Lovelace' }, { async: true }, cb)
     })
   })
 })
@@ -63,8 +63,8 @@ describe('Async Render checks', () => {
 describe('Async Loops', () => {
   it('Looping over async array', async () => {
     var asyncLoopTemplate = `
-{{~async each([1,2,3])}}
-{{~async async-test() /}},
+{{@async each([1,2,3])}}
+{{@async async-test() /}},
 {{/each}}`
     expect(await Sqrl.render(asyncLoopTemplate, {}, { async: true })).toEqual(
       '\nHI FROM ASYNC,\nHI FROM ASYNC,\nHI FROM ASYNC,\n'
@@ -73,8 +73,8 @@ describe('Async Loops', () => {
 
   it('Looping over object', async () => {
     var asyncLoopTemplate = `
-{{~async foreach(it) => key, val}}
-{{~async async-test() /}},{{key}},{{val}}
+{{@async foreach(it) => key, val}}
+{{@async async-test() /}},{{key}},{{val}}
 
 {{/foreach}}`
     expect(

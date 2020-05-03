@@ -1,6 +1,6 @@
 var Sqrl = require('../dist/squirrelly.cjs')
 var template = `
-{{~try}}
+{{@try}}
 This won't work: {{ *it.hi | validate}}
 {{#catch => err}}
 Uh-oh, error! Message was '{{err.message}}'

@@ -32,7 +32,7 @@ describe('Simple Render checks', () => {
   describe('render errors', () => {
     test("throws when there's an unknown helper", () => {
       expect(() => {
-        render('{{~unknown-helper(it.name) /}}', { name: 'Ben' })
+        render('{{@unknown-helper(it.name) /}}', { name: 'Ben' })
       }).toThrow()
     })
 
@@ -67,7 +67,7 @@ describe('Renders with different scopes', () => {
   it('useScope helper works', () => {
     expect(
       render(
-        'Hi {{~useScope(it)=>{name} }}{{name}}{{/useScope}}',
+        'Hi {{@useScope(it)=>{name} }}{{name}}{{/useScope}}',
         { name: 'Ada Lovelace' },
         { useWith: true }
       )

@@ -1,10 +1,10 @@
 <h1>My layout</h1>
 <h2>
-{{~block('title')}}
+{{@block('title')}}
 this is the default title
 {{/block}}
 </h2>
-{{~block('description')}}
+{{@block('description')}}
 The default description
 {{/block}}
 <p> This is a cool layout by {{it.name}}</p>

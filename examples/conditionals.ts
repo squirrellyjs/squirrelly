@@ -1,8 +1,8 @@
 var Sqrl = require('../dist/squirrelly.cjs')
 var template = `
 The Daugherty's have 8 kids. Their names are:
-{{~each (it.kids) => val, index}}
-{{~if(index < it.kids.length - 1_}}
+{{@each (it.kids) => val, index}}
+{{@if(index < it.kids.length - 1_}}
   {{val}},
 {{_#else_}}
   and {{val}}

@@ -102,7 +102,7 @@ templateList['handlebars-raw'] = `
 
 templateList['squirrelly'] = `
 <ul>
-{{~each(it.list) => val}}
+{{@each(it.list) => val}}
     <li>User: {{val.user}} / Web Site: {{val.site}}</li>
 {{/each}}
 </ul>`
@@ -484,7 +484,7 @@ window['app'] = function(selector) {
         <label><input type="number" value="{{it.length}}" onchange="restart('length', this.value)"> list</label>
         <strong>×</strong>
         <label><input type="number" value="{{it.calls}}" onchange="restart('calls', this.value)"> calls</label>
-        <label><input type="checkbox" {{~if(it.escape)}}checked{{/if}} onchange="restart('escape', this.checked)"> escape</label>
+        <label><input type="checkbox" {{@if(it.escape)}}checked{{/if}} onchange="restart('escape', this.checked)"> escape</label>
         <button id="get-link" class="button">&#x1f517; Get link</button>
 
     </p>

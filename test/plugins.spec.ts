@@ -10,12 +10,12 @@ function myPlugin () {
       return ast
     },
     processFnString: function (str: string, env?: SqrlConfig) {
-      return str.replace(/@@num@@/, '2352.3')
+      return str.replace(/%%num%%/, '2352.3')
     }
   }
 }
 
-var template = `{{it.val}} {{ @@num@@ }}.`
+var template = `{{it.val}} {{ %%num%% }}.`
 
 describe('Plugins', () => {
   it('Plugins function properly', () => {
