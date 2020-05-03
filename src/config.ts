@@ -14,6 +14,7 @@ type trimConfig = 'nl' | 'slurp' | false
 export interface SqrlConfig {
   varName: string
   autoTrim: trimConfig | [trimConfig, trimConfig]
+  rmWhitespace?: boolean
   autoEscape: boolean
   defaultFilter: false | string
   tags: [string, string]
