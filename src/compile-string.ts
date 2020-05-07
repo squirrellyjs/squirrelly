@@ -4,6 +4,7 @@ import Parse from './parse'
 
 import { SqrlConfig } from './config'
 import { AstObject, Filter, ParentTemplateObject } from './parse'
+type ParsedTagType = 'h' | 's' | 'e' | 'q' | 'i'
 // import SqrlErr from './err'
 
 /* END TYPES */
@@ -32,7 +33,7 @@ export default function compileToString (str: string, env: SqrlConfig) {
   // TODO: is `return cb()` necessary, or could we just do `cb()`
 }
 
-function filter (str: string, filters: Array<Filter>, env: SqrlConfig) {
+function filter (str: string, filters: Array<Filter>) {
   for (var i = 0; i < filters.length; i++) {
     var name = filters[i][0]
     var params = filters[i][1]
@@ -110,7 +111,7 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
       // we know string exists
       returnStr += "tR+='" + str + "';"
     } else {
-      var type = currentBlock.t // @, s, !, ?, r
+      var type: ParsedTagType = currentBlock.t as ParsedTagType // h, s, e, q, i
       var content = currentBlock.c || ''
       var filters = currentBlock.f
       var name = currentBlock.n || ''
@@ -122,17 +123,17 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
       //   throw SqrlErr("Async block or helper '" + name + "' in non-async env")
       // }
       // Let compiler do this
-      if (type === 'r') {
+      if (type === 'i') {
         if (env.defaultFilter) {
           content = "c.l('F','" + env.defaultFilter + "')(" + content + ')'
         }
         if (!currentBlock.raw && env.autoEscape) {
           content = "c.l('F','e')(" + content + ')'
         }
-        var filtered = filter(content, filters, env)
+        var filtered = filter(content, filters)
         returnStr += 'tR+=' + filtered + ';'
         // reference
-      } else if (type === '@') {
+      } else if (type === 'h') {
         // helper
         if (env.storage.nativeHelpers.get(name)) {
           returnStr += env.storage.nativeHelpers.get(name)(currentBlock, env)
@@ -150,22 +151,22 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
           }
           helperReturn += ',c)'
 
-          returnStr += 'tR+=' + filter(helperReturn, filters, env) + ';'
+          returnStr += 'tR+=' + filter(helperReturn, filters) + ';'
         }
       } else if (type === 's') {
+        // self-closing helper
+
         returnStr +=
           'tR+=' +
           filter(
             (isAsync ? 'await ' : '') + "c.l('H','" + name + "')({params:[" + params + ']},[],c)',
-            filters,
-            env
+            filters
           ) +
           ';'
-        // self-closing helper
-      } else if (type === '!') {
+      } else if (type === 'e') {
         // execute
         returnStr += content + '\n'
-      } else if (type === '?') {
+      } else if (type === 'q') {
         // custom (implement later)
       }
     }

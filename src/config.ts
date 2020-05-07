@@ -8,6 +8,7 @@ export type FetcherFunction = (container: 'H' | 'F', name: string) => Function |
 import { HelperFunction, FilterFunction } from './containers'
 import { TemplateFunction } from './compile'
 import { Cacher } from './storage'
+// import { TagType } from './parse'
 
 type trimConfig = 'nl' | 'slurp' | false
 
@@ -26,6 +27,16 @@ export interface SqrlConfig {
     nativeHelpers: Cacher<Function>
     filters: Cacher<FilterFunction>
     templates: Cacher<TemplateFunction>
+  }
+  prefixes: {
+    h: string
+    b: string
+    i: string
+    r: string
+    c: string
+    e: string
+    q: string
+    [index: string]: string
   }
   cache: boolean
   views?: string | Array<string>
@@ -72,6 +83,19 @@ var defaultConfig: SqrlConfig = {
     nativeHelpers: nativeHelpers,
     filters: filters,
     templates: templates
+  },
+  prefixes: {
+    h: '@',
+    b: '#',
+    i: '=',
+    r: '*',
+    c: '/',
+    e: '',
+    q: '?'
+  },
+  parse: {
+    refEqual: true,
+    helperTilde: false
   },
   cache: false,
   plugins: [],

@@ -62,7 +62,7 @@
           if (hasOwnProp(fromObj, key)) {
               if (fromObj[key] != null &&
                   typeof fromObj[key] == 'object' &&
-                  key === 'storage' &&
+                  (key === 'storage' || key === 'prefixes') &&
                   !notConfig // not called from Cache.load
               ) {
                   // plugins or storage
@@ -140,36 +140,47 @@
   var singleQuoteReg = /'(?:\\[\s\w"'\\`]|[^\n\r'\\])*?'/g;
   var doubleQuoteReg = /"(?:\\[\s\w"'\\`]|[^\n\r"\\])*?"/g;
   function parse(str, env) {
+      /* Adding for EJS compatibility */
+      if (env.rmWhitespace) {
+          // Code taken directly from EJS
+          // Have to use two separate replaces here as `^` and `$` operators don't
+          // work well with `\r` and empty lines don't work well with the `m` flag.
+          // Essentially, this replaces the whitespace at the beginning and end of
+          // each line and removes multiple newlines.
+          str = str.replace(/[\r\n]+/g, '\n').replace(/^\s+|\s+$/gm, '');
+      }
+      /* End rmWhitespace option */
       templateLitReg.lastIndex = 0;
       singleQuoteReg.lastIndex = 0;
       doubleQuoteReg.lastIndex = 0;
+      var envPrefixes = env.prefixes;
+      var prefixes = (envPrefixes.h +
+          envPrefixes.b +
+          envPrefixes.i +
+          envPrefixes.r +
+          envPrefixes.c +
+          envPrefixes.e +
+          envPrefixes.q)
+          .replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&') // as seen on MDN
+          .split('')
+          .join('|');
       var parseCloseReg = new RegExp('([|()]|=>)|' + // powerchars
           '\'|"|`|\\/\\*|\\s*((\\/)?(-|_)?' + // comments, strings
           env.tags[1] +
           ')', 'g');
-      var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*', 'g');
+      var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*(' + prefixes + ')?\\s*', 'g');
       var startInd = 0;
       var trimNextLeftWs = false;
-      function parseTag(tagOpenIndex) {
+      function parseTag(tagOpenIndex, currentType) {
           var currentObj = { f: [] };
           var numParens = 0;
-          var firstChar = str[startInd];
           var currentAttribute = 'c'; // default - Valid values: 'c'=content, 'f'=filter, 'fp'=filter params, 'p'=param, 'n'=name
-          var currentType = 'r'; // Default
-          startInd += 1; // assume we're gonna skip the first character
-          if (firstChar === '@' || firstChar === '#' || firstChar === '/') {
+          if (currentType === 'h' || currentType === 'b' || currentType === 'c') {
               currentAttribute = 'n';
-              currentType = firstChar;
           }
-          else if (firstChar === '!' || firstChar === '?') {
-              // ? for custom
-              currentType = firstChar;
-          }
-          else if (firstChar === '*') {
+          else if (currentType === 'r') {
               currentObj.raw = true;
-          }
-          else {
-              startInd -= 1;
+              currentType = 'i';
           }
           function addAttrValue(indx) {
               var valUnprocessed = str.slice(startInd, indx);
@@ -255,7 +266,7 @@
                   tagOpenReg.lastIndex = startInd;
                   // console.log('tagClose: ' + startInd)
                   trimNextLeftWs = wsControl;
-                  if (slash && currentType === '@') {
+                  if (slash && currentType === 'h') {
                       currentType = 's';
                   } // TODO throw err
                   currentObj.t = currentType;
@@ -302,7 +313,6 @@
                   }
               }
           }
-          // TODO: Do I need this?
           ParseErr('unclosed tag', str, tagOpenIndex);
           return currentObj; // To prevent TypeScript from erroring
       }
@@ -331,9 +341,20 @@
           while ((tagOpenMatch = tagOpenReg.exec(str)) !== null) {
               var precedingString = tagOpenMatch[1];
               var shouldTrimRightPrecedingString = tagOpenMatch[2];
+              var prefix = tagOpenMatch[3];
+              var prefixType;
+              for (var key in envPrefixes) {
+                  if (envPrefixes[key] === prefix) {
+                      prefixType = key;
+                      break;
+                  }
+              }
               pushString(precedingString, shouldTrimRightPrecedingString);
               startInd = tagOpenMatch.index + tagOpenMatch[0].length;
-              var currentObj = parseTag(tagOpenMatch.index);
+              if (!prefixType) {
+                  ParseErr('unrecognized tag type', str, startInd);
+              }
+              var currentObj = parseTag(tagOpenMatch.index, prefixType);
               // ===== NOW ADD THE OBJECT TO OUR BUFFER =====
               var currentType = currentObj.t;
               if (currentType === '@') {
@@ -436,7 +457,7 @@
       return res;
       // TODO: is `return cb()` necessary, or could we just do `cb()`
   }
-  function filter(str, filters, env) {
+  function filter(str, filters) {
       for (var i = 0; i < filters.length; i++) {
           var name = filters[i][0];
           var params = filters[i][1];
@@ -498,7 +519,7 @@
               returnStr += "tR+='" + str + "';";
           }
           else {
-              var type = currentBlock.t; // @, s, !, ?, r
+              var type = currentBlock.t; // h, s, e, q, i
               var content = currentBlock.c || '';
               var filters = currentBlock.f;
               var name = currentBlock.n || '';
@@ -510,7 +531,7 @@
               //   throw SqrlErr("Async block or helper '" + name + "' in non-async env")
               // }
               // Let compiler do this
-              if (type === 'r') {
+              if (type === 'i') {
                   if (env.defaultFilter) {
                       content = "c.l('F','" + env.defaultFilter + "')(" + content + ')';
                   }
@@ -521,7 +542,7 @@
                   returnStr += 'tR+=' + filtered + ';';
                   // reference
               }
-              else if (type === '@') {
+              else if (type === 'h') {
                   // helper
                   if (env.storage.nativeHelpers.get(name)) {
                       returnStr += env.storage.nativeHelpers.get(name)(currentBlock, env);
@@ -543,13 +564,13 @@
                   }
               }
               else if (type === 's') {
+                  // self-closing helper
                   returnStr +=
                       'tR+=' +
                           filter((isAsync ? 'await ' : '') + "c.l('H','" + name + "')({params:[" + params + ']},[],c)', filters) +
                           ';';
-                  // self-closing helper
               }
-              else if (type === '!') {
+              else if (type === 'e') {
                   // execute
                   returnStr += content + '\n';
               }
@@ -783,11 +804,24 @@
           helpers: helpers,
           nativeHelpers: nativeHelpers,
           filters: filters,
-          templates: templates
+          templates: templates,
+      },
+      prefixes: {
+          h: '@',
+          b: '#',
+          i: '=',
+          r: '*',
+          c: '/',
+          e: '',
+          q: '?',
+      },
+      parse: {
+          refEqual: true,
+          helperTilde: false,
       },
       cache: false,
       plugins: [],
-      useWith: false
+      useWith: false,
   };
   defaultConfig.l.bind(defaultConfig);
   function getConfig(override, baseConfig) {

@@ -32,7 +32,7 @@ export function copyProps<T> (toObj: T, fromObj: T, notConfig?: boolean) {
       if (
         fromObj[key] != null &&
         typeof fromObj[key] == 'object' &&
-        key === 'storage' &&
+        (key === 'storage' || key === 'prefixes') &&
         !notConfig // not called from Cache.load
       ) {
         // plugins or storage

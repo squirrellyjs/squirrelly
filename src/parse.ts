@@ -5,7 +5,8 @@ import { trimWS } from './utils'
 
 import { SqrlConfig } from './config'
 
-export type TagType = '@' | '/' | '#' | '?' | 'r' | '!' | 's'
+export type TagType = 'h' | 'b' | 'i' | 'r' | 'c' | 'e' | 'q' | 's'
+// TODO: change to anagram "QBIRCHES"
 export type TemplateAttribute = 'c' | 'f' | 'fp' | 'p' | 'n' | 'res' | 'err'
 export type TemplateObjectAttribute = 'c' | 'p' | 'n' | 'res'
 
@@ -57,6 +58,22 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
   singleQuoteReg.lastIndex = 0
   doubleQuoteReg.lastIndex = 0
 
+  var envPrefixes = env.prefixes
+
+  var prefixes = (
+    envPrefixes.h +
+    envPrefixes.b +
+    envPrefixes.i +
+    envPrefixes.r +
+    envPrefixes.c +
+    envPrefixes.e +
+    envPrefixes.q
+  )
+    // .replace(/[\]\\]/g, '\\$&') // as seen on MDN
+    // WARNING: Having '\' or ']' as prefixes will error.
+    .split('')
+    .join('|')
+
   var parseCloseReg = new RegExp(
     '([|()]|=>)|' + // powerchars
     '\'|"|`|\\/\\*|\\s*((\\/)?(-|_)?' + // comments, strings
@@ -65,28 +82,20 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
     'g'
   )
 
-  var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*', 'g')
+  var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*([' + prefixes + '])?\\s*', 'g')
   var startInd = 0
   var trimNextLeftWs: string | false = false
 
-  function parseTag (tagOpenIndex: number): TemplateObject {
+  function parseTag (tagOpenIndex: number, currentType: TagType): TemplateObject {
     var currentObj: TemplateObject = { f: [] }
     var numParens = 0
-    var firstChar = str[startInd]
     var currentAttribute: TemplateAttribute = 'c' // default - Valid values: 'c'=content, 'f'=filter, 'fp'=filter params, 'p'=param, 'n'=name
-    var currentType: TagType = 'r' // Default
-    startInd += 1 // assume we're gonna skip the first character
 
-    if (firstChar === '@' || firstChar === '#' || firstChar === '/') {
+    if (currentType === 'h' || currentType === 'b' || currentType === 'c') {
       currentAttribute = 'n'
-      currentType = firstChar
-    } else if (firstChar === '!' || firstChar === '?') {
-      // ? for custom
-      currentType = firstChar
-    } else if (firstChar === '*') {
+    } else if (currentType === 'r') {
       currentObj.raw = true
-    } else {
-      startInd -= 1
+      currentType = 'i'
     }
 
     function addAttrValue (indx: number) {
@@ -167,7 +176,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
         tagOpenReg.lastIndex = startInd
         // console.log('tagClose: ' + startInd)
         trimNextLeftWs = wsControl
-        if (slash && currentType === '@') {
+        if (slash && currentType === 'h') {
           currentType = 's'
         } // TODO throw err
         currentObj.t = currentType
@@ -210,7 +219,6 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
         }
       }
     }
-    // TODO: Do I need this?
     ParseErr('unclosed tag', str, tagOpenIndex)
     return currentObj // To prevent TypeScript from erroring
   }
@@ -250,11 +258,24 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
     while ((tagOpenMatch = tagOpenReg.exec(str)) !== null) {
       var precedingString = tagOpenMatch[1]
       var shouldTrimRightPrecedingString = tagOpenMatch[2]
+      var prefix = tagOpenMatch[3] || ''
+      var prefixType: TagType | undefined
+
+      for (var key in envPrefixes) {
+        if (envPrefixes[key] === prefix) {
+          prefixType = key as TagType
+          break
+        }
+      }
 
       pushString(precedingString, shouldTrimRightPrecedingString)
       startInd = tagOpenMatch.index + tagOpenMatch[0].length
 
-      var currentObj = parseTag(tagOpenMatch.index)
+      if (!prefixType) {
+        ParseErr('unrecognized tag type: ' + prefix, str, startInd)
+      }
+
+      var currentObj = parseTag(tagOpenMatch.index, prefixType as TagType)
       // ===== NOW ADD THE OBJECT TO OUR BUFFER =====
 
       var currentType = currentObj.t

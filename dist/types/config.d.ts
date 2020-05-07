@@ -6,6 +6,7 @@ declare type trimConfig = 'nl' | 'slurp' | false;
 export interface SqrlConfig {
     varName: string;
     autoTrim: trimConfig | [trimConfig, trimConfig];
+    rmWhitespace?: boolean;
     autoEscape: boolean;
     defaultFilter: false | string;
     tags: [string, string];
@@ -20,6 +21,16 @@ export interface SqrlConfig {
         nativeHelpers: Cacher<Function>;
         filters: Cacher<FilterFunction>;
         templates: Cacher<TemplateFunction>;
+    };
+    prefixes: {
+        h: string;
+        b: string;
+        i: string;
+        r: string;
+        c: string;
+        e: string;
+        q: string;
+        [index: string]: string;
     };
     cache: boolean;
     views?: string | Array<string>;
