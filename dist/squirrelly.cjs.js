@@ -180,21 +180,22 @@ function parse(str, env) {
     singleQuoteReg.lastIndex = 0;
     doubleQuoteReg.lastIndex = 0;
     var envPrefixes = env.prefixes;
-    var prefixes = (envPrefixes.h +
+    var prefixes = envPrefixes.h +
         envPrefixes.b +
         envPrefixes.i +
         envPrefixes.r +
         envPrefixes.c +
         envPrefixes.e +
-        envPrefixes.q)
-        .replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&') // as seen on MDN
-        .split('')
-        .join('|');
+        envPrefixes.q;
+    // .replace(/[\]\\]/g, '\\$&') // as seen on MDN
+    // WARNING: Having '\' or ']' as prefixes will error.
+    // .split('')
+    // .join('|')
     var parseCloseReg = new RegExp('([|()]|=>)|' + // powerchars
         '\'|"|`|\\/\\*|\\s*((\\/)?(-|_)?' + // comments, strings
         env.tags[1] +
         ')', 'g');
-    var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*(' + prefixes + ')?\\s*', 'g');
+    var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*([' + prefixes + '])?\\s*', 'g');
     var startInd = 0;
     var trimNextLeftWs = false;
     function parseTag(tagOpenIndex, currentType) {
@@ -367,7 +368,7 @@ function parse(str, env) {
         while ((tagOpenMatch = tagOpenReg.exec(str)) !== null) {
             var precedingString = tagOpenMatch[1];
             var shouldTrimRightPrecedingString = tagOpenMatch[2];
-            var prefix = tagOpenMatch[3];
+            var prefix = tagOpenMatch[3] || '';
             var prefixType;
             for (var key in envPrefixes) {
                 if (envPrefixes[key] === prefix) {
@@ -378,12 +379,12 @@ function parse(str, env) {
             pushString(precedingString, shouldTrimRightPrecedingString);
             startInd = tagOpenMatch.index + tagOpenMatch[0].length;
             if (!prefixType) {
-                ParseErr('unrecognized tag type', str, startInd);
+                ParseErr('unrecognized tag type: ' + prefix, str, startInd);
             }
             var currentObj = parseTag(tagOpenMatch.index, prefixType);
             // ===== NOW ADD THE OBJECT TO OUR BUFFER =====
             var currentType = currentObj.t;
-            if (currentType === '@') {
+            if (currentType === 'h') {
                 var hName = currentObj.n || '';
                 if (env.async && asyncRegExp.test(hName)) {
                     currentObj.a = true;
@@ -392,7 +393,8 @@ function parse(str, env) {
                 currentObj = parseContext(currentObj); // currentObj is the parent object
                 buffer.push(currentObj);
             }
-            else if (currentType === '/') {
+            else if (currentType === 'c') {
+                // tag close
                 if (parentObj.n === currentObj.n) {
                     if (lastBlock) {
                         // If there's a previous block
@@ -409,7 +411,8 @@ function parse(str, env) {
                     ParseErr("Helper start and end don't match", str, tagOpenMatch.index + tagOpenMatch[0].length);
                 }
             }
-            else if (currentType === '#') {
+            else if (currentType === 'b') {
+                // block
                 // TODO: make sure async stuff inside blocks are recognized
                 if (lastBlock) {
                     // If there's a previous block
@@ -802,24 +805,24 @@ var defaultConfig = {
         helpers: helpers,
         nativeHelpers: nativeHelpers,
         filters: filters,
-        templates: templates,
+        templates: templates
     },
     prefixes: {
         h: '@',
         b: '#',
-        i: '=',
+        i: '',
         r: '*',
         c: '/',
-        e: '',
-        q: '?',
+        e: '!',
+        q: '?'
     },
     parse: {
         refEqual: true,
-        helperTilde: false,
+        helperTilde: false
     },
     cache: false,
     plugins: [],
-    useWith: false,
+    useWith: false
 };
 defaultConfig.l.bind(defaultConfig);
 function getConfig(override, baseConfig) {

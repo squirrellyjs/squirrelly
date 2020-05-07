@@ -87,10 +87,10 @@ var defaultConfig: SqrlConfig = {
   prefixes: {
     h: '@',
     b: '#',
-    i: '=',
+    i: '',
     r: '*',
     c: '/',
-    e: '',
+    e: '!',
     q: '?'
   },
   parse: {

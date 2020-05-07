@@ -6,7 +6,7 @@ export declare type AstObject = string | TemplateObject;
 export declare type Filter = [string, string] | [string, string, true];
 export interface TemplateObject {
     n?: string;
-    t?: string;
+    t?: 'h' | 'b' | 'i' | 'c' | 'q' | 'e' | 's';
     f: Array<Filter>;
     c?: string;
     p?: string;

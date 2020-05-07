@@ -16,7 +16,7 @@ export type Filter = [string, string] | [string, string, true]
 // [name, params, async]
 export interface TemplateObject {
   n?: string
-  t?: string
+  t?: 'h' | 'b' | 'i' | 'c' | 'q' | 'e' | 's'
   f: Array<Filter>
   c?: string
   p?: string
@@ -60,7 +60,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
 
   var envPrefixes = env.prefixes
 
-  var prefixes = (
+  var prefixes =
     envPrefixes.h +
     envPrefixes.b +
     envPrefixes.i +
@@ -68,11 +68,11 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
     envPrefixes.c +
     envPrefixes.e +
     envPrefixes.q
-  )
-    // .replace(/[\]\\]/g, '\\$&') // as seen on MDN
-    // WARNING: Having '\' or ']' as prefixes will error.
-    .split('')
-    .join('|')
+
+  // .replace(/[\]\\]/g, '\\$&') // as seen on MDN
+  // WARNING: Having '\' or ']' as prefixes will error.
+  // .split('')
+  // .join('|')
 
   var parseCloseReg = new RegExp(
     '([|()]|=>)|' + // powerchars
@@ -279,7 +279,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
       // ===== NOW ADD THE OBJECT TO OUR BUFFER =====
 
       var currentType = currentObj.t
-      if (currentType === '@') {
+      if (currentType === 'h') {
         var hName = currentObj.n || ''
         if (env.async && asyncRegExp.test(hName)) {
           currentObj.a = true
@@ -287,7 +287,8 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
         }
         currentObj = parseContext(currentObj) // currentObj is the parent object
         buffer.push(currentObj)
-      } else if (currentType === '/') {
+      } else if (currentType === 'c') {
+        // tag close
         if (parentObj.n === currentObj.n) {
           if (lastBlock) {
             // If there's a previous block
@@ -305,7 +306,8 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
             tagOpenMatch.index + tagOpenMatch[0].length
           )
         }
-      } else if (currentType === '#') {
+      } else if (currentType === 'b') {
+        // block
         // TODO: make sure async stuff inside blocks are recognized
         if (lastBlock) {
           // If there's a previous block

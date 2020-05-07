@@ -12,12 +12,12 @@ const complexTemplate = fs.readFileSync(filePath, 'utf8')
 describe('parse test', () => {
   it('parses a simple template', () => {
     var buff = parse('hi {{ hey }}', defaultConfig)
-    expect(buff).toEqual(['hi ', { f: [], c: 'hey', t: 'r' }])
+    expect(buff).toEqual(['hi ', { f: [], c: 'hey', t: 'i' }])
   })
 
   it('works with whitespace trimming', () => {
     var buff = parse('hi\n{{-hey-}} {{_hi_}}', defaultConfig)
-    expect(buff).toEqual(['hi', { f: [], c: 'hey', t: 'r' }, { f: [], c: 'hi', t: 'r' }])
+    expect(buff).toEqual(['hi', { f: [], c: 'hey', t: 'i' }, { f: [], c: 'hi', t: 'i' }])
   })
 
   it('works with filters', () => {
@@ -30,7 +30,7 @@ describe('parse test', () => {
           ['stuff2', '"param1"']
         ],
         c: 'hey',
-        t: 'r'
+        t: 'i'
       }
     ])
   })
@@ -43,8 +43,8 @@ describe('parse test', () => {
         n: 'each',
         p: 'x',
         res: 'hi',
-        t: '@',
-        b: [{ f: [], n: 'else', t: '#', d: [' oops '] }],
+        t: 'h',
+        b: [{ f: [], n: 'else', t: 'b', d: [' oops '] }],
         d: [' Hey ']
       }
     ])
@@ -55,24 +55,24 @@ describe('parse test', () => {
     expect(buff).toEqual([
       'Hi\\n',
       { f: [], n: 'log', p: '"Hope you like Squirrelly!"', t: 's' },
-      { f: [], c: 'htmlstuff', t: 'r' },
+      { f: [], c: 'htmlstuff', t: 'i' },
       {
         f: [],
         n: 'foreach',
         p: 'options.obj',
         res: 'val, key',
-        t: '@',
+        t: 'h',
         b: [],
         d: [
           '\\nReversed value: ',
-          { f: [['reverse', '']], c: 'val', t: 'r' },
+          { f: [['reverse', '']], c: 'val', t: 'i' },
           ', Key: ',
-          { f: [], c: 'key', t: 'r' },
+          { f: [], c: 'key', t: 'i' },
           {
             f: [],
             n: 'if',
             p: 'key==="thirdchild"',
-            t: '@',
+            t: 'h',
             b: [],
             d: [
               {
@@ -80,13 +80,13 @@ describe('parse test', () => {
                 n: 'each',
                 p: 'options.obj[key]',
                 res: 'index, key',
-                t: '@',
+                t: 'h',
                 b: [],
                 d: [
                   '\\nSalutations! Index: ',
-                  { f: [], c: 'index', t: 'r' },
+                  { f: [], c: 'index', t: 'i' },
                   ', old key: ',
-                  { f: [], c: 'key', t: 'r' }
+                  { f: [], c: 'key', t: 'i' }
                 ]
               }
             ]
@@ -98,19 +98,19 @@ describe('parse test', () => {
         f: [],
         n: 'customhelper',
         p: '',
-        t: '@',
+        t: 'h',
         b: [
           {
             f: [],
             n: 'cabbage',
-            t: '#',
+            t: 'b',
             d: [
               'Cabbages taste good\\n',
-              { f: [], c: 'console.log(hi);', t: '!' },
-              { f: [], c: 'custom stuff', t: '?' }
+              { f: [], c: 'console.log(hi);', t: 'e' },
+              { f: [], c: 'custom stuff', t: 'q' }
             ]
           },
-          { f: [], n: 'pineapple', t: '#', d: ['As do pineapples\\n'] }
+          { f: [], n: 'pineapple', t: 'b', d: ['As do pineapples\\n'] }
         ],
         d: []
       },
@@ -177,7 +177,7 @@ describe('parse test', () => {
 
   it('works with helpers with results', () => {
     var buff = parse('{{@log ("hey") => res, res2}}{{/log}}', defaultConfig)
-    expect(buff).toEqual([{ f: [], n: 'log', p: '"hey"', res: 'res, res2', t: '@', b: [], d: [] }])
+    expect(buff).toEqual([{ f: [], n: 'log', p: '"hey"', res: 'res, res2', t: 'h', b: [], d: [] }])
   })
 
   test("throws when helpers start and end don't match", () => {
