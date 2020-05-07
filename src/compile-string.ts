@@ -4,7 +4,7 @@ import Parse from './parse'
 
 import { SqrlConfig } from './config'
 import { AstObject, Filter, ParentTemplateObject } from './parse'
-type ParsedTagType = 'h' | 's' | 'e' | 'q' | 'i'
+type ParsedTagType = 'h' | 's' | 'e' | 'i'
 // import SqrlErr from './err'
 
 /* END TYPES */
@@ -111,7 +111,7 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
       // we know string exists
       returnStr += "tR+='" + str + "';"
     } else {
-      var type: ParsedTagType = currentBlock.t as ParsedTagType // h, s, e, q, i
+      var type: ParsedTagType = currentBlock.t as ParsedTagType // h, s, e, i
       var content = currentBlock.c || ''
       var filters = currentBlock.f
       var name = currentBlock.n || ''
@@ -166,8 +166,6 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
       } else if (type === 'e') {
         // execute
         returnStr += content + '\n'
-      } else if (type === 'q') {
-        // custom (implement later)
       }
     }
   }

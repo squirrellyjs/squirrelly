@@ -61,13 +61,7 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
   var envPrefixes = env.prefixes
 
   var prefixes =
-    envPrefixes.h +
-    envPrefixes.b +
-    envPrefixes.i +
-    envPrefixes.r +
-    envPrefixes.c +
-    envPrefixes.e +
-    envPrefixes.q
+    envPrefixes.h + envPrefixes.b + envPrefixes.i + envPrefixes.r + envPrefixes.c + envPrefixes.e
 
   // .replace(/[\]\\]/g, '\\$&') // as seen on MDN
   // WARNING: Having '\' or ']' as prefixes will error.

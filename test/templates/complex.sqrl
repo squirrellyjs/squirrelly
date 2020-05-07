@@ -15,8 +15,7 @@ Salutations! Index: {{index}}, old key: {{key}}
 {{@customhelper()}}
 {{#cabbage}}
 Cabbages taste good
-{{!console.log(hi);}}
-{{?custom stuff}}
+{{!console.log(hi)}}
 {{#pineapple}}
 As do pineapples
 {{/customhelper}}

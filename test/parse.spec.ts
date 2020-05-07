@@ -104,11 +104,7 @@ describe('parse test', () => {
             f: [],
             n: 'cabbage',
             t: 'b',
-            d: [
-              'Cabbages taste good\\n',
-              { f: [], c: 'console.log(hi);', t: 'e' },
-              { f: [], c: 'custom stuff', t: 'q' }
-            ]
+            d: ['Cabbages taste good\\n', { f: [], c: 'console.log(hi)', t: 'e' }]
           },
           { f: [], n: 'pineapple', t: 'b', d: ['As do pineapples\\n'] }
         ],

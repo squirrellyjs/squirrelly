@@ -35,7 +35,6 @@ export interface SqrlConfig {
     r: string
     c: string
     e: string
-    q: string
     [index: string]: string
   }
   cache: boolean
@@ -90,12 +89,7 @@ var defaultConfig: SqrlConfig = {
     i: '',
     r: '*',
     c: '/',
-    e: '!',
-    q: '?'
-  },
-  parse: {
-    refEqual: true,
-    helperTilde: false
+    e: '!'
   },
   cache: false,
   plugins: [],

@@ -180,13 +180,7 @@ function parse(str, env) {
     singleQuoteReg.lastIndex = 0;
     doubleQuoteReg.lastIndex = 0;
     var envPrefixes = env.prefixes;
-    var prefixes = envPrefixes.h +
-        envPrefixes.b +
-        envPrefixes.i +
-        envPrefixes.r +
-        envPrefixes.c +
-        envPrefixes.e +
-        envPrefixes.q;
+    var prefixes = envPrefixes.h + envPrefixes.b + envPrefixes.i + envPrefixes.r + envPrefixes.c + envPrefixes.e;
     // .replace(/[\]\\]/g, '\\$&') // as seen on MDN
     // WARNING: Having '\' or ']' as prefixes will error.
     // .split('')
@@ -548,7 +542,7 @@ function compileScope(buff, env) {
             returnStr += "tR+='" + str + "';";
         }
         else {
-            var type = currentBlock.t; // h, s, e, q, i
+            var type = currentBlock.t; // h, s, e, i
             var content = currentBlock.c || '';
             var filters = currentBlock.f;
             var name = currentBlock.n || '';
@@ -805,7 +799,7 @@ var defaultConfig = {
         helpers: helpers,
         nativeHelpers: nativeHelpers,
         filters: filters,
-        templates: templates
+        templates: templates,
     },
     prefixes: {
         h: '@',
@@ -814,15 +808,10 @@ var defaultConfig = {
         r: '*',
         c: '/',
         e: '!',
-        q: '?'
-    },
-    parse: {
-        refEqual: true,
-        helperTilde: false
     },
     cache: false,
     plugins: [],
-    useWith: false
+    useWith: false,
 };
 defaultConfig.l.bind(defaultConfig);
 function getConfig(override, baseConfig) {
