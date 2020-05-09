@@ -176,6 +176,16 @@ describe('parse test', () => {
      ^`)
   })
 
+  it('works with template literal', () => {
+    var buff = parse('{{ `stuff ${val} stuff` }}', defaultConfig)
+    expect(buff).toEqual([{ f: [], c: '`stuff ${val} stuff`', t: 'i' }])
+  })
+
+  it('works with comments', () => {
+    var buff = parse('{{! /* comment */ console.log("HI"); /*comment*/ }}', defaultConfig)
+    expect(buff).toEqual([{ f: [], c: '/* comment */ console.log("HI"); /*comment*/', t: 'e' }])
+  })
+
   test('throws with unclosed multi-line comment', () => {
     expect(() => {
       parse('{{! /* }}', defaultConfig)
