@@ -1,7 +1,7 @@
 /* global it, expect, describe */
 
 import { trimWS } from '../src/utils'
-import { defaultConfig } from '../src/config'
+import { defaultConfig, getConfig } from '../src/config'
 
 describe('Whitespace trim', () => {
   describe('#trimLeft', () => {
@@ -36,6 +36,28 @@ describe('Whitespace trim', () => {
       Object.defineProperty(String.prototype, 'trimRight', { value: undefined })
       expect(trimWS('jestjs ', defaultConfig, '', '_')).toBe(
         trimWS('jestjs\n', defaultConfig, '', '-')
+      )
+    })
+  })
+
+  describe('#trim', () => {
+    it('WS trim - manual', () => {
+      expect(trimWS('   jestjs  ', defaultConfig, '_', '_')).toBe('jestjs')
+    })
+
+    it('WS trim - config array slurp', () => {
+      expect(
+        trimWS('  \n jestjs  \r\n  ', getConfig({ autoTrim: ['slurp', 'slurp'] }), '', '')
+      ).toBe('jestjs')
+    })
+
+    it('WS trim - config slurp', () => {
+      expect(trimWS('  \n jestjs  \r\n  ', getConfig({ autoTrim: 'slurp' }), '', '')).toBe('jestjs')
+    })
+
+    it('WS trim - config manual hybrid', () => {
+      expect(trimWS('  \n jestjs  \r\n', getConfig({ autoTrim: 'slurp' }), '', '-')).toBe(
+        'jestjs  '
       )
     })
   })
