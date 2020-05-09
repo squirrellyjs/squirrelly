@@ -1,7 +1,7 @@
 /* global it, expect, describe, test */
 
 import { parse } from '../src/index'
-import { defaultConfig } from '../src/config'
+import { defaultConfig, getConfig } from '../src/config'
 
 var fs = require('fs'),
   path = require('path'),
@@ -18,6 +18,25 @@ describe('parse test', () => {
   it('works with whitespace trimming', () => {
     var buff = parse('hi\n{{-hey-}} {{_hi_}}', defaultConfig)
     expect(buff).toEqual(['hi', { f: [], c: 'hey', t: 'i' }, { f: [], c: 'hi', t: 'i' }])
+  })
+
+  it('works with rmWhitespace', () => {
+    var buff = parse(
+      `
+<ul>
+    <li>Stuff</li>
+    <li>Stuff</li>
+</ul>
+
+<br />
+`,
+      getConfig({ rmWhitespace: true })
+    )
+
+    // rmWhitespace will remove leading whitespace
+    // and multiple newlines in a row
+
+    expect(buff).toEqual(['<ul>\\n<li>Stuff</li>\\n<li>Stuff</li>\\n</ul>\\n<br />'])
   })
 
   it('works with filters', () => {

@@ -1,6 +1,6 @@
 /* global it, expect, describe */
 import { compileToString } from '../src/index'
-import { defaultConfig } from '../src/config'
+import { defaultConfig, getConfig } from '../src/config'
 
 var fs = require('fs'),
   path = require('path'),
@@ -31,10 +31,27 @@ describe('Compile to String test', () => {
     )
   })
 
+  it('works with default filter', () => {
+    var str = compileToString(
+      'hi {{ hey }}',
+      getConfig({ defaultFilter: 'filter1', autoEscape: false })
+    )
+    expect(str).toEqual(
+      "var tR='';tR+='hi ';tR+=c.l('F','filter1')(hey);if(cb){cb(null,tR)} return tR"
+    )
+  })
+
   it('works with helpers', () => {
     var str = compileToString('{{@each(x) => hi }} Hey {{#else }} oops {{/ each}}', defaultConfig)
     expect(str).toEqual(
       "var tR='';tR+=c.l('H','each')({exec:function(hi){var tR='';tR+=' Hey ';return tR},params:[x]},[{exec:function(){var tR='';tR+=' oops ';return tR},params:[],name:'else'},],c);if(cb){cb(null,tR)} return tR"
+    )
+  })
+
+  it('works with helpers without blocks', () => {
+    var str = compileToString('{{@foo(x) => hi }} Helper content {{/ foo}}', defaultConfig)
+    expect(str).toEqual(
+      "var tR='';tR+=c.l('H','foo')({exec:function(hi){var tR='';tR+=' Helper content ';return tR},params:[x]},[],c);if(cb){cb(null,tR)} return tR"
     )
   })
 

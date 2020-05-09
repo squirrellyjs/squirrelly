@@ -795,7 +795,7 @@ var defaultConfig = {
         helpers: helpers,
         nativeHelpers: nativeHelpers,
         filters: filters,
-        templates: templates,
+        templates: templates
     },
     prefixes: {
         h: '@',
@@ -803,11 +803,11 @@ var defaultConfig = {
         i: '',
         r: '*',
         c: '/',
-        e: '!',
+        e: '!'
     },
     cache: false,
     plugins: [],
-    useWith: false,
+    useWith: false
 };
 defaultConfig.l.bind(defaultConfig);
 function getConfig(override, baseConfig) {
