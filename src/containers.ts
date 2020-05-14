@@ -222,6 +222,7 @@ var nativeHelpers = new Cacher<Function>({
 })
 
 var escMap: EscapeMap = {
+  // TODO: Add >
   '&': '&amp;',
   '<': '&lt;',
   '"': '&quot;',
