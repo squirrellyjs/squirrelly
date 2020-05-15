@@ -129,4 +129,4 @@ This project follows the [all-contributors](https://github.com/kentcdodds/all-co
 
 ## Credits
 
-- Async support and file handling were added based on code from [EJS](https://github.com/mde/ejs), which is licensed under the Apache-2.0 license. Code was modified to throw a Squirrelly Error.
+- Async support and file handling were added based on code from [EJS](https://github.com/mde/ejs), which is licensed under the Apache-2.0 license. Code was modified to throw informative errors and work with Squirrelly's API
