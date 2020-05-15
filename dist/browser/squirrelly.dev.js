@@ -158,10 +158,26 @@
       singleQuoteReg.lastIndex = 0;
       doubleQuoteReg.lastIndex = 0;
       var envPrefixes = env.prefixes;
-      var prefixes = envPrefixes.h + envPrefixes.b + envPrefixes.i + envPrefixes.r + envPrefixes.c + envPrefixes.e;
-      prefixes = prefixes.split('').reduce(function (accumulator, currentValue) {
-          return accumulator + '|' + escapeRegExp(currentValue);
-      });
+      var prefixes = [
+          envPrefixes.h,
+          envPrefixes.b,
+          envPrefixes.i,
+          envPrefixes.r,
+          envPrefixes.c,
+          envPrefixes.e,
+      ].reduce(function (accumulator, prefix) {
+          if (accumulator && prefix) {
+              return accumulator + '|' + escapeRegExp(prefix);
+          }
+          else if (prefix) {
+              // accumulator is falsy
+              return escapeRegExp(prefix);
+          }
+          else {
+              // prefix and accumulator are both falsy
+              return accumulator;
+          }
+      }, '');
       var parseCloseReg = new RegExp('([|()]|=>)|' + // powerchars
           '\'|"|`|\\/\\*|\\s*((\\/)?(-|_)?' + // comments, strings
           escapeRegExp(env.tags[1]) +
