@@ -745,6 +745,7 @@ var nativeHelpers = new Cacher({
 var escMap = {
     '&': '&amp;',
     '<': '&lt;',
+    '>': '&gt;',
     '"': '&quot;',
     "'": '&#39;'
 };
@@ -754,8 +755,8 @@ function replaceChar(s) {
 function XMLEscape(str) {
     // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
     var newStr = String(str);
-    if (/[&<"']/.test(newStr)) {
-        return newStr.replace(/[&<"']/g, replaceChar);
+    if (/[&<>"']/.test(newStr)) {
+        return newStr.replace(/[&<>"']/g, replaceChar);
     }
     else {
         return newStr;

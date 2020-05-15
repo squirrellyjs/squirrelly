@@ -15,7 +15,7 @@ describe('Simple render checks', () => {
     })
     it('Escaping works', () => {
       expect(render('{{it.html}}', { html: '<script>Malicious XSS</script>' })).toEqual(
-        '&lt;script>Malicious XSS&lt;/script>'
+        '&lt;script&gt;Malicious XSS&lt;/script&gt;'
       )
     })
     it('Unescaping with * works', () => {
