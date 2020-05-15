@@ -189,7 +189,7 @@ function parse(str, env) {
         envPrefixes.i,
         envPrefixes.r,
         envPrefixes.c,
-        envPrefixes.e,
+        envPrefixes.e
     ].reduce(function (accumulator, prefix) {
         if (accumulator && prefix) {
             return accumulator + '|' + escapeRegExp(prefix);
