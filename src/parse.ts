@@ -42,9 +42,13 @@ var singleQuoteReg = /'(?:\\[\s\w"'\\`]|[^\n\r'\\])*?'/g
 
 var doubleQuoteReg = /"(?:\\[\s\w"'\\`]|[^\n\r"\\])*?"/g
 
+var specialCharsReg = /[.*+\-?^${}()|[\]\\]/g
+
 function escapeRegExp (string: string) {
   // From MDN
-  return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+  return specialCharsReg.test(string)
+    ? string.replace(specialCharsReg, '\\$&') // $& means the whole matched string
+    : string
 }
 
 export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
@@ -76,10 +80,10 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
     if (accumulator && prefix) {
       return accumulator + '|' + escapeRegExp(prefix)
     } else if (prefix) {
-      // accumulator is falsy
+      // accumulator is empty
       return escapeRegExp(prefix)
     } else {
-      // prefix and accumulator are both falsy
+      // prefix and accumulator are both empty strings
       return accumulator
     }
   }, '')
