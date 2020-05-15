@@ -42,6 +42,11 @@ var singleQuoteReg = /'(?:\\[\s\w"'\\`]|[^\n\r'\\])*?'/g
 
 var doubleQuoteReg = /"(?:\\[\s\w"'\\`]|[^\n\r"\\])*?"/g
 
+function escapeRegExp (string: string) {
+  // From MDN
+  return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+}
+
 export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
   /* Adding for EJS compatibility */
   if (env.rmWhitespace) {
@@ -63,20 +68,23 @@ export default function parse (str: string, env: SqrlConfig): Array<AstObject> {
   var prefixes =
     envPrefixes.h + envPrefixes.b + envPrefixes.i + envPrefixes.r + envPrefixes.c + envPrefixes.e
 
-  // .replace(/[\]\\]/g, '\\$&') // as seen on MDN
-  // WARNING: Having '\' or ']' as prefixes will error.
-  // .split('')
-  // .join('|')
+  prefixes = prefixes.split('').reduce(function (accumulator, currentValue) {
+    return accumulator + '|' + escapeRegExp(currentValue)
+  })
 
   var parseCloseReg = new RegExp(
     '([|()]|=>)|' + // powerchars
     '\'|"|`|\\/\\*|\\s*((\\/)?(-|_)?' + // comments, strings
-      env.tags[1] +
+      escapeRegExp(env.tags[1]) +
       ')',
     'g'
   )
 
-  var tagOpenReg = new RegExp('([^]*?)' + env.tags[0] + '(-|_)?\\s*([' + prefixes + '])?\\s*', 'g')
+  var tagOpenReg = new RegExp(
+    '([^]*?)' + escapeRegExp(env.tags[0]) + '(-|_)?\\s*(' + prefixes + ')?\\s*',
+    'g'
+  )
+
   var startInd = 0
   var trimNextLeftWs: string | false = false
 
