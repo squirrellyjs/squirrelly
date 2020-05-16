@@ -133,7 +133,7 @@ templateList['swig-raw'] = `
 var config = {
   length: 20,
   calls: 6000,
-  escape: true
+  escape: true,
 }
 
 function getParameterByName(name) {
@@ -159,7 +159,7 @@ if (window.location.search) {
 
 // 制造测试数据
 var data = {
-  list: []
+  list: [],
 }
 
 for (var i = 0; i < config.length; i++) {
@@ -168,7 +168,7 @@ for (var i = 0; i < config.length; i++) {
     user: '<strong style="color:red">糖饼</strong>',
     site: 'https://github.com/aui',
     weibo: 'http://weibo.com/planeart',
-    QQweibo: 'http://t.qq.com/tangbin'
+    QQweibo: 'http://t.qq.com/tangbin',
   })
 }
 
@@ -176,7 +176,7 @@ for (var i = 0; i < config.length; i++) {
 var testList = [
   {
     name: 'art-template',
-    tester: function() {
+    tester: function () {
       var id = config.escape ? 'template' : 'template-raw'
       var source = templateList[id]
       //   console.log(fn.toString())
@@ -187,12 +187,12 @@ var testList = [
         html = fn(data)
       }
       return html
-    }
+    },
   },
 
   {
     name: 'art-template / fast mode',
-    tester: function() {
+    tester: function () {
       var id = config.escape ? 'template-fast-mode' : 'template-fast-mode-raw'
       var source = templateList[id]
       var html = ''
@@ -202,12 +202,12 @@ var testList = [
         html = fn(data)
       }
       return html
-    }
+    },
   },
 
   {
     name: 'doT',
-    tester: function() {
+    tester: function () {
       var id = config.escape ? 'dot' : 'dot-raw'
       var source = templateList[id]
       var html = ''
@@ -217,12 +217,12 @@ var testList = [
         html = fn(data)
       }
       return html
-    }
+    },
   },
 
   {
     name: 'ejs',
-    tester: function() {
+    tester: function () {
       var id = config.escape ? 'template' : 'template-raw'
       var source = templateList[id]
       var html = ''
@@ -232,42 +232,11 @@ var testList = [
         html = fn(data)
       }
       return html
-    }
-  },
-
-  {
-    name: 'Jade / pug',
-    tester: function() {
-      var id = config.escape ? 'pug' : 'pug-raw'
-      var source = templateList[id]
-      var pug = require('pug')
-      var html = ''
-      for (var i = 0; i < config.calls; i++) {
-        var fn = pug.compile(source)
-
-        html = fn(data)
-      }
-      return html
-    }
-  },
-
-  {
-    name: 'Handlebars',
-    tester: function() {
-      var id = config.escape ? 'handlebars' : 'handlebars-raw'
-      var source = templateList[id]
-      var html = ''
-      for (var i = 0; i < config.calls; i++) {
-        var fn = Handlebars.compile(source)
-
-        html = fn(data)
-      }
-      return html
-    }
+    },
   },
   {
     name: 'Squirrelly',
-    tester: function() {
+    tester: function () {
       if (!config.escape) {
         Sqrl.defaultConfig.autoEscape = false
       }
@@ -279,11 +248,11 @@ var testList = [
         html = Sqrl.render(source, data)
       }
       return html
-    }
+    },
   },
   {
     name: 'Squirrelly - Fast',
-    tester: function() {
+    tester: function () {
       if (!config.escape) {
         Sqrl.defaultConfig.autoEscape = false
       }
@@ -295,11 +264,40 @@ var testList = [
         html = Sqrl.render(source, data)
       }
       return html
-    }
+    },
+  },
+  {
+    name: 'Jade / pug',
+    tester: function () {
+      var id = config.escape ? 'pug' : 'pug-raw'
+      var source = templateList[id]
+      var pug = require('pug')
+      var html = ''
+      for (var i = 0; i < config.calls; i++) {
+        var fn = pug.compile(source)
+
+        html = fn(data)
+      }
+      return html
+    },
+  },
+  {
+    name: 'Handlebars',
+    tester: function () {
+      var id = config.escape ? 'handlebars' : 'handlebars-raw'
+      var source = templateList[id]
+      var html = ''
+      for (var i = 0; i < config.calls; i++) {
+        var fn = Handlebars.compile(source)
+
+        html = fn(data)
+      }
+      return html
+    },
   },
   {
     name: 'Mustache',
-    tester: function() {
+    tester: function () {
       var id = config.escape ? 'mustache' : 'mustache-raw'
       var source = templateList[id]
       var html = ''
@@ -309,12 +307,12 @@ var testList = [
         html = Mustache.render(source, data)
       }
       return html
-    }
+    },
   },
 
   {
     name: 'swig',
-    tester: function() {
+    tester: function () {
       var id = config.escape ? 'swig' : 'swig-raw'
       var source = templateList[id]
       var html = ''
@@ -324,8 +322,8 @@ var testList = [
         html = fn(data)
       }
       return html
-    }
-  }
+    },
+  },
 ]
 
 Highcharts.setOptions({
@@ -338,20 +336,20 @@ Highcharts.setOptions({
     '#CB93E0',
     '#A2A2A4',
     '#E1AC65',
-    '#6AF9C4'
-  ]
+    '#6AF9C4',
+  ],
 })
 
-var runTest = function(callback) {
-  var list = testList.filter(function(test) {
+var runTest = function (callback) {
+  var list = testList.filter(function (test) {
     return !config.escape || test.supportEscape !== false
   })
 
-  var Timer = function() {
+  var Timer = function () {
     this.startTime = window.performance.now()
   }
 
-  Timer.prototype.stop = function() {
+  Timer.prototype.stop = function () {
     return window.performance.now() - this.startTime
   }
 
@@ -365,11 +363,11 @@ var runTest = function(callback) {
   var chart = new Highcharts.Chart({
     chart: {
       animation: {
-        duration: 150
+        duration: 150,
       },
       renderTo: 'test-container',
       height: categories.length * 32,
-      type: 'bar'
+      type: 'bar',
     },
 
     title: false,
@@ -380,44 +378,44 @@ var runTest = function(callback) {
 
     xAxis: {
       categories: categories,
-      labels: {}
+      labels: {},
     },
 
     yAxis: {
       min: 0,
       title: {
-        text: 'Time'
-      }
+        text: 'Time',
+      },
     },
 
     legend: {
-      enabled: false
+      enabled: false,
     },
 
     tooltip: {
-      formatter: function() {
+      formatter: function () {
         return '<b>' + this.x + '</b><br/>' + this.y + ' ops/sec'
-      }
+      },
     },
 
     credits: {
-      enabled: false
+      enabled: false,
     },
     plotOptions: {
       bar: {
         dataLabels: {
           enabled: true,
-          formatter: function() {
+          formatter: function () {
             return this.y + ' ops/sec'
-          }
-        }
-      }
+          },
+        },
+      },
     },
     series: [
       {
-        data: []
-      }
-    ]
+        data: [],
+      },
+    ],
   })
 
   function tester(target) {
@@ -431,7 +429,7 @@ var runTest = function(callback) {
 
     chart.series[0].addPoint({
       color: colors.shift(),
-      y: opsPerSec
+      y: opsPerSec,
     })
 
     if (!list.length) {
@@ -441,7 +439,7 @@ var runTest = function(callback) {
 
     target = list.shift()
 
-    setTimeout(function() {
+    setTimeout(function () {
       tester(target)
     }, 500)
   }
@@ -450,7 +448,7 @@ var runTest = function(callback) {
   tester(target)
 }
 
-window['restart'] = function(key, value) {
+window['restart'] = function (key, value) {
   config[key] = value
 }
 
@@ -459,7 +457,7 @@ function getLink() {
     'length=' + config.length + '&calls=' + config.calls + '&escape=' + config.escape
 }
 
-window['app'] = function(selector) {
+window['app'] = function (selector) {
   var app = document.querySelector(selector)
   var body = `
 <h1>Rendering test</h1>
@@ -499,16 +497,16 @@ window['app'] = function(selector) {
 
   document.getElementById('get-link').addEventListener('click', getLink)
 
-  document.getElementById('button-start').onclick = function() {
+  document.getElementById('button-start').onclick = function () {
     var elem = this
     this.disabled = true
-    runTest(function() {
+    runTest(function () {
       elem.style.display = 'none'
       document.getElementById('button-restart').style.display = ''
     })
   }
 
-  document.getElementById('button-restart').onclick = function() {
+  document.getElementById('button-restart').onclick = function () {
     window.location.reload()
   }
 }
