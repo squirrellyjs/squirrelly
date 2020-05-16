@@ -2,8 +2,10 @@ var Sqrl = require('../dist/squirrelly.cjs')
 var template = `
 {{it.value}}
 
+{{" hi "}}
+
 {{it.value | safe}}
-{{!/*this is a comment */ }}
+{{!/*this is a comment */}}
 
 {{it.value | safe | capitalize}}
 

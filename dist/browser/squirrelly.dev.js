@@ -167,7 +167,7 @@
           envPrefixes.i,
           envPrefixes.r,
           envPrefixes.c,
-          envPrefixes.e
+          envPrefixes.e,
       ].reduce(function (accumulator, prefix) {
           if (accumulator && prefix) {
               return accumulator + '|' + escapeRegExp(prefix);
@@ -182,7 +182,7 @@
           }
       }, '');
       var parseCloseReg = new RegExp('([|()]|=>)|' + // powerchars
-          '\'|"|`|\\/\\*|\\s*((\\/)?(-|_)?' + // comments, strings
+          '(\'|"|`|\\/\\*)|\\s*((\\/)?(-|_)?' + // comments, strings
           escapeRegExp(env.tags[1]) +
           ')', 'g');
       var tagOpenReg = new RegExp('([^]*?)' + escapeRegExp(env.tags[0]) + '(-|_)?\\s*(' + prefixes + ')?\\s*', 'g');
@@ -240,9 +240,10 @@
           // tslint:disable-next-line:no-conditional-assignment
           while ((m = parseCloseReg.exec(str)) !== null) {
               var char = m[1];
-              var tagClose = m[2];
-              var slash = m[3];
-              var wsControl = m[4];
+              var punctuator = m[2];
+              var tagClose = m[3];
+              var slash = m[4];
+              var wsControl = m[5];
               var i = m.index;
               if (char) {
                   // Power character
@@ -277,26 +278,13 @@
                       currentAttribute = 'res';
                   }
               }
-              else if (tagClose) {
-                  addAttrValue(i);
-                  startInd = i + m[0].length;
-                  tagOpenReg.lastIndex = startInd;
-                  // console.log('tagClose: ' + startInd)
-                  trimNextLeftWs = wsControl;
-                  if (slash && currentType === 'h') {
-                      currentType = 's';
-                  } // TODO throw err
-                  currentObj.t = currentType;
-                  return currentObj;
-              }
-              else {
-                  var punctuator = m[0];
+              else if (punctuator) {
                   if (punctuator === '/*') {
                       var commentCloseInd = str.indexOf('*/', parseCloseReg.lastIndex);
                       if (commentCloseInd === -1) {
                           ParseErr('unclosed comment', str, m.index);
                       }
-                      parseCloseReg.lastIndex = commentCloseInd;
+                      parseCloseReg.lastIndex = commentCloseInd + 2; // since */ is 2 characters, and we're using indexOf rather than a RegExp
                   }
                   else if (punctuator === "'") {
                       singleQuoteReg.lastIndex = m.index;
@@ -328,6 +316,18 @@
                           ParseErr('unclosed string', str, m.index);
                       }
                   }
+              }
+              else if (tagClose) {
+                  addAttrValue(i);
+                  startInd = i + m[0].length;
+                  tagOpenReg.lastIndex = startInd;
+                  // console.log('tagClose: ' + startInd)
+                  trimNextLeftWs = wsControl;
+                  if (slash && currentType === 'h') {
+                      currentType = 's';
+                  } // TODO throw err
+                  currentObj.t = currentType;
+                  return currentObj;
               }
           }
           ParseErr('unclosed tag', str, tagOpenIndex);
