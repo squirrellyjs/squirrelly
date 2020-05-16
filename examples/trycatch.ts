@@ -9,7 +9,7 @@ Uh-oh, error! Message was '{{err.message}}'
 
 // the above is auto unescaped because otherwise it automatically converts it to a string
 
-Sqrl.Filters.define('validate', function (str) {
+Sqrl.filters.define('validate', function (str) {
   console.log('str is ' + str + 'and its type is ' + typeof str)
   if (typeof str !== 'string') {
     console.log('gonna error')
@@ -19,8 +19,8 @@ Sqrl.Filters.define('validate', function (str) {
   }
 })
 
-console.log(Sqrl.Parse(template, Sqrl.Env.default))
+console.log(Sqrl.parse(template, Sqrl.defaultConfig))
 console.log('===========================')
-console.log(Sqrl.Compile(template, Sqrl.Env.default).toString())
+console.log(Sqrl.compile(template).toString())
 console.log('===========================')
-console.log(Sqrl.Render(template, { riceKids: ['Ben', 'Polly', 'Joel', 'Phronsie', 'Davie'] }))
+console.log(Sqrl.render(template, { riceKids: ['Ben', 'Polly', 'Joel', 'Phronsie', 'Davie'] }))

@@ -3,18 +3,19 @@ var template = `
 {{it.value}}
 
 {{it.value | safe}}
-{{!/*this is a comment */}}
+{{!/*this is a comment */ }}
+
 {{it.value | safe | capitalize}}
 
 {{it.value | capitalize | safe}}
 
 `
-Sqrl.Filters.define('capitalize', function (str) {
+Sqrl.filters.define('capitalize', function (str) {
   return str.toUpperCase()
 })
 
-console.log(Sqrl.Parse(template, Sqrl.Env.default))
+console.log(Sqrl.parse(template, Sqrl.defaultConfig))
 console.log('===========================')
-console.log(Sqrl.Compile(template, Sqrl.Env.default).toString())
+console.log(Sqrl.compile(template).toString())
 console.log('===========================')
-console.log(Sqrl.Render(template, { value: '<img>Something</img>' }))
+console.log(Sqrl.render(template, { value: '<img>Something</img>' }))

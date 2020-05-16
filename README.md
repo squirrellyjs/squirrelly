@@ -4,7 +4,7 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
-[logo]: https://img.shields.io/badge/all_contributors-3-orange.svg "Number of contributors on All-Contributors"
+[logo]: https://img.shields.io/badge/all_contributors-3-orange.svg 'Number of contributors on All-Contributors'
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
@@ -17,6 +17,7 @@
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://img.shields.io/gitter/room/squirrellyjs/squirrelly?color=%2346BC99)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://paypal.me/bengubler)
+[![Try squirrelly on RunKit](https://img.shields.io/badge/try%20on%20runkit-squirrelly-brightgreen)](https://npm.runkit.com/squirrelly)
 
 **Summary**
 
@@ -28,7 +29,7 @@ Version 8 is still in beta. Squirrelly v7 will continue to be maintained, and ca
 
 [Read about the changes](https://squirrelly.js.org/blog/squirrelly-version-8)
 
-*Looking for a [lightweight, faster, and more reliable](https://eta.js.org/docs/about/eta-vs-ejs) __alternative to EJS?__ Check out Squirrelly's cousin, [Eta](https://eta.js.org).*
+_Looking for a [lightweight, faster, and more reliable](https://eta.js.org/docs/about/eta-vs-ejs) **alternative to EJS?** Check out Squirrelly's cousin, [Eta](https://eta.js.org)._
 
 ## Why Squirrelly?
 

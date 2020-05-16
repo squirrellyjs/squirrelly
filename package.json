@@ -18,6 +18,7 @@
   "typings": "dist/types/index.d.ts",
   "jsdelivr": "dist/browser/squirrelly.min.js",
   "unpkg": "dist/browser/squirrelly.min.js",
+  "runkitExampleFilename": "examples/runkit.js",
   "sideEffects": false,
   "files": [
     "dist"
