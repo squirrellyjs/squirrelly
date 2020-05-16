@@ -21,7 +21,8 @@
   "runkitExampleFilename": "examples/runkit.js",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "examples"
   ],
   "author": "Ben Gubler <nebrelbug@gmail.com>",
   "funding": "https://github.com/squirrellyjs/squirrelly?sponsor=1",
