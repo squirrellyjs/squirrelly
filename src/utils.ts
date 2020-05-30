@@ -83,7 +83,7 @@ function trimWS (
   if (leftTrim === '_' || leftTrim === 'slurp') {
     // console.log('trimming left' + leftTrim)
     // full slurp
-    if (String.prototype.trimLeft) {
+    if (!!String.prototype.trimLeft) {
       str = str.trimLeft()
     } else {
       str = str.replace(/^[\s\uFEFF\xA0]+/, '')
@@ -97,7 +97,7 @@ function trimWS (
   if (rightTrim === '_' || rightTrim === 'slurp') {
     // console.log('trimming right' + rightTrim)
     // full slurp
-    if (String.prototype.trimRight) {
+    if (!!String.prototype.trimRight) {
       str = str.trimRight()
     } else {
       str = str.replace(/[\s\uFEFF\xA0]+$/, '')
