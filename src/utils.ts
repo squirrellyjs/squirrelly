@@ -83,6 +83,7 @@ function trimWS (
   if (leftTrim === '_' || leftTrim === 'slurp') {
     // console.log('trimming left' + leftTrim)
     // full slurp
+    // eslint-disable-next-line no-extra-boolean-cast
     if (!!String.prototype.trimLeft) {
       str = str.trimLeft()
     } else {
@@ -97,6 +98,7 @@ function trimWS (
   if (rightTrim === '_' || rightTrim === 'slurp') {
     // console.log('trimming right' + rightTrim)
     // full slurp
+    // eslint-disable-next-line no-extra-boolean-cast
     if (!!String.prototype.trimRight) {
       str = str.trimRight()
     } else {
