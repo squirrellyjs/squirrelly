@@ -1,6 +1,6 @@
 /* global it, expect, describe */
 
-import { renderFile } from '../src/index'
+import { renderFile, __express } from '../src/index'
 
 var path = require('path'),
   filePath = path.join(__dirname, 'templates/simple.sqrl')
@@ -10,6 +10,10 @@ describe('File handlers test', () => {
     var renderedFile = await renderFile(filePath, { name: 'Ben' })
 
     expect(renderedFile).toEqual('Hi Ben')
+  })
+
+  it('renderFile and __express are equivalent', async () => {
+    expect(renderFile).toEqual(__express)
   })
 
   it('render file with callback works', done => {

@@ -1,6 +1,6 @@
 /* global it, expect, describe */
-import { compileToString } from '../src/index'
-import { defaultConfig, getConfig } from '../src/config'
+import { compileToString, getConfig } from '../src/index'
+import { defaultConfig } from '../src/config'
 
 var fs = require('fs'),
   path = require('path'),
