@@ -12,7 +12,6 @@
 [![Travis](https://img.shields.io/travis/com/squirrellyjs/squirrelly/master.svg)](https://travis-ci.com/squirrellyjs/squirrelly)
 [![All Contributors][logo]](#contributors-)
 [![Coveralls](https://img.shields.io/coveralls/squirrellyjs/squirrelly.svg)](https://coveralls.io/github/squirrellyjs/squirrelly)
-[![Dev Dependencies](https://img.shields.io/david/dev/squirrellyjs/squirrelly)](https://david-dm.org/squirrellyjs/squirrelly?type=dev)
 
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://img.shields.io/gitter/room/squirrellyjs/squirrelly?color=%2346BC99)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -106,6 +105,8 @@ To be added
 
 [Waiting for permissions]
 
+- [Add yours!](https://github.com/squirrellyjs/squirrelly/edit/master/README.md)
+
 ## Contributors
 
 Made with ❤ by [@nebrelbug](https://github.com/nebrelbug) and all these wonderful contributors ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
@@ -125,6 +126,8 @@ Made with ❤ by [@nebrelbug](https://github.com/nebrelbug) and all these wonder
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+*Note: because we completely rewrote Version 8 and it has a separate Git history, this chart excludes the dozens of contributors to Version 7. Their contributions are deeply appreciated and many of their ideas and code contributions are being used in Squirrelly v8. Many of their contributions can be found in the [v7 branch commit history](https://github.com/squirrellyjs/squirrelly/commits/v7).*
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind are welcome!
 
