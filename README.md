@@ -105,6 +105,7 @@ To be added
 
 [Waiting for permissions]
 
+- [Cypress](https://www.cypress.io/): Fast, easy and reliable testing for anything that runs in a browser
 - [Add yours!](https://github.com/squirrellyjs/squirrelly/edit/master/README.md)
 
 ## Contributors
