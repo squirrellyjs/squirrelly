@@ -25,7 +25,7 @@ export type HelperFunction = (
   config: SqrlConfig
 ) => string | Promise<string>
 
-export type FilterFunction = (str: string) => any | Promise<any>
+export type FilterFunction = (obj: any, ...filterParameters: any[]) => any | Promise<any>
 
 interface EscapeMap {
   '&': '&amp;'
