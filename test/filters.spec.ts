@@ -34,8 +34,8 @@ describe('Simple render checks', () => {
         const last = obj.splice(-1)
         return obj.join(joinStr) + lastJoinStr + last;
       })
-      expect(render(`{{ it.fruits | customFilterWithParams(', ', ' or ') /}}?`, { fruits: [1, 2, 3] }))
-      .toEqual('Banana, Kiwi or Apple?')
+      expect(render(`{{ it.fruits | customFilterWithParams(', ', ' or ') /}} ?`, { fruits: ["Apple", "Banana", "Kiwi"] }))
+      .toEqual('Apple, Banana or Kiwi ?')
     })
   })
 })
