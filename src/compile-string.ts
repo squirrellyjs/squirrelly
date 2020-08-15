@@ -9,7 +9,7 @@ type ParsedTagType = 'h' | 's' | 'e' | 'i'
 
 /* END TYPES */
 
-export default function compileToString (str: string, env: SqrlConfig) {
+export default function compileToString(str: string, env: SqrlConfig) {
   var buffer: Array<AstObject> = Parse(str, env)
 
   var res =
@@ -33,7 +33,7 @@ export default function compileToString (str: string, env: SqrlConfig) {
   // TODO: is `return cb()` necessary, or could we just do `cb()`
 }
 
-function filter (str: string, filters: Array<Filter>) {
+function filter(str: string, filters: Array<Filter>) {
   for (var i = 0; i < filters.length; i++) {
     var name = filters[i][0]
     var params = filters[i][1]
@@ -56,7 +56,7 @@ function filter (str: string, filters: Array<Filter>) {
 // TODO: Use type intersections for TemplateObject, etc.
 // so I don't have to make properties mandatory
 
-function compileHelper (
+function compileHelper(
   env: SqrlConfig,
   res: string,
   descendants: Array<AstObject>,
@@ -81,7 +81,7 @@ function compileHelper (
   return ret
 }
 
-function compileBlocks (blocks: Array<ParentTemplateObject>, env: SqrlConfig) {
+function compileBlocks(blocks: Array<ParentTemplateObject>, env: SqrlConfig) {
   var ret = '['
   for (var i = 0; i < blocks.length; i++) {
     var block = blocks[i]
@@ -94,11 +94,11 @@ function compileBlocks (blocks: Array<ParentTemplateObject>, env: SqrlConfig) {
   return ret
 }
 
-export function compileScopeIntoFunction (buff: Array<AstObject>, res: string, env: SqrlConfig) {
+export function compileScopeIntoFunction(buff: Array<AstObject>, res: string, env: SqrlConfig) {
   return 'function(' + res + "){var tR='';" + compileScope(buff, env) + 'return tR}'
 }
 
-export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
+export function compileScope(buff: Array<AstObject>, env: SqrlConfig) {
   var i = 0
   var buffLength = buff.length
   var returnStr = ''
@@ -127,10 +127,10 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
         if (env.defaultFilter) {
           content = "c.l('F','" + env.defaultFilter + "')(" + content + ')'
         }
+        var filtered = filter(content, filters)
         if (!currentBlock.raw && env.autoEscape) {
           content = "c.l('F','e')(" + content + ')'
         }
-        var filtered = filter(content, filters)
         returnStr += 'tR+=' + filtered + ';'
         // reference
       } else if (type === 'h') {
