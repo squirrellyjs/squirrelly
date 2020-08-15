@@ -578,10 +578,10 @@ function compileScope(buff, env) {
                 if (env.defaultFilter) {
                     content = "c.l('F','" + env.defaultFilter + "')(" + content + ')';
                 }
-                if (!currentBlock.raw && env.autoEscape) {
-                    content = "c.l('F','e')(" + content + ')';
-                }
                 var filtered = filter(content, filters);
+                if (!currentBlock.raw && env.autoEscape) {
+                    filtered = "c.l('F','e')(" + filtered + ')';
+                }
                 returnStr += 'tR+=' + filtered + ';';
                 // reference
             }

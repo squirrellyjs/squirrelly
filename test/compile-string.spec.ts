@@ -27,7 +27,7 @@ describe('Compile to String test', () => {
   it('works with filters', () => {
     var str = compileToString('hi {{ hey | stuff | stuff2 ("param1") }}', defaultConfig)
     expect(str).toEqual(
-      "var tR='';tR+='hi ';tR+=c.l('F','stuff2')(c.l('F','stuff')(c.l('F','e')(hey)),\"param1\");if(cb){cb(null,tR)} return tR"
+      "var tR='';tR+='hi ';tR+=c.l('F','e')(c.l('F','stuff2')(c.l('F','stuff')(hey),\"param1\"));if(cb){cb(null,tR)} return tR"
     )
   })
 
@@ -58,7 +58,7 @@ describe('Compile to String test', () => {
   it('compiles complex template', () => {
     var str = compileToString(complexTemplate, defaultConfig)
     expect(str).toEqual(
-      "var tR='';tR+='Hi\\n';tR+=c.l('H','log')({params:[\"Hope you like Squirrelly!\"]},[],c);tR+=c.l('F','e')(htmlstuff);tR+=c.l('H','foreach')({exec:function(val, key){var tR='';tR+='\\nReversed value: ';tR+=c.l('F','reverse')(c.l('F','e')(val));tR+=', Key: ';tR+=c.l('F','e')(key);if(key===\"thirdchild\"){tR+=c.l('H','each')({exec:function(index, key){var tR='';tR+='\\nSalutations! Index: ';tR+=c.l('F','e')(index);tR+=', old key: ';tR+=c.l('F','e')(key);return tR},params:[options.obj[key]]},[],c);}return tR},params:[options.obj]},[],c);tR+='\\n';tR+=c.l('H','customhelper')({exec:function(){var tR='';return tR},params:[]},[{exec:function(){var tR='';tR+='Cabbages taste good\\n';console.log(hi)\nreturn tR},params:[],name:'cabbage'},{exec:function(){var tR='';tR+='As do pineapples\\n';return tR},params:[],name:'pineapple'},],c);tR+='\\nThis is a partial: ';tR+=c.l('H','include')({params:[\"mypartial\"]},[],c);if(cb){cb(null,tR)} return tR"
+      "var tR='';tR+='Hi\\n';tR+=c.l('H','log')({params:[\"Hope you like Squirrelly!\"]},[],c);tR+=c.l('F','e')(htmlstuff);tR+=c.l('H','foreach')({exec:function(val, key){var tR='';tR+='\\nReversed value: ';tR+=c.l('F','e')(c.l('F','reverse')(val));tR+=', Key: ';tR+=c.l('F','e')(key);if(key===\"thirdchild\"){tR+=c.l('H','each')({exec:function(index, key){var tR='';tR+='\\nSalutations! Index: ';tR+=c.l('F','e')(index);tR+=', old key: ';tR+=c.l('F','e')(key);return tR},params:[options.obj[key]]},[],c);}return tR},params:[options.obj]},[],c);tR+='\\n';tR+=c.l('H','customhelper')({exec:function(){var tR='';return tR},params:[]},[{exec:function(){var tR='';tR+='Cabbages taste good\\n';console.log(hi)\nreturn tR},params:[],name:'cabbage'},{exec:function(){var tR='';tR+='As do pineapples\\n';return tR},params:[],name:'pineapple'},],c);tR+='\\nThis is a partial: ';tR+=c.l('H','include')({params:[\"mypartial\"]},[],c);if(cb){cb(null,tR)} return tR"
     )
   })
 
