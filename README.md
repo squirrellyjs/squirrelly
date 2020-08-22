@@ -106,6 +106,7 @@ To be added
 [Waiting for permissions]
 
 - [Cypress](https://www.cypress.io/): Fast, easy and reliable testing for anything that runs in a browser
+- [txAdmin](https://github.com/tabarra/txAdmin): A **full featured** web panel to manage & monitor your FiveM Server remotely, used by over two thousand servers worldwide
 - [Add yours!](https://github.com/squirrellyjs/squirrelly/edit/master/README.md)
 
 ## Contributors
