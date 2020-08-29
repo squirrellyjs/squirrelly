@@ -2,6 +2,14 @@
 
 # squirrelly
 
+<p align="left">
+  <a href="https://squirrelly.js.org">Documentation</a> -
+  <a href="https://gitter.im/squirrellyjs/Lobby">Chat</a> -
+  <a href="https://npm.runkit.com/squirrelly">RunKit Demo</a> -
+  <a href="https://squirrelly.js.org/playground">Playground</a>
+</p>
+
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
 [logo]: https://img.shields.io/badge/all_contributors-3-orange.svg 'Number of contributors on All-Contributors'
@@ -12,11 +20,7 @@
 [![Travis](https://img.shields.io/travis/com/squirrellyjs/squirrelly/master.svg)](https://travis-ci.com/squirrellyjs/squirrelly)
 [![All Contributors][logo]](#contributors-)
 [![Coveralls](https://img.shields.io/coveralls/squirrellyjs/squirrelly.svg)](https://coveralls.io/github/squirrellyjs/squirrelly)
-
-[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![Join the chat at https://gitter.im/squirrellyjs/Lobby](https://img.shields.io/gitter/room/squirrellyjs/squirrelly?color=%2346BC99)](https://gitter.im/squirrellyjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://paypal.me/bengubler)
-[![Try squirrelly on RunKit](https://img.shields.io/badge/try%20on%20runkit-squirrelly-brightgreen)](https://npm.runkit.com/squirrelly)
 
 **Summary**
 
