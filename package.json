@@ -1,6 +1,6 @@
 {
   "name": "squirrelly",
-  "version": "8.0.4",
+  "version": "8.0.5",
   "description": "Lightweight, fast, and powerful JS template engine. Supports helpers, filters, template inheritance",
   "keywords": [
     "squirrelly",
