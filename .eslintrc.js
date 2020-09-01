@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     browser: true,
-    node: true
+    node: true,
   },
   extends: [
     'eslint:recommended',
@@ -9,7 +9,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     // 'standard-with-typescript',
     'prettier',
-    'prettier/@typescript-eslint'
+    'prettier/@typescript-eslint',
   ],
   ignorePatterns: [
     'node_modules',
@@ -18,12 +18,12 @@ module.exports = {
     'coverage',
     'browser-tests',
     'tools',
-    'rollup.config.ts'
+    'rollup.config.ts',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: 'tsconfig.eslint.json',
-    sourceType: 'module'
+    sourceType: 'module',
   },
   plugins: ['@typescript-eslint'],
   rules: {
@@ -31,7 +31,8 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 0,
     'prefer-const': 0,
     '@typescript-eslint/no-use-before-define': 0,
-    '@typescript-eslint/explicit-function-return-type': 0
+    '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/ban-types': 0, // Otherwise TS won't let us use Function and object
   },
-  settings: {}
+  settings: {},
 }
