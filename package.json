@@ -53,7 +53,7 @@
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
-      "prettier-standard --lint"
+      "eslint"
     ]
   },
   "config": {
