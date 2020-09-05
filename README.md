@@ -9,7 +9,6 @@
   <a href="https://squirrelly.js.org/playground">Playground</a>
 </p>
 
-
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
 [logo]: https://img.shields.io/badge/all_contributors-3-orange.svg 'Number of contributors on All-Contributors'
@@ -123,7 +122,7 @@ Made with ❤ by [@nebrelbug](https://github.com/nebrelbug) and all these wonder
 <table>
   <tr>
     <td align="center"><a href="http://www.bengubler.com"><img src="https://avatars3.githubusercontent.com/u/25597854?v=4" width="100px;" alt=""/><br /><sub><b>Ben Gubler</b></sub></a><br /><a href="https://github.com/squirrellyjs/squirrelly/commits?author=nebrelbug" title="Code">💻</a> <a href="#question-nebrelbug" title="Answering Questions">💬</a> <a href="https://github.com/squirrellyjs/squirrelly/commits?author=nebrelbug" title="Documentation">📖</a> <a href="https://github.com/squirrellyjs/squirrelly/commits?author=nebrelbug" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://ducnhatphung@gmail.com"><img src="https://avatars1.githubusercontent.com/u/16368559?v=4" width="100px;" alt=""/><br /><sub><b>Clite Tailor</b></sub></a><br /><a href="#ideas-clitetailor" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/squirrellyjs/squirrelly/commits?author=clitetailor" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/clitetailor"><img src="https://avatars1.githubusercontent.com/u/16368559?v=4" width="100px;" alt=""/><br /><sub><b>Clite Tailor</b></sub></a><br /><a href="#ideas-clitetailor" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/squirrellyjs/squirrelly/commits?author=clitetailor" title="Code">💻</a></td>
     <td align="center"><a href="https://twitter.com/ioan_chiriac"><img src="https://avatars2.githubusercontent.com/u/173203?v=4" width="100px;" alt=""/><br /><sub><b>Ioan CHIRIAC</b></sub></a><br /><a href="https://github.com/squirrellyjs/squirrelly/commits?author=ichiriac" title="Code">💻</a> <a href="#ideas-ichiriac" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
@@ -133,7 +132,7 @@ Made with ❤ by [@nebrelbug](https://github.com/nebrelbug) and all these wonder
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-*Note: because we completely rewrote Version 8 and it has a separate Git history, this chart excludes the dozens of contributors to Version 7. Their contributions are deeply appreciated and many of their ideas and code contributions are being used in Squirrelly v8. Many of their contributions can be found in the [v7 branch commit history](https://github.com/squirrellyjs/squirrelly/commits/v7).*
+_Note: because we completely rewrote Version 8 and it has a separate Git history, this chart excludes the dozens of contributors to Version 7. Their contributions are deeply appreciated and many of their ideas and code contributions are being used in Squirrelly v8. Many of their contributions can be found in the [v7 branch commit history](https://github.com/squirrellyjs/squirrelly/commits/v7)._
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind are welcome!
 
