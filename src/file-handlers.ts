@@ -111,7 +111,8 @@ function includeFile (path: string, options: SqrlConfig) {
 }
 
 function renderFile (filename: string, data: DataObj, cb?: CallbackFn) {
-  var Config: FileOptions = getConfig((data as PartialConfig) || {}) as FileOptions
+  data = data || {}
+  var Config: FileOptions = getConfig((data as PartialConfig)) as FileOptions
   // TODO: make sure above doesn't error. We do set filename down below
 
   if (data.settings) {

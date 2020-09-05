@@ -1053,7 +1053,8 @@ function includeFile(path, options) {
     return handleCache(newFileOptions);
 }
 function renderFile(filename, data, cb) {
-    var Config = getConfig(data || {});
+    data = data || {};
+    var Config = getConfig(data);
     // TODO: make sure above doesn't error. We do set filename down below
     if (data.settings) {
         // Pull a few things from known locations
