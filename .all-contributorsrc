@@ -36,6 +36,16 @@
         "code",
         "ideas"
       ]
+    },
+    {
+      "login": "futurelucas4502",
+      "name": "Lucas Wilson",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/48055553?v=4",
+      "profile": "https://futurelucas4502.co.uk",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

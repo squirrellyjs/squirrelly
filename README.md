@@ -10,9 +10,7 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[logo]: https://img.shields.io/badge/all_contributors-3-orange.svg 'Number of contributors on All-Contributors'
-
+[logo]: https://img.shields.io/badge/all_contributors-4-orange.svg 'Number of contributors on All-Contributors'
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![GitHub package.json version (master)](https://img.shields.io/github/package-json/v/squirrellyjs/squirrelly/master?label=current%20version)
@@ -124,12 +122,12 @@ Made with ❤ by [@nebrelbug](https://github.com/nebrelbug) and all these wonder
     <td align="center"><a href="http://www.bengubler.com"><img src="https://avatars3.githubusercontent.com/u/25597854?v=4" width="100px;" alt=""/><br /><sub><b>Ben Gubler</b></sub></a><br /><a href="https://github.com/squirrellyjs/squirrelly/commits?author=nebrelbug" title="Code">💻</a> <a href="#question-nebrelbug" title="Answering Questions">💬</a> <a href="https://github.com/squirrellyjs/squirrelly/commits?author=nebrelbug" title="Documentation">📖</a> <a href="https://github.com/squirrellyjs/squirrelly/commits?author=nebrelbug" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/clitetailor"><img src="https://avatars1.githubusercontent.com/u/16368559?v=4" width="100px;" alt=""/><br /><sub><b>Clite Tailor</b></sub></a><br /><a href="#ideas-clitetailor" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/squirrellyjs/squirrelly/commits?author=clitetailor" title="Code">💻</a></td>
     <td align="center"><a href="https://twitter.com/ioan_chiriac"><img src="https://avatars2.githubusercontent.com/u/173203?v=4" width="100px;" alt=""/><br /><sub><b>Ioan CHIRIAC</b></sub></a><br /><a href="https://github.com/squirrellyjs/squirrelly/commits?author=ichiriac" title="Code">💻</a> <a href="#ideas-ichiriac" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://futurelucas4502.co.uk"><img src="https://avatars1.githubusercontent.com/u/48055553?v=4" width="100px;" alt=""/><br /><sub><b>Lucas Wilson</b></sub></a><br /><a href="https://github.com/squirrellyjs/squirrelly/issues?q=author%3Afuturelucas4502" title="Bug reports">🐛</a> <a href="https://github.com/squirrellyjs/squirrelly/commits?author=futurelucas4502" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 _Note: because we completely rewrote Version 8 and it has a separate Git history, this chart excludes the dozens of contributors to Version 7. Their contributions are deeply appreciated and many of their ideas and code contributions are being used in Squirrelly v8. Many of their contributions can be found in the [v7 branch commit history](https://github.com/squirrellyjs/squirrelly/commits/v7)._
