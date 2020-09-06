@@ -28,5 +28,14 @@ describe('Simple render checks', () => {
         '<script>Malicious XSS</script>'
       )
     })
+    it('Custom filter with parameters', () => {
+      filters.define('customFilterWithParams', function (obj: any, ...filterParameters: any[]): string {
+        const [joinStr, lastJoinStr] = filterParameters
+        const last = obj.splice(-1)
+        return obj.join(joinStr) + lastJoinStr + last;
+      })
+      expect(render(`{{ it.fruits | customFilterWithParams(', ', ' or ') /}} ?`, { fruits: ["Apple", "Banana", "Kiwi"] }))
+      .toEqual('Apple, Banana or Kiwi ?')
+    })
   })
 })
