@@ -46,6 +46,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "jmclean-cnexus",
+      "name": "jmclean-cnexus",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/64215359?v=4",
+      "profile": "https://github.com/jmclean-cnexus",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
