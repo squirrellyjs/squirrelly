@@ -2,6 +2,7 @@ import { Cacher } from './storage'
 import SqrlErr from './err'
 import { compileScope, compileScopeIntoFunction } from './compile-string'
 import { hasOwnProp } from './utils'
+import { errWithBlocksOrFilters, asyncArrLoop, asyncObjLoop, XMLEscape } from './container-utils'
 
 /* TYPES */
 
@@ -27,15 +28,6 @@ export type HelperFunction = (
 
 export type FilterFunction = (...args: any[]) => any | Promise<any>
 
-interface EscapeMap {
-  '&': '&amp;'
-  '<': '&lt;'
-  '>': '&gt;'
-  '"': '&quot;'
-  "'": '&#39;'
-  [index: string]: string
-}
-
 interface IncludeHelperContent extends HelperContent {
   params: [string, object]
 }
@@ -47,50 +39,6 @@ interface GenericData {
 /* END TYPES */
 
 var templates = new Cacher<TemplateFunction>({})
-
-function errWithBlocksOrFilters (
-  name: string,
-  blocks: Array<any> | false, // false means don't check
-  filters: Array<any> | false,
-  native?: boolean
-) {
-  if (blocks && blocks.length > 0) {
-    throw SqrlErr((native ? 'Native' : '') + "Helper '" + name + "' doesn't accept blocks")
-  }
-  if (filters && filters.length > 0) {
-    throw SqrlErr((native ? 'Native' : '') + "Helper '" + name + "' doesn't accept filters")
-  }
-}
-
-/* ASYNC LOOP FNs */
-function asyncArrLoop (arr: Array<any>, index: number, fn: Function, res: string, cb: Function) {
-  fn(arr[index], index).then(function (val: string) {
-    res += val
-    if (index === arr.length - 1) {
-      cb(res)
-    } else {
-      asyncArrLoop(arr, index + 1, fn, res, cb)
-    }
-  })
-}
-
-function asyncObjLoop (
-  obj: { [index: string]: any },
-  keys: Array<string>,
-  index: number,
-  fn: Function,
-  res: string,
-  cb: Function
-) {
-  fn(keys[index], obj[keys[index]]).then(function (val: string) {
-    res += val
-    if (index === keys.length - 1) {
-      cb(res)
-    } else {
-      asyncObjLoop(obj, keys, index + 1, fn, res, cb)
-    }
-  })
-}
 
 /* ASYNC LOOP FNs */
 
@@ -221,28 +169,6 @@ var nativeHelpers = new Cacher<Function>({
     return returnStr
   }
 })
-
-var escMap: EscapeMap = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;'
-}
-
-function replaceChar (s: string): string {
-  return escMap[s]
-}
-
-function XMLEscape (str: unknown) {
-  // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
-  var newStr = String(str)
-  if (/[&<>"']/.test(newStr)) {
-    return newStr.replace(/[&<>"']/g, replaceChar)
-  } else {
-    return newStr
-  }
-}
 
 var filters = new Cacher<FilterFunction>({ e: XMLEscape })
 
