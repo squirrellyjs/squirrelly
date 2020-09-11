@@ -1,0 +1,50 @@
+import * as utils from '../src/container-utils'
+import SqrlErr from '../src/err'
+
+describe('replaceChar', () => {
+    it('should replace & with &amp;', () => {
+        let res = utils.replaceChar("&")
+        expect(res).toEqual("&amp;")
+    })
+    it('should replace < with &lt;', () => {
+        let res = utils.replaceChar("<")
+        expect(res).toEqual("&lt;")
+    })
+    it('should replace > with &gt;', () => {
+        let res = utils.replaceChar(">")
+        expect(res).toEqual("&gt;")
+    })
+    it('should replace " with &quot;', () => {
+        let res = utils.replaceChar("\"")
+        expect(res).toEqual("&quot;")
+    })
+    it('should replace \' with &#39;', () => {
+        let res = utils.replaceChar("'")
+        expect(res).toEqual("&#39;")
+    })
+})
+
+describe('errWithBlocksOrFilters', () => {
+    it('should throw error if array of blosk is supplied', (done) => {
+        try {
+            utils.errWithBlocksOrFilters("testHelper", ["block"], false)
+            done("An error should have thrown")
+        } catch (e) {
+            expect(e).toBeInstanceOf(SqrlErr)
+            expect(e.message).toEqual("Helper 'testHelper' doesn't accept blocks")
+            done()
+        }
+    })
+
+    it('should throw error if array of filters is supplied', (done) => {
+        try {
+            utils.errWithBlocksOrFilters("testHelper",false , ["filter"])
+            done("An error should have thrown")
+        } catch (e) {
+            expect(e).toBeInstanceOf(SqrlErr)
+            expect(e.message).toEqual("Helper 'testHelper' doesn't accept filters")
+            done()
+        }
+    })
+
+})

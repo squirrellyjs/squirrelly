@@ -10,3 +10,4 @@ compiled
 .rpt2_cache
 docs
 build
+package-lock.json
