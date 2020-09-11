@@ -125,6 +125,7 @@
     "jest": "^26.4.2",
     "jest-config": "^26.4.2",
     "lint-staged": "^10.2.13",
+    "np": "^6.5.0",
     "prettier-standard": "^16.4.1",
     "prompt": "^1.0.0",
     "replace-in-file": "^6.1.0",
