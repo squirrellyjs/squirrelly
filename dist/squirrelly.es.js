@@ -622,8 +622,6 @@ function compileScope(buff, env) {
     return returnStr;
 }
 
-/* END TYPES */
-var templates = new Cacher({});
 function errWithBlocksOrFilters(name, blocks, // false means don't check
 filters, native) {
     if (blocks && blocks.length > 0) {
@@ -656,6 +654,29 @@ function asyncObjLoop(obj, keys, index, fn, res, cb) {
         }
     });
 }
+var escMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+};
+function replaceChar(s) {
+    return escMap[s];
+}
+function XMLEscape(str) {
+    // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
+    var newStr = String(str);
+    if (/[&<>"']/.test(newStr)) {
+        return newStr.replace(/[&<>"']/g, replaceChar);
+    }
+    else {
+        return newStr;
+    }
+}
+
+/* END TYPES */
+var templates = new Cacher({});
 /* ASYNC LOOP FNs */
 var helpers = new Cacher({
     each: function (content, blocks) {
@@ -766,26 +787,6 @@ var nativeHelpers = new Cacher({
         return returnStr;
     }
 });
-var escMap = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-};
-function replaceChar(s) {
-    return escMap[s];
-}
-function XMLEscape(str) {
-    // To deal with XSS. Based on Escape implementations of Mustache.JS and Marko, then customized.
-    var newStr = String(str);
-    if (/[&<>"']/.test(newStr)) {
-        return newStr.replace(/[&<>"']/g, replaceChar);
-    }
-    else {
-        return newStr;
-    }
-}
 var filters = new Cacher({ e: XMLEscape });
 
 /* END TYPES */
