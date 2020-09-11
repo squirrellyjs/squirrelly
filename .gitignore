@@ -11,3 +11,4 @@ compiled
 docs
 build
 package-lock.json
+dist
