@@ -1,5 +1,5 @@
 import Parse from './parse'
-
+import { safeCompile } from './utils'
 /* TYPES */
 
 import { SqrlConfig } from './config'
@@ -112,10 +112,10 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
       returnStr += "tR+='" + str + "';"
     } else {
       var type: ParsedTagType = currentBlock.t as ParsedTagType // h, s, e, i
-      var content = currentBlock.c || ''
+      var content = safeCompile(currentBlock.c || '', '')
       var filters = currentBlock.f
       var name = currentBlock.n || ''
-      var params = currentBlock.p || ''
+      var params = safeCompile(currentBlock.p || '', '')
       var res = currentBlock.res || ''
       var blocks = currentBlock.b
       var isAsync = !!currentBlock.a // !! is to booleanize it

@@ -22,6 +22,10 @@ try {
 
 export { asyncFunc }
 
+export const safeCompile = (variableName: string, returnStr: string) : string => {
+  return `(function(){ try{ return ${variableName} }catch(err) { return ${returnStr}} })()`
+}
+
 export function hasOwnProp (obj: object, prop: string) {
   return Object.prototype.hasOwnProperty.call(obj, prop)
 }
