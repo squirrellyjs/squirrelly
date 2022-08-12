@@ -111,11 +111,13 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
       // we know string exists
       returnStr += "tR+='" + str + "';"
     } else {
+      currentBlock.c = safeCompile( currentBlock.c || '', '')
+      currentBlock.p = safeCompile( currentBlock.p || '', '')
       var type: ParsedTagType = currentBlock.t as ParsedTagType // h, s, e, i
-      var content = safeCompile(currentBlock.c || '', '')
+      var content = currentBlock.c
       var filters = currentBlock.f
       var name = currentBlock.n || ''
-      var params = safeCompile(currentBlock.p || '', '')
+      var params = currentBlock.p
       var res = currentBlock.res || ''
       var blocks = currentBlock.b
       var isAsync = !!currentBlock.a // !! is to booleanize it
