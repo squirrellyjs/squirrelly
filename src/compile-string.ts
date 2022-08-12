@@ -1,7 +1,7 @@
 import Parse from './parse'
 
 /* TYPES */
-
+import { safeCompile } from './utils'
 import { SqrlConfig } from './config'
 import { AstObject, Filter, ParentTemplateObject } from './parse'
 type ParsedTagType = 'h' | 's' | 'e' | 'i'
@@ -9,7 +9,7 @@ type ParsedTagType = 'h' | 's' | 'e' | 'i'
 
 /* END TYPES */
 
-export default function compileToString (str: string, env: SqrlConfig) {
+export default function compileToString(str: string, env: SqrlConfig) {
   var buffer: Array<AstObject> = Parse(str, env)
 
   var res =
@@ -33,7 +33,7 @@ export default function compileToString (str: string, env: SqrlConfig) {
   // TODO: is `return cb()` necessary, or could we just do `cb()`
 }
 
-function filter (str: string, filters: Array<Filter>) {
+function filter(str: string, filters: Array<Filter>) {
   for (var i = 0; i < filters.length; i++) {
     var name = filters[i][0]
     var params = filters[i][1]
@@ -56,7 +56,7 @@ function filter (str: string, filters: Array<Filter>) {
 // TODO: Use type intersections for TemplateObject, etc.
 // so I don't have to make properties mandatory
 
-function compileHelper (
+function compileHelper(
   env: SqrlConfig,
   res: string,
   descendants: Array<AstObject>,
@@ -81,7 +81,7 @@ function compileHelper (
   return ret
 }
 
-function compileBlocks (blocks: Array<ParentTemplateObject>, env: SqrlConfig) {
+function compileBlocks(blocks: Array<ParentTemplateObject>, env: SqrlConfig) {
   var ret = '['
   for (var i = 0; i < blocks.length; i++) {
     var block = blocks[i]
@@ -94,11 +94,12 @@ function compileBlocks (blocks: Array<ParentTemplateObject>, env: SqrlConfig) {
   return ret
 }
 
-export function compileScopeIntoFunction (buff: Array<AstObject>, res: string, env: SqrlConfig) {
+export function compileScopeIntoFunction(buff: Array<AstObject>, res: string, env: SqrlConfig) {
   return 'function(' + res + "){var tR='';" + compileScope(buff, env) + 'return tR}'
 }
 
-export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
+export function compileScope(buff: Array<AstObject>, env: SqrlConfig) {
+
   var i = 0
   var buffLength = buff.length
   var returnStr = ''
@@ -107,18 +108,19 @@ export function compileScope (buff: Array<AstObject>, env: SqrlConfig) {
     var currentBlock = buff[i]
     if (typeof currentBlock === 'string') {
       var str = currentBlock
-
       // we know string exists
       returnStr += "tR+='" + str + "';"
     } else {
+      currentBlock.p = safeCompile(currentBlock.p, '') || ''
       var type: ParsedTagType = currentBlock.t as ParsedTagType // h, s, e, i
-      var content = currentBlock.c || ''
+      var content = safeCompile(currentBlock.c, '') || ''
       var filters = currentBlock.f
       var name = currentBlock.n || ''
       var params = currentBlock.p || ''
       var res = currentBlock.res || ''
       var blocks = currentBlock.b
       var isAsync = !!currentBlock.a // !! is to booleanize it
+
       // if (isAsync && !env.async) {
       //   throw SqrlErr("Async block or helper '" + name + "' in non-async env")
       // }
