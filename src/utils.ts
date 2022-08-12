@@ -20,17 +20,13 @@ try {
   }
 }
 
-export const safeCompile = (a: any, b: any) => {
-  return `(function(){ try{ return ${a} }catch(err) { return ${b}} })()`
-}
-
 export { asyncFunc }
 
-export function hasOwnProp(obj: object, prop: string) {
+export function hasOwnProp (obj: object, prop: string) {
   return Object.prototype.hasOwnProperty.call(obj, prop)
 }
 
-export function copyProps<T>(toObj: T, fromObj: T, notConfig?: boolean) {
+export function copyProps<T> (toObj: T, fromObj: T, notConfig?: boolean) {
   for (var key in fromObj) {
     if (hasOwnProp((fromObj as unknown) as object, key)) {
       if (
@@ -52,7 +48,7 @@ export function copyProps<T>(toObj: T, fromObj: T, notConfig?: boolean) {
   return toObj
 }
 
-function trimWS(
+function trimWS (
   str: string,
   env: SqrlConfig,
   wsLeft: string | false,
