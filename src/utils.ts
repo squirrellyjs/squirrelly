@@ -25,7 +25,7 @@ export { asyncFunc }
 export const safeCompile = (variableName: string, returnStr: string) : string => {
   return `(function(){
     try{
-      return ${variableName}? ${variableName}: ''
+      return ${variableName} == undefined || ${variableName} == null? '': ${variableName}
     }catch(err) {
       return ${returnStr}
     }
