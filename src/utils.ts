@@ -27,7 +27,7 @@ export const safeCompile = (variableName: string, returnStr: string) : string =>
     try{
       return ${variableName} == undefined || ${variableName} == null? '': ${variableName}
     }catch(err) {
-      return ${returnStr}
+      return ''
     }
   })()`
 }
