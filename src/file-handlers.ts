@@ -4,7 +4,7 @@ import SqrlErr from './err'
 import compile from './compile'
 import { getConfig } from './config'
 import { getPath, readFile, loadFile } from './file-utils'
-import { promiseImpl, copyProps } from './utils'
+import { promiseImpl } from './utils'
 
 /* TYPES */
 
@@ -34,7 +34,6 @@ interface DataObj {
  * `options.filename` so it must be set prior to calling this function.
  *
  * @param {Options} options   compilation options
- * @param {String} [template] template source
  * @return {(TemplateFunction|ClientFunction)}
  * Depending on the value of `options.client`, either type might be returned.
  * @static
@@ -122,13 +121,6 @@ function renderFile (filename: string, data: DataObj, cb?: CallbackFn) {
     }
     if (data.settings['view cache']) {
       Config.cache = true
-    }
-    // Undocumented after Express 2, but still usable, esp. for
-    // items that are unsafe to be passed along with data, like `root`
-    var viewOpts = data.settings['view options']
-
-    if (viewOpts) {
-      copyProps(Config, viewOpts)
     }
   }
 
