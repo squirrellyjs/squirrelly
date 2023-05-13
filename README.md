@@ -109,6 +109,7 @@ To be added
 
 - [Cypress](https://www.cypress.io/): Fast, easy and reliable testing for anything that runs in a browser
 - [txAdmin](https://github.com/tabarra/txAdmin): A **full featured** web panel to manage & monitor your FiveM Server remotely, used by over two thousand servers worldwide
+- [Neuron JS](https://neuron-docs.vercel.app/): A **Fast** and **Lightweight** server-side framework for Node.js.
 - [Add yours!](https://github.com/squirrellyjs/squirrelly/edit/master/README.md)
 
 ## Contributors
