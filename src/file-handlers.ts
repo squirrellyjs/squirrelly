@@ -4,7 +4,7 @@ import SqrlErr from './err'
 import compile from './compile'
 import { getConfig } from './config'
 import { getPath, readFile, loadFile } from './file-utils'
-import { promiseImpl, copyProps } from './utils'
+import { promiseImpl } from './utils'
 
 /* TYPES */
 
@@ -18,9 +18,6 @@ interface FileOptions extends SqrlConfig {
 }
 
 interface DataObj {
-  settings?: {
-    [key: string]: any
-  }
   [key: string]: any
 }
 
@@ -34,7 +31,6 @@ interface DataObj {
  * `options.filename` so it must be set prior to calling this function.
  *
  * @param {Options} options   compilation options
- * @param {String} [template] template source
  * @return {(TemplateFunction|ClientFunction)}
  * Depending on the value of `options.client`, either type might be returned.
  * @static
@@ -114,23 +110,6 @@ function renderFile (filename: string, data: DataObj, cb?: CallbackFn) {
   data = data || {}
   var Config: FileOptions = getConfig((data as PartialConfig)) as FileOptions
   // TODO: make sure above doesn't error. We do set filename down below
-
-  if (data.settings) {
-    // Pull a few things from known locations
-    if (data.settings.views) {
-      Config.views = data.settings.views
-    }
-    if (data.settings['view cache']) {
-      Config.cache = true
-    }
-    // Undocumented after Express 2, but still usable, esp. for
-    // items that are unsafe to be passed along with data, like `root`
-    var viewOpts = data.settings['view options']
-
-    if (viewOpts) {
-      copyProps(Config, viewOpts)
-    }
-  }
 
   Config.filename = filename // Make sure filename is right
 
