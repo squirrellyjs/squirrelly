@@ -109,6 +109,7 @@ To be added
 
 - [Cypress](https://www.cypress.io/): Fast, easy and reliable testing for anything that runs in a browser
 - [txAdmin](https://github.com/tabarra/txAdmin): A **full featured** web panel to manage & monitor your FiveM Server remotely, used by over two thousand servers worldwide
+- [primitive-dodoc](https://github.com/primitivefinance/primitive-dodoc): Zero-config Hardhat plugin to generate documentation for all your Solidity contracts
 - [Add yours!](https://github.com/squirrellyjs/squirrelly/edit/master/README.md)
 
 ## Contributors
