@@ -133,10 +133,10 @@ templateList['swig-raw'] = `
 var config = {
   length: 20,
   calls: 6000,
-  escape: true,
+  escape: true
 }
 
-function getParameterByName(name) {
+function getParameterByName (name) {
   var url = window.location.href
   var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
   var results = regex.exec(url)
@@ -159,7 +159,7 @@ if (window.location.search) {
 
 // 制造测试数据
 var data = {
-  list: [],
+  list: []
 }
 
 for (var i = 0; i < config.length; i++) {
@@ -168,7 +168,7 @@ for (var i = 0; i < config.length; i++) {
     user: '<strong style="color:red">糖饼</strong>',
     site: 'https://github.com/aui',
     weibo: 'http://weibo.com/planeart',
-    QQweibo: 'http://t.qq.com/tangbin',
+    QQweibo: 'http://t.qq.com/tangbin'
   })
 }
 
@@ -187,7 +187,7 @@ var testList = [
         html = fn(data)
       }
       return html
-    },
+    }
   },
 
   {
@@ -202,7 +202,7 @@ var testList = [
         html = fn(data)
       }
       return html
-    },
+    }
   },
 
   {
@@ -217,7 +217,7 @@ var testList = [
         html = fn(data)
       }
       return html
-    },
+    }
   },
 
   {
@@ -232,7 +232,7 @@ var testList = [
         html = fn(data)
       }
       return html
-    },
+    }
   },
   {
     name: 'Squirrelly',
@@ -248,7 +248,7 @@ var testList = [
         html = Sqrl.render(source, data)
       }
       return html
-    },
+    }
   },
   {
     name: 'Squirrelly - Fast',
@@ -264,7 +264,7 @@ var testList = [
         html = Sqrl.render(source, data)
       }
       return html
-    },
+    }
   },
   {
     name: 'Jade / pug',
@@ -279,7 +279,7 @@ var testList = [
         html = fn(data)
       }
       return html
-    },
+    }
   },
   {
     name: 'Handlebars',
@@ -293,7 +293,7 @@ var testList = [
         html = fn(data)
       }
       return html
-    },
+    }
   },
   {
     name: 'Mustache',
@@ -307,7 +307,7 @@ var testList = [
         html = Mustache.render(source, data)
       }
       return html
-    },
+    }
   },
 
   {
@@ -322,8 +322,8 @@ var testList = [
         html = fn(data)
       }
       return html
-    },
-  },
+    }
+  }
 ]
 
 Highcharts.setOptions({
@@ -336,8 +336,8 @@ Highcharts.setOptions({
     '#CB93E0',
     '#A2A2A4',
     '#E1AC65',
-    '#6AF9C4',
-  ],
+    '#6AF9C4'
+  ]
 })
 
 var runTest = function (callback) {
@@ -363,11 +363,11 @@ var runTest = function (callback) {
   var chart = new Highcharts.Chart({
     chart: {
       animation: {
-        duration: 150,
+        duration: 150
       },
       renderTo: 'test-container',
       height: categories.length * 32,
-      type: 'bar',
+      type: 'bar'
     },
 
     title: false,
@@ -378,28 +378,28 @@ var runTest = function (callback) {
 
     xAxis: {
       categories: categories,
-      labels: {},
+      labels: {}
     },
 
     yAxis: {
       min: 0,
       title: {
-        text: 'Time',
-      },
+        text: 'Time'
+      }
     },
 
     legend: {
-      enabled: false,
+      enabled: false
     },
 
     tooltip: {
       formatter: function () {
         return '<b>' + this.x + '</b><br/>' + this.y + ' ops/sec'
-      },
+      }
     },
 
     credits: {
-      enabled: false,
+      enabled: false
     },
     plotOptions: {
       bar: {
@@ -407,18 +407,18 @@ var runTest = function (callback) {
           enabled: true,
           formatter: function () {
             return this.y + ' ops/sec'
-          },
-        },
-      },
+          }
+        }
+      }
     },
     series: [
       {
-        data: [],
-      },
-    ],
+        data: []
+      }
+    ]
   })
 
-  function tester(target) {
+  function tester (target) {
     var time = new Timer()
     var html = target.tester()
     var endTime = time.stop()
@@ -429,7 +429,7 @@ var runTest = function (callback) {
 
     chart.series[0].addPoint({
       color: colors.shift(),
-      y: opsPerSec,
+      y: opsPerSec
     })
 
     if (!list.length) {
@@ -452,7 +452,7 @@ window['restart'] = function (key, value) {
   config[key] = value
 }
 
-function getLink() {
+function getLink () {
   window.location.search =
     'length=' + config.length + '&calls=' + config.calls + '&escape=' + config.escape
 }
