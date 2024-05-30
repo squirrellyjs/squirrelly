@@ -113,4 +113,9 @@ function trimWS (
   return str
 }
 
-export { trimWS }
+// credit to pugjs/pug
+function isValidJSIdentifier (str: string) {
+  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(name);
+}
+
+export { trimWS, isValidJSIdentifier }
