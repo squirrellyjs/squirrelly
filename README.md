@@ -46,7 +46,7 @@ Simply put, Squirrelly is super lightweight, super fast, super powerful, and sup
   - _ex. `{{someval + "name }}" }}`_ compiles correctly, while it fails with DoT or EJS
 - ⚡️ Exports ES Modules as well as UMD
 - 🔨 Loops
-- 🔧 Custom delimeters
+- 🔧 Custom delimiters
 - 📝 Easy template syntax
 - 🔧 Precompilation
 - 🔨 Partials
