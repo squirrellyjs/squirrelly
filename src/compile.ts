@@ -1,6 +1,6 @@
 import compileToString from './compile-string'
 import { getConfig } from './config'
-import { asyncFunc } from './utils'
+import { asyncFunc, isValidJSIdentifier } from './utils'
 import SqrlErr from './err'
 
 /* TYPES */
@@ -25,6 +25,9 @@ export default function compile (str: string, env?: PartialConfig): TemplateFunc
     } else {
       throw SqrlErr("This environment doesn't support async/await")
     }
+  }
+  if (options.varName && isValidJSIdentifier(options.varName) === false) {
+    throw SqrlErr("options.varName must be a valid JS identifier")
   }
 
   /* END ASYNC HANDLING */
