@@ -22,13 +22,13 @@ try {
 
 export { asyncFunc }
 
-export function hasOwnProp (obj: object, prop: string) {
+export function hasOwnProp(obj: object, prop: string) {
   return Object.prototype.hasOwnProperty.call(obj, prop)
 }
 
-export function copyProps<T> (toObj: T, fromObj: T, notConfig?: boolean) {
+export function copyProps<T>(toObj: T, fromObj: T, notConfig?: boolean) {
   for (var key in fromObj) {
-    if (hasOwnProp((fromObj as unknown) as object, key)) {
+    if (hasOwnProp(fromObj as unknown as object, key)) {
       if (
         fromObj[key] != null &&
         typeof fromObj[key] == 'object' &&
@@ -48,7 +48,7 @@ export function copyProps<T> (toObj: T, fromObj: T, notConfig?: boolean) {
   return toObj
 }
 
-function trimWS (
+function trimWS(
   str: string,
   env: SqrlConfig,
   wsLeft: string | false,
@@ -114,8 +114,8 @@ function trimWS (
 }
 
 // credit to pugjs/pug
-function isValidJSIdentifier (str: string) {
-  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(name);
+function isValidJSIdentifier(name: string) {
+  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(name)
 }
 
-export { trimWS, isValidJSIdentifier }
+export { isValidJSIdentifier, trimWS }
