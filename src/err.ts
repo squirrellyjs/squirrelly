@@ -16,6 +16,11 @@ SqrlErr.prototype = Object.create(Error.prototype, {
   name: { value: 'Squirrelly Error', enumerable: false }
 })
 
+export interface SqrlErrType {
+  message: string
+  name: string
+}
+
 // TODO: Class transpilation adds a lot to the bundle size
 
 export function ParseErr (message: string, str: string, indx: number) {

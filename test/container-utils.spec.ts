@@ -1,5 +1,5 @@
 import * as utils from '../src/container-utils'
-import SqrlErr from '../src/err'
+import SqrlErr, { SqrlErrType } from '../src/err'
 
 describe('replaceChar', () => {
   it('should replace & with &amp;', () => {
@@ -41,7 +41,8 @@ describe('errWithBlocksOrFilters', () => {
       done('An error should have thrown')
     } catch (e) {
       expect(e).toBeInstanceOf(SqrlErr)
-      expect(e.message).toEqual("Helper 'testHelper' doesn't accept blocks")
+      const error = e as SqrlErrType
+      expect(error.message).toEqual("Helper 'testHelper' doesn't accept blocks")
       done()
     }
   })
@@ -52,7 +53,8 @@ describe('errWithBlocksOrFilters', () => {
       done('An error should have thrown')
     } catch (e) {
       expect(e).toBeInstanceOf(SqrlErr)
-      expect(e.message).toEqual("Helper 'testHelper' doesn't accept filters")
+      const error = e as SqrlErrType
+      expect(error.message).toEqual("Helper 'testHelper' doesn't accept filters")
       done()
     }
   })
