@@ -82,7 +82,7 @@ function tryHandleCache (options: FileOptions, data: object, cb: CallbackFn) {
     try {
       handleCache(options)(data, options, cb)
     } catch (err) {
-      return cb(err)
+      return cb(err as Error)
     }
   }
 }

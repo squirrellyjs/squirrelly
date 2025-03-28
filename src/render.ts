@@ -59,7 +59,7 @@ export default function render (
       try {
         handleCache(template, options)(data, options, cb)
       } catch (err) {
-        return cb(err)
+        return cb(err as Error)
       }
     }
   } else {

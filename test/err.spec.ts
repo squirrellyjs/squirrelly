@@ -1,13 +1,14 @@
 /* global it, expect, describe */
 
-import { ParseErr } from '../src/err'
+import { ParseErr, SqrlErrType } from '../src/err'
 describe('ParseErr', () => {
   it('error throws correctly', () => {
     try {
       ParseErr('Something Unexpected Happened!', 'template {{', 9)
     } catch (ex) {
-      expect(ex.name).toBe('Squirrelly Error')
-      expect(ex.message).toBe(`Something Unexpected Happened! at line 1 col 10:
+      const error = ex as SqrlErrType
+      expect(error.name).toBe('Squirrelly Error')
+      expect(error.message).toBe(`Something Unexpected Happened! at line 1 col 10:
 
   template {{
            ^`)
@@ -19,8 +20,9 @@ describe('ParseErr', () => {
     try {
       ParseErr('Something Unexpected Happened!', 'template {{', 9)
     } catch (ex) {
-      expect(ex.name).toBe('Squirrelly Error')
-      expect(ex.message).toBe(`Something Unexpected Happened! at line 1 col 10:
+      const error = ex as SqrlErrType
+      expect(error.name).toBe('Squirrelly Error')
+      expect(error.message).toBe(`Something Unexpected Happened! at line 1 col 10:
 
   template {{
            ^`)
